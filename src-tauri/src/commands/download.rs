@@ -176,7 +176,9 @@ pub async fn start_download(
     let args = build_yt_dlp_args(&payload, ffmpeg_path.clone());
     
     // DEBUG: print the command
+    #[cfg(debug_assertions)]
     println!("Running yt-dlp with args: {:?}", args);
+    #[cfg(debug_assertions)]
     println!("FFmpeg path detected: {:?}", ffmpeg_path);
     let is_playlist = payload.is_playlist;
 

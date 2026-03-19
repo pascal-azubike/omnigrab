@@ -191,12 +191,13 @@
   }
 
   function togglePlaylistItem(index: number) {
-    if (selectedItems.has(index)) {
-      selectedItems.delete(index);
+    const next = new Set(selectedItems);
+    if (next.has(index)) {
+      next.delete(index);
     } else {
-      selectedItems.add(index);
+      next.add(index);
     }
-    selectedItems = selectedItems; // trigger reactivity
+    selectedItems = next; // proper Svelte 5 reactivity trigger
   }
 
   function selectAll() {

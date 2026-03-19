@@ -52,6 +52,7 @@ function createDownloadStore() {
   let unlistenCancelled: UnlistenFn | null = null;
 
   async function init() {
+    if (unlistenProgress) return; // Guard: don't double-register listeners
     unlistenProgress = await listen<ProgressEvent>('download:progress', async ({ payload }) => {
       const idx = items.findIndex(i => i.id === payload.id);
       if (idx === -1) return;
@@ -73,21 +74,25 @@ function createDownloadStore() {
       // Add to history if newly completed
       if (payload.status === 'complete' && !wasComplete) {
         const item = items[idx];
-        await historyStore.addItem({
-          id: item.id,
-          url: item.url,
-          title: item.currentTitle || item.title,
-          thumbnail: item.thumbnail,
-          platform: item.platform,
-          format: item.format,
-          quality: item.quality,
-          outputPath: item.outputPath,
-          filePath: '', // Will be better determined if we parse the destination
-          fileSize: item.totalBytes || item.downloadedBytes,
-          downloadedAt: Date.now(),
-          isPlaylist: item.isPlaylist,
-          playlistTotal: item.playlistTotal,
-        });
+        try {
+          await historyStore.addItem({
+            id: item.id,
+            url: item.url,
+            title: item.currentTitle || item.title,
+            thumbnail: item.thumbnail,
+            platform: item.platform,
+            format: item.format,
+            quality: item.quality,
+            outputPath: item.outputPath,
+            filePath: '',
+            fileSize: item.totalBytes || item.downloadedBytes,
+            downloadedAt: Date.now(),
+            isPlaylist: item.isPlaylist,
+            playlistTotal: item.playlistTotal,
+          });
+        } catch (e) {
+          console.error('Failed to save to history:', e);
+        }
       }
     });
 

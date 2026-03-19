@@ -51,7 +51,7 @@ jobs:
           fi
 
       - name: build android app (.apk)
-        run: npx tauri android build -- --arch aarch64,x86_64
+        run: npx tauri android build
 
       - name: upload release asset
         uses: softprops/action-gh-release@v2

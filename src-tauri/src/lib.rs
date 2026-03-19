@@ -1,11 +1,25 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::Mutex; // #1: Use async-aware Mutex instead of std::sync::Mutex
 use tauri_plugin_shell::process::CommandChild;
 
 pub mod commands;
 
+// #1: Async Mutex for non-blocking lock in async command handlers
 pub type DownloadMap = Arc<Mutex<HashMap<String, CommandChild>>>;
+
+// #2: Typed download status enum — no more stringly-typed status strings
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum DownloadStatus {
+    Queued,
+    Downloading,
+    Processing,
+    Complete,
+    Error,
+    Cancelled,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
@@ -78,7 +92,7 @@ pub struct ProgressEvent {
     pub downloaded_bytes: u64,
     pub total_bytes: u64,
     pub current_title: String,
-    pub status: String,
+    pub status: DownloadStatus, // #2: typed enum instead of String
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -108,7 +122,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_notification::init())
-        .plugin(tauri_plugin_updater::Builder::new().build())
+        // #3: updater removed — pubkey was empty, would fail silently at runtime
+        // Re-enable when you have a real signing key: .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             commands::info::get_video_info,
             commands::info::get_playlist_info,

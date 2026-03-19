@@ -2,6 +2,7 @@
   import '../app.css';
   import { onMount } from 'svelte';
   import { page } from '$app/state';
+  import { getVersion } from '@tauri-apps/api/app';
   import { settingsStore } from '$lib/stores/settings.svelte.js';
   import { downloadStore } from '$lib/stores/downloads.svelte.js';
   import { historyStore } from '$lib/stores/history.svelte.js';
@@ -9,6 +10,7 @@
   let { children } = $props();
 
   let isInitialized = $state(false);
+  let appVersion = $state('...');
 
   // Initialize all Tauri stores
   onMount(() => {
@@ -17,6 +19,7 @@
         await settingsStore.init();
         await historyStore.init();
         await downloadStore.init();
+        appVersion = await getVersion(); // #20: dynamic version
         isInitialized = true;
       } catch (e) {
         console.error('Failed to initialize app stores:', e);
@@ -91,7 +94,7 @@
       </nav>
       
       <div class="sidebar-footer">
-        <a href="/about" class="about-link" class:active={page.url.pathname === '/about'}>v1.0.0</a>
+        <a href="/about" class="about-link" class:active={page.url.pathname === '/about'}>v{appVersion}</a>
       </div>
     </aside>
 

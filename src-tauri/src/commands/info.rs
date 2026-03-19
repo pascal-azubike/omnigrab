@@ -2,11 +2,8 @@ use crate::{Format, PlaylistEntry, PlaylistInfo, VideoInfo};
 use tauri::AppHandle;
 use tauri_plugin_shell::ShellExt;
 
-pub fn map_yt_dlp_error_pub(stderr: &str) -> String {
-    map_yt_dlp_error(stderr)
-}
-
-fn map_yt_dlp_error(stderr: &str) -> String {
+// #9: Made pub directly — removed the trivial `map_yt_dlp_error_pub` wrapper
+pub fn map_yt_dlp_error(stderr: &str) -> String {
     if stderr.contains("Sign in to confirm") || stderr.contains("bot") {
         return "YouTube requires authentication. Go to Settings → Authentication and import your browser cookies.".to_string();
     }
@@ -124,18 +121,23 @@ pub async fn get_playlist_info(app: AppHandle, url: String) -> Result<PlaylistIn
         return Err("No playlist data returned. The URL may not be a playlist.".to_string());
     }
 
-    // First line is the playlist metadata, rest are entries
-    let meta: serde_json::Value =
-        serde_json::from_str(lines[0]).map_err(|e| format!("JSON parse error: {}", e))?;
+    // #11: Find the playlist metadata by _type field — not by assuming position 0
+    let meta: serde_json::Value = lines
+        .iter()
+        .filter_map(|l| serde_json::from_str(l).ok())
+        .find(|v: &serde_json::Value| v["_type"].as_str() == Some("playlist"))
+        .unwrap_or_else(|| {
+            serde_json::from_str(lines[0]).unwrap_or(serde_json::Value::Null)
+        });
 
+    // #11: Only include actual video entries (not the playlist object itself)
     let entries: Vec<PlaylistEntry> = lines
         .iter()
         .enumerate()
         .filter_map(|(i, line)| {
             let entry: serde_json::Value = serde_json::from_str(line).ok()?;
-            // Skip the top-level playlist object (has _type: "playlist")
             if entry["_type"].as_str() == Some("playlist") {
-                return None;
+                return None; // skip the top-level playlist object
             }
             Some(PlaylistEntry {
                 index: (i as u64) + 1,
@@ -174,43 +176,37 @@ pub async fn get_playlist_info(app: AppHandle, url: String) -> Result<PlaylistIn
     })
 }
 
+// #10: Platform detection using a lookup table — eliminating the long if/else chain
 pub fn extract_platform(url: &str) -> String {
     let url_lower = url.to_lowercase();
-    if url_lower.contains("youtube.com") || url_lower.contains("youtu.be") {
-        "YouTube".to_string()
-    } else if url_lower.contains("tiktok.com") {
-        "TikTok".to_string()
-    } else if url_lower.contains("instagram.com") {
-        "Instagram".to_string()
-    } else if url_lower.contains("twitter.com") || url_lower.contains("x.com") {
-        "Twitter/X".to_string()
-    } else if url_lower.contains("facebook.com") || url_lower.contains("fb.com") {
-        "Facebook".to_string()
-    } else if url_lower.contains("reddit.com") {
-        "Reddit".to_string()
-    } else if url_lower.contains("vimeo.com") {
-        "Vimeo".to_string()
-    } else if url_lower.contains("twitch.tv") {
-        "Twitch".to_string()
-    } else if url_lower.contains("soundcloud.com") {
-        "SoundCloud".to_string()
-    } else if url_lower.contains("bandcamp.com") {
-        "Bandcamp".to_string()
-    } else if url_lower.contains("dailymotion.com") {
-        "Dailymotion".to_string()
-    } else if url_lower.contains("bilibili.com") {
-        "Bilibili".to_string()
-    } else if url_lower.contains("rumble.com") {
-        "Rumble".to_string()
-    } else if url_lower.contains("odysee.com") {
-        "Odysee".to_string()
-    } else if url_lower.contains("pinterest.com") {
-        "Pinterest".to_string()
-    } else if url_lower.contains("nicovideo.jp") {
-        "Niconico".to_string()
-    } else if url_lower.contains("vk.com") {
-        "VK".to_string()
-    } else {
-        "Unknown".to_string()
-    }
+
+    // Ordered by frequency of use for slight performance benefit
+    let platforms: &[(&str, &str)] = &[
+        ("youtube.com",    "YouTube"),
+        ("youtu.be",       "YouTube"),
+        ("tiktok.com",     "TikTok"),
+        ("instagram.com",  "Instagram"),
+        ("twitter.com",    "Twitter/X"),
+        ("x.com",          "Twitter/X"),
+        ("facebook.com",   "Facebook"),
+        ("fb.com",         "Facebook"),
+        ("reddit.com",     "Reddit"),
+        ("vimeo.com",      "Vimeo"),
+        ("twitch.tv",      "Twitch"),
+        ("soundcloud.com", "SoundCloud"),
+        ("bandcamp.com",   "Bandcamp"),
+        ("dailymotion.com","Dailymotion"),
+        ("bilibili.com",   "Bilibili"),
+        ("rumble.com",     "Rumble"),
+        ("odysee.com",     "Odysee"),
+        ("pinterest.com",  "Pinterest"),
+        ("nicovideo.jp",   "Niconico"),
+        ("vk.com",         "VK"),
+    ];
+
+    platforms
+        .iter()
+        .find(|(domain, _)| url_lower.contains(domain))
+        .map(|(_, name)| name.to_string())
+        .unwrap_or_else(|| "Unknown".to_string())
 }

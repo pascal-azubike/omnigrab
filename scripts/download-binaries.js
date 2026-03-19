@@ -111,6 +111,20 @@ function fetchJson(url) {
   });
 }
 
+// #28: Retry wrapper — 3 attempts with exponential backoff
+async function withRetry(fn, retries = 3, delay = 1000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (attempt === retries) throw err;
+      console.warn(`  ⚠ Attempt ${attempt} failed, retrying in ${delay}ms...`);
+      await new Promise(r => setTimeout(r, delay));
+      delay *= 2; // exponential backoff
+    }
+  }
+}
+
 function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
     const file = createWriteStream(dest);
@@ -166,7 +180,8 @@ async function downloadYtDlp() {
     }
 
     console.log(`  ⬇ Downloading ${destName} from ${asset.browser_download_url}`);
-    await downloadFile(asset.browser_download_url, destPath);
+    // #28: wrap download in retry logic
+    await withRetry(() => downloadFile(asset.browser_download_url, destPath));
 
     // Make executable on Unix
     if (!target.ext) {
@@ -192,13 +207,13 @@ async function downloadFfmpeg() {
     
     const tmpPath = path.join(BINARIES_DIR, `_tmp_ffmpeg_${target.triple}`);
     try {
-      await downloadFile(target.url, tmpPath);
+      // #28: wrap ffmpeg download in retry logic
+      await withRetry(() => downloadFile(target.url, tmpPath));
       
       if (target.isZip) {
         console.log(`  📂 Extracting from ZIP...`);
         if (process.platform === 'win32') {
           execSync(`powershell -Command "Expand-Archive -Path '${tmpPath}' -DestinationPath '${BINARIES_DIR}' -Force"`);
-          // Note: Expand-Archive extracts the folder. We need to move the binary.
           const extractedPath = path.join(BINARIES_DIR, target.zipPath);
           if (fs.existsSync(extractedPath)) {
             fs.renameSync(extractedPath, destPath);
@@ -212,10 +227,12 @@ async function downloadFfmpeg() {
         }
       } else {
         console.log(`  📂 Extracting from tar.xz...`);
-        execSync(`tar -xJf "${tmpPath}" --strip-components=2 -C "${BINARIES_DIR}"`);
-        // The binary name might be different (e.g., just 'ffmpeg'). Rename to destName.
-        const extractedBinary = path.join(BINARIES_DIR, target.binary);
+        // #27: Extract the specific file by its internal path, not by strip-components
+        execSync(`tar -xJf "${tmpPath}" -C "${BINARIES_DIR}" "${target.tarPath}"`);
+        const extractedBinary = path.join(BINARIES_DIR, target.tarPath);
         if (fs.existsSync(extractedBinary) && extractedBinary !== destPath) {
+          // Move from nested path to flat destPath
+          fs.mkdirSync(path.dirname(destPath), { recursive: true });
           fs.renameSync(extractedBinary, destPath);
         }
       }

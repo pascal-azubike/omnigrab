@@ -13,6 +13,7 @@
   import SiteLogos from '$lib/components/SiteLogos.svelte';
   
   import type { VideoInfo, PlaylistInfo } from '$lib/types.js';
+  import { detectPlatform } from '$lib/utils/platform.js';
 
   let url = $state('');
   let loading = $state(false);
@@ -55,8 +56,8 @@
       } else {
         videoInfo = await invoke<VideoInfo>('get_video_info', { url: urlVal });
       }
-    } catch (err: any) {
-      error = err.toString();
+    } catch (err: unknown) {
+      error = err as string; // #19: invoke errors are already strings
     } finally {
       loading = false;
     }
@@ -164,7 +165,7 @@
       url: url,
       title: playlistInfo.playlist_title,
       thumbnail: playlistInfo.playlist_thumbnail,
-      platform: videoInfo?.platform || 'Unknown',
+      platform: videoInfo?.platform ?? detectPlatform(url)?.name ?? 'Unknown', // #18: derive from URL when videoInfo is not loaded
       format,
       quality,
       outputPath,

@@ -17,7 +17,11 @@ export interface HistoryItem {
 }
 
 const STORE_KEY = 'download_history';
+// #16: Named constant — max history items before oldest are trimmed
 const MAX_HISTORY = 500;
+
+// #15: Debounce timer to batch disk writes (avoids writing on every addItem/removeItem)
+let persistTimer: ReturnType<typeof setTimeout> | null = null;
 
 function createHistoryStore() {
   let items = $state<HistoryItem[]>([]);
@@ -38,17 +42,17 @@ function createHistoryStore() {
   async function addItem(item: HistoryItem) {
     // Avoid duplicates by ID
     items = [item, ...items.filter(i => i.id !== item.id)].slice(0, MAX_HISTORY);
-    await persist();
+    debouncedPersist();
   }
 
   async function removeItem(id: string) {
     items = items.filter(i => i.id !== id);
-    await persist();
+    debouncedPersist();
   }
 
   async function clearAll() {
     items = [];
-    await persist();
+    await persist(); // immediate flush on clear
   }
 
   function search(query: string): HistoryItem[] {
@@ -57,6 +61,12 @@ function createHistoryStore() {
     return items.filter(
       i => i.title.toLowerCase().includes(q) || i.platform.toLowerCase().includes(q)
     );
+  }
+
+  // #15: Debounce: batch multiple rapid writes into one disk write after 300ms
+  function debouncedPersist() {
+    if (persistTimer) clearTimeout(persistTimer);
+    persistTimer = setTimeout(() => persist(), 300);
   }
 
   async function persist() {

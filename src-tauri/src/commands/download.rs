@@ -1,4 +1,4 @@
-use crate::{DownloadPayload, PlaylistProgressEvent, ProgressEvent};
+use crate::{DownloadMap, DownloadPayload, DownloadStatus, PlaylistProgressEvent, ProgressEvent};
 use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_shell::ShellExt;
 
@@ -11,8 +11,10 @@ fn build_yt_dlp_args(payload: &DownloadPayload, ffmpeg_path: Option<String>) -> 
         args.push(path);
     }
 
+    let is_audio = payload.quality == "audio";
+
     // Format selector based on quality
-    if payload.quality == "audio" {
+    if is_audio {
         args.push("-x".to_string());
         args.push("--audio-format".to_string());
         args.push(payload.format.clone());
@@ -20,13 +22,13 @@ fn build_yt_dlp_args(payload: &DownloadPayload, ffmpeg_path: Option<String>) -> 
         args.push("0".to_string());
     } else {
         let format_selector = match payload.quality.as_str() {
-            "best" => "bestvideo+bestaudio/best".to_string(),
-            "2160" => "bestvideo[height<=2160]+bestaudio/best".to_string(),
-            "1080" => "bestvideo[height<=1080]+bestaudio/best".to_string(),
-            "720" => "bestvideo[height<=720]+bestaudio/best".to_string(),
-            "480" => "bestvideo[height<=480]+bestaudio/best".to_string(),
-            "360" => "bestvideo[height<=360]+bestaudio/best".to_string(),
-            _ => "bestvideo+bestaudio/best".to_string(),
+            "best"  => "bestvideo+bestaudio/best".to_string(),
+            "2160"  => "bestvideo[height<=2160]+bestaudio/best".to_string(),
+            "1080"  => "bestvideo[height<=1080]+bestaudio/best".to_string(),
+            "720"   => "bestvideo[height<=720]+bestaudio/best".to_string(),
+            "480"   => "bestvideo[height<=480]+bestaudio/best".to_string(),
+            "360"   => "bestvideo[height<=360]+bestaudio/best".to_string(),
+            _       => "bestvideo+bestaudio/best".to_string(),
         };
         args.push("-f".to_string());
         args.push(format_selector);
@@ -35,7 +37,6 @@ fn build_yt_dlp_args(payload: &DownloadPayload, ffmpeg_path: Option<String>) -> 
         if payload.format == "mp4" {
             args.push("--remux-video".to_string());
             args.push("mp4".to_string());
-            // More aggressive audio conversion for MP4
             args.push("--postprocessor-args".to_string());
             args.push("ffmpeg: -c:a aac -b:a 192k".to_string());
         } else if payload.format == "mkv" {
@@ -46,10 +47,7 @@ fn build_yt_dlp_args(payload: &DownloadPayload, ffmpeg_path: Option<String>) -> 
 
     // Output template
     args.push("-o".to_string());
-    args.push(format!(
-        "{}/%(title)s.%(ext)s",
-        payload.output_path
-    ));
+    args.push(format!("{}/%(title)s.%(ext)s", payload.output_path));
 
     // Progress output
     args.push("--newline".to_string());
@@ -101,9 +99,11 @@ fn build_yt_dlp_args(payload: &DownloadPayload, ffmpeg_path: Option<String>) -> 
         args.push("--no-playlist".to_string());
     }
 
-    // Sleep interval to avoid rate limiting
-    args.push("--sleep-interval".to_string());
-    args.push("3".to_string());
+    // #7: Only add sleep interval for video/playlist downloads, not audio-only
+    if !is_audio && payload.is_playlist {
+        args.push("--sleep-interval".to_string());
+        args.push("2".to_string());
+    }
 
     // No warnings in output
     args.push("--no-warnings".to_string());
@@ -135,6 +135,11 @@ fn parse_progress_line(line: &str) -> Option<(f64, u64, u64, String, String)> {
     Some((percent, downloaded_bytes, total_bytes, speed, eta))
 }
 
+/// #8: Safe emit helper — silently ignores errors from closed windows
+fn safe_emit(app: &AppHandle, event: &str, payload: impl serde::Serialize + Clone) {
+    let _ = app.emit(event, payload);
+}
+
 #[tauri::command]
 pub async fn start_download(
     app: AppHandle,
@@ -145,13 +150,11 @@ pub async fn start_download(
     // Attempt to find ffmpeg path to pass to yt-dlp
     let mut ffmpeg_path = None;
     
-    // In Tauri 2, we can try to find the sidecar path
     #[cfg(desktop)]
     {
         use tauri::path::BaseDirectory;
-        let triples = ["ffmpeg-x86_64-pc-windows-msvc.exe", "ffmpeg.exe", "ffmpeg"];
-        
-        for target in triples {
+        // Try standard sidecar resource locations
+        for target in &["ffmpeg", "ffmpeg.exe"] {
             if let Ok(path) = app.path().resolve(target, BaseDirectory::Resource) {
                 if path.exists() {
                     ffmpeg_path = Some(path.to_string_lossy().to_string());
@@ -160,13 +163,16 @@ pub async fn start_download(
             }
         }
 
-        // Fallback: check current exe dir
+        // Fallback: check sibling of current exe
         if ffmpeg_path.is_none() {
             if let Ok(exe_path) = std::env::current_exe() {
                 if let Some(parent) = exe_path.parent() {
-                    let p = parent.join("ffmpeg.exe");
-                    if p.exists() {
-                        ffmpeg_path = Some(p.to_string_lossy().to_string());
+                    for name in &["ffmpeg", "ffmpeg.exe"] {
+                        let p = parent.join(name);
+                        if p.exists() {
+                            ffmpeg_path = Some(p.to_string_lossy().to_string());
+                            break;
+                        }
                     }
                 }
             }
@@ -174,28 +180,26 @@ pub async fn start_download(
     }
 
     let args = build_yt_dlp_args(&payload, ffmpeg_path.clone());
-    
-    // DEBUG: print the command
+
     #[cfg(debug_assertions)]
-    println!("Running yt-dlp with args: {:?}", args);
-    #[cfg(debug_assertions)]
-    println!("FFmpeg path detected: {:?}", ffmpeg_path);
+    {
+        println!("Running yt-dlp with args: {:?}", args);
+        println!("FFmpeg path detected: {:?}", ffmpeg_path);
+    }
+
     let is_playlist = payload.is_playlist;
 
     // Emit queued status
-    let _ = app.emit(
-        "download:progress",
-        ProgressEvent {
-            id: download_id.clone(),
-            percent: 0.0,
-            speed: "0 B/s".to_string(),
-            eta: "--".to_string(),
-            downloaded_bytes: 0,
-            total_bytes: 0,
-            current_title: String::new(),
-            status: "downloading".to_string(),
-        },
-    );
+    safe_emit(&app, "download:progress", ProgressEvent {
+        id: download_id.clone(),
+        percent: 0.0,
+        speed: "0 B/s".to_string(),
+        eta: "--".to_string(),
+        downloaded_bytes: 0,
+        total_bytes: 0,
+        current_title: String::new(),
+        status: DownloadStatus::Downloading,
+    });
 
     let (mut rx, child) = app
         .shell()
@@ -207,8 +211,8 @@ pub async fn start_download(
 
     // Store child process
     {
-        let state = app.state::<crate::DownloadMap>();
-        let mut map = state.lock().map_err(|e| e.to_string())?;
+        let state = app.state::<DownloadMap>();
+        let mut map = state.lock().await; // #1: async lock
         map.insert(download_id.clone(), child);
     }
 
@@ -222,7 +226,8 @@ pub async fn start_download(
 
         let mut current_title = String::new();
         let mut had_error = false;
-        let mut error_msg = String::new();
+        // #6: Accumulate ALL stderr lines, not just the last
+        let mut stderr_lines: Vec<String> = Vec::new();
 
         while let Some(event) = rx.recv().await {
             match event {
@@ -242,7 +247,6 @@ pub async fn start_download(
 
                     // Capture current video title
                     if line_str.starts_with("[download] Destination:") {
-                        // Extract filename as title approximation
                         if let Some(name) = line_str.split("Destination: ").nth(1) {
                             current_title = name.trim().to_string();
                         }
@@ -258,59 +262,51 @@ pub async fn start_download(
                             current_title.clone()
                         };
 
-                        let _ = app_clone.emit(
-                            "download:progress",
-                            ProgressEvent {
-                                id: id_clone.clone(),
-                                percent,
-                                speed,
-                                eta,
-                                downloaded_bytes: dl_bytes,
-                                total_bytes,
-                                current_title: title.clone(),
-                                status: "downloading".to_string(),
-                            },
-                        );
+                        safe_emit(&app_clone, "download:progress", ProgressEvent {
+                            id: id_clone.clone(),
+                            percent,
+                            speed,
+                            eta,
+                            downloaded_bytes: dl_bytes,
+                            total_bytes,
+                            current_title: title.clone(),
+                            status: DownloadStatus::Downloading,
+                        });
 
                         if is_playlist && playlist_index > 0 {
-                            let _ = app_clone.emit(
-                                "download:playlist-progress",
-                                PlaylistProgressEvent {
-                                    id: id_clone.clone(),
-                                    current_index: playlist_index,
-                                    total_count: 0, // Will be updated from frontend
-                                    current_title: title,
-                                },
-                            );
+                            safe_emit(&app_clone, "download:playlist-progress", PlaylistProgressEvent {
+                                id: id_clone.clone(),
+                                current_index: playlist_index,
+                                total_count: 0,
+                                current_title: title,
+                            });
                         }
                     }
 
                     // Processing / merging
                     if line_str.contains("[Merger]") || line_str.contains("[ffmpeg]") {
-                        let _ = app_clone.emit(
-                            "download:progress",
-                            ProgressEvent {
-                                id: id_clone.clone(),
-                                percent: 100.0,
-                                speed: String::new(),
-                                eta: String::new(),
-                                downloaded_bytes: 0,
-                                total_bytes: 0,
-                                current_title: current_title.clone(),
-                                status: "processing".to_string(),
-                            },
-                        );
+                        safe_emit(&app_clone, "download:progress", ProgressEvent {
+                            id: id_clone.clone(),
+                            percent: 100.0,
+                            speed: String::new(),
+                            eta: String::new(),
+                            downloaded_bytes: 0,
+                            total_bytes: 0,
+                            current_title: current_title.clone(),
+                            status: DownloadStatus::Processing,
+                        });
                     }
                 }
                 CommandEvent::Stderr(line) => {
                     let line_str = String::from_utf8_lossy(&line).to_string();
                     if !line_str.trim().is_empty() {
-                        error_msg = line_str;
+                        // #6: Accumulate all stderr lines
+                        stderr_lines.push(line_str);
                     }
                 }
                 CommandEvent::Error(e) => {
                     had_error = true;
-                    error_msg = e;
+                    stderr_lines.push(e);
                     break;
                 }
                 CommandEvent::Terminated(status) => {
@@ -322,40 +318,49 @@ pub async fn start_download(
         }
 
         // Remove from active downloads
-        if let Ok(mut map) = app_clone.state::<crate::DownloadMap>().lock() {
+        {
+            let state = app_clone.state::<DownloadMap>();
+            let mut map = state.lock().await; // #1: async lock
             map.remove(&id_clone);
         }
 
+        // #6: Find the most meaningful error from accumulated stderr
+        let error_msg = if had_error {
+            // Prefer lines that look like actual errors (not progress noise)
+            stderr_lines.iter()
+                .rev()
+                .find(|l| l.contains("ERROR") || l.contains("error") || l.contains("WARNING"))
+                .or_else(|| stderr_lines.last())
+                .cloned()
+                .unwrap_or_default()
+        } else {
+            String::new()
+        };
+
         // Emit final status
         if had_error {
-            let user_error = crate::commands::info::map_yt_dlp_error_pub(&error_msg);
-            let _ = app_clone.emit(
-                "download:progress",
-                ProgressEvent {
-                    id: id_clone.clone(),
-                    percent: 0.0,
-                    speed: String::new(),
-                    eta: String::new(),
-                    downloaded_bytes: 0,
-                    total_bytes: 0,
-                    current_title: user_error,
-                    status: "error".to_string(),
-                },
-            );
+            let user_error = crate::commands::info::map_yt_dlp_error(&error_msg);
+            safe_emit(&app_clone, "download:progress", ProgressEvent {
+                id: id_clone.clone(),
+                percent: 0.0,
+                speed: String::new(),
+                eta: String::new(),
+                downloaded_bytes: 0,
+                total_bytes: 0,
+                current_title: user_error,
+                status: DownloadStatus::Error,
+            });
         } else {
-            let _ = app_clone.emit(
-                "download:progress",
-                ProgressEvent {
-                    id: id_clone.clone(),
-                    percent: 100.0,
-                    speed: String::new(),
-                    eta: String::new(),
-                    downloaded_bytes: 0,
-                    total_bytes: 0,
-                    current_title: String::new(),
-                    status: "complete".to_string(),
-                },
-            );
+            safe_emit(&app_clone, "download:progress", ProgressEvent {
+                id: id_clone.clone(),
+                percent: 100.0,
+                speed: String::new(),
+                eta: String::new(),
+                downloaded_bytes: 0,
+                total_bytes: 0,
+                current_title: String::new(),
+                status: DownloadStatus::Complete,
+            });
         }
     });
 
@@ -367,11 +372,11 @@ pub async fn cancel_download(
     app: AppHandle,
     download_id: String,
 ) -> Result<(), String> {
-    let state = app.state::<crate::DownloadMap>();
-    let mut map = state.lock().map_err(|e| e.to_string())?;
+    let state = app.state::<DownloadMap>();
+    let mut map = state.lock().await; // #1: async lock
     if let Some(child) = map.remove(&download_id) {
         child.kill().map_err(|e| e.to_string())?;
     }
-    let _ = app.emit("download:cancelled", serde_json::json!({ "id": download_id }));
+    safe_emit(&app, "download:cancelled", serde_json::json!({ "id": download_id }));
     Ok(())
 }

@@ -38,27 +38,60 @@ jobs:
       - name: download sidecars
         run: node scripts/download-binaries.js
 
-      - name: debug sidecars
-        run: ls -R src-tauri/
-
       - name: install dependencies
         run: npm ci
 
-      - name: initialize android if missing
+      - name: initialize android
         run: |
           if [ ! -d "src-tauri/gen/android" ]; then
             yes | npx tauri android init
           fi
 
       - name: build android app (.apk)
-        # --target restricts which ABIs are compiled by the Tauri CLI
-        # aarch64 = arm64-v8a (modern phones), x86_64 = emulators/Chromebooks
-        # Excludes armv7 and x86 because no static FFmpeg binaries exist for them
+        # --target restricts ABIs to arm64-v8a and x86_64 only (armv7/x86 have no static FFmpeg)
         run: npx tauri android build --target aarch64 --target x86_64
+
+      - name: sign APK (aarch64)
+        run: |
+          # Generate a self-signed keystore for distribution signing
+          keytool -genkeypair \
+            -alias omnigrab \
+            -keypass omnigrab123 \
+            -keystore omnigrab.jks \
+            -storepass omnigrab123 \
+            -dname "CN=OmniGrab, OU=App, O=OmniGrab, L=Unknown, S=Unknown, C=US" \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000
+
+          # Sign and align the aarch64 APK
+          UNSIGNED_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*arm64*unsigned*.apk" -o -name "*aarch64*unsigned*.apk" 2>/dev/null | head -1)
+          if [ -z "$UNSIGNED_APK" ]; then
+            UNSIGNED_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*unsigned*.apk" | head -1)
+          fi
+
+          echo "Found unsigned APK: $UNSIGNED_APK"
+          ls -R src-tauri/gen/android/app/build/outputs/apk/ || true
+
+          if [ -n "$UNSIGNED_APK" ]; then
+            $ANDROID_HOME/build-tools/*/apksigner sign \
+              --ks omnigrab.jks \
+              --ks-pass pass:omnigrab123 \
+              --key-pass pass:omnigrab123 \
+              --ks-key-alias omnigrab \
+              --out OmniGrab-aarch64.apk \
+              "$UNSIGNED_APK"
+            echo "✓ Signed APK: OmniGrab-aarch64.apk"
+          else
+            echo "⚠ No unsigned APK found — listing all APK outputs:"
+            find src-tauri/gen/android/app/build/outputs -name "*.apk" || true
+          fi
 
       - name: upload release asset
         uses: softprops/action-gh-release@v2
         with:
-          files: src-tauri/gen/android/app/build/outputs/apk/**/release/*.apk
+          files: |
+            OmniGrab-aarch64.apk
+            src-tauri/gen/android/app/build/outputs/apk/**/release/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

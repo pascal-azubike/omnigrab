@@ -27,7 +27,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+          targets: aarch64-linux-android,x86_64-linux-android
 
       - name: Install NDK
         uses: nttld/setup-ndk@v1
@@ -38,21 +38,24 @@ jobs:
       - name: download sidecars
         run: node scripts/download-binaries.js
 
+      - name: debug sidecars
+        run: ls -R src-tauri/
+
       - name: install dependencies
         run: npm ci
 
       - name: initialize android if missing
         run: |
           if [ ! -d "src-tauri/gen/android" ]; then
-            npx tauri android init
+            yes | npx tauri android init
           fi
 
       - name: build android app (.apk)
-        run: npm run tauri android build -- --arch aarch64,x86_64
+        run: npx tauri android build --arch aarch64,x86_64
 
       - name: upload release asset
         uses: softprops/action-gh-release@v2
         with:
-          files: src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk
+          files: src-tauri/gen/android/app/build/outputs/apk/**/release/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

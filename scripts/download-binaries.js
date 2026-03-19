@@ -31,6 +31,7 @@ const YT_DLP_TARGETS = [
   { triple: 'x86_64-apple-darwin',          asset: 'yt-dlp_macos',          ext: ''     },
   { triple: 'aarch64-apple-darwin',         asset: 'yt-dlp_macos',          ext: ''     },
   { triple: 'aarch64-linux-android',        asset: 'yt-dlp_linux_aarch64',  ext: ''     },
+  { triple: 'x86_64-linux-android',         asset: 'yt-dlp_linux',          ext: ''     },
 ];
 
 // ffmpeg platform downloads from BtbN/FFmpeg-Builds
@@ -82,6 +83,14 @@ const FFMPEG_TARGETS = [
     ext: '',
     isZip: false,
     tarPath: 'ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg',
+  },
+  {
+    triple: 'x86_64-linux-android',
+    url: 'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz',
+    binary: 'ffmpeg',
+    ext: '',
+    isZip: false,
+    tarPath: 'ffmpeg-master-latest-linux64-gpl/bin/ffmpeg',
   },
 ];
 

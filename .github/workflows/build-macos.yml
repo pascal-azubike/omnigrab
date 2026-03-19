@@ -1,0 +1,57 @@
+name: Release macOS
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            target: aarch64-apple-darwin
+          - arch: x86_64
+            target: x86_64-apple-darwin
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+          key: macos-${{ matrix.arch }}
+
+      - name: download sidecar binaries
+        run: node scripts/download-binaries.js
+
+      - name: install frontend dependencies
+        run: npm ci
+
+      - name: build and release (${{ matrix.arch }})
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: app-v__VERSION__
+          releaseName: 'OmniGrab v__VERSION__'
+          releaseBody: 'See the assets below to download and install.'
+          releaseDraft: true
+          prerelease: false
+          args: --target ${{ matrix.target }}

@@ -1,0 +1,103 @@
+﻿
+> tauri-app@0.1.0 check
+> svelte-kit sync && svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: c:\Users\pascal\Desktop\youyube downloader
+Getting Svelte diagnostics...
+
+c:\Users\pascal\Desktop\youyube downloader\[32mvite.config.ts[39m:1:10
+[31mError[39m: '"@sveltejs/vite-plugin-svelte"' has no exported member named 'sveltekit'. Did you mean 'svelte'? 
+[36mimport { [35msveltekit[36m } from '@sveltejs/vite-plugin-svelte';
+import { defineConfig } from 'vite';[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32mvite.config.ts[39m:5:14
+[31mError[39m: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`. 
+[36m
+const host = [35mprocess[36m.env.TAURI_DEV_HOST;[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32mvite.config.ts[39m:28:7
+[31mError[39m: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`. 
+[36m    target:
+      [35mprocess[36m.env.TAURI_ENV_PLATFORM == 'windows'
+        ? 'chrome105'[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32mvite.config.ts[39m:31:14
+[31mError[39m: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`. 
+[36m        : 'safari13',
+    minify: ![35mprocess[36m.env.TAURI_ENV_DEBUG ? 'esbuild' : false,
+    sourcemap: !!process.env.TAURI_ENV_DEBUG,[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32mvite.config.ts[39m:32:18
+[31mError[39m: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`. 
+[36m    minify: !process.env.TAURI_ENV_DEBUG ? 'esbuild' : false,
+    sourcemap: !![35mprocess[36m.env.TAURI_ENV_DEBUG,
+  },[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\lib\components\HistoryItem.svelte[39m:161:5
+[33mWarn[39m: Also define the standard property 'line-clamp' for compatibility (css)
+[36m    display: -webkit-box;
+    [35m-webkit-line-clamp[36m: 2;
+    -webkit-box-orient: vertical;[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\lib\components\VideoPreview.svelte[39m:104:9
+[33mWarn[39m: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+[36m      <div class="option-group">
+        [35m<label class="option-label">Quality</label>[36m
+        <select bind:value={quality} class="input">[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\lib\components\VideoPreview.svelte[39m:114:9
+[33mWarn[39m: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+[36m      <div class="option-group">
+        [35m<label class="option-label">Format</label>[36m
+        <select bind:value={format} class="input">[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\lib\components\VideoPreview.svelte[39m:124:9
+[33mWarn[39m: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+[36m      <div class="option-group full-width">
+        [35m<label class="option-label">Save to</label>[36m
+        <div class="path-input">[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\lib\components\VideoPreview.svelte[39m:247:5
+[33mWarn[39m: Also define the standard property 'line-clamp' for compatibility (css)
+[36m    display: -webkit-box;
+    [35m-webkit-line-clamp[36m: 3;
+    -webkit-box-orient: vertical;[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\routes\+layout.svelte[39m:164:5
+[33mWarn[39m: Also define the standard property 'background-clip' for compatibility (css)
+[36m    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    [35m-webkit-background-clip[36m: text;
+    -webkit-text-fill-color: transparent;[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\routes\+layout.svelte[39m:14:11
+[31mError[39m: Argument of type '() => Promise<() => void>' is not assignable to parameter of type '() => (() => any) | Promise<never>'.
+  Type 'Promise<() => void>' is not assignable to type '(() => any) | Promise<never>'.
+    Type 'Promise<() => void>' is not assignable to type 'Promise<never>'.
+      Type '() => void' is not assignable to type 'never'. (ts)
+[36m  // Initialize all Tauri stores
+  onMount([35masync () => {[36m
+    try {[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\routes\+page.svelte[39m:250:9
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m        <div class="error-msg">{error}</div>
+        [35m<button class="btn btn-ghost btn-sm btn-icon" onclick={() => error = ''}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>[36m
+      </div>[39m
+
+c:\Users\pascal\Desktop\youyube downloader\[32msrc\routes\+page.svelte[39m:5:32
+[31mError[39m: Cannot find module 'uuid' or its corresponding type declarations. (ts)
+[36m  import { goto } from '$app/navigation';
+  import { v4 as uuidv4 } from [35m'uuid'[36m;[39m
+
+====================================
+[31msvelte-check found 7 errors and 7 warnings in 5 files
+[39m

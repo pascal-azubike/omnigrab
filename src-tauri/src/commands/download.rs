@@ -177,39 +177,41 @@ pub async fn start_download(
         return Ok("android download started natively".to_string());
     }
     
-    // Attempt to find ffmpeg path to pass to yt-dlp
-    let mut ffmpeg_path = None;
-    
-    #[cfg(desktop)]
+    #[cfg(not(target_os = "android"))]
     {
-        use tauri::path::BaseDirectory;
-        // Try standard sidecar resource locations
-        for target in &["ffmpeg", "ffmpeg.exe"] {
-            if let Ok(path) = app.path().resolve(target, BaseDirectory::Resource) {
-                if path.exists() {
-                    ffmpeg_path = Some(path.to_string_lossy().to_string());
-                    break;
+        // Attempt to find ffmpeg path to pass to yt-dlp
+        let mut ffmpeg_path = None;
+        
+        #[cfg(desktop)]
+        {
+            use tauri::path::BaseDirectory;
+            // Try standard sidecar resource locations
+            for target in &["ffmpeg", "ffmpeg.exe"] {
+                if let Ok(path) = app.path().resolve(target, BaseDirectory::Resource) {
+                    if path.exists() {
+                        ffmpeg_path = Some(path.to_string_lossy().to_string());
+                        break;
+                    }
                 }
             }
-        }
 
-        // Fallback: check sibling of current exe
-        if ffmpeg_path.is_none() {
-            if let Ok(exe_path) = std::env::current_exe() {
-                if let Some(parent) = exe_path.parent() {
-                    for name in &["ffmpeg", "ffmpeg.exe"] {
-                        let p = parent.join(name);
-                        if p.exists() {
-                            ffmpeg_path = Some(p.to_string_lossy().to_string());
-                            break;
+            // Fallback: check sibling of current exe
+            if ffmpeg_path.is_none() {
+                if let Ok(exe_path) = std::env::current_exe() {
+                    if let Some(parent) = exe_path.parent() {
+                        for name in &["ffmpeg", "ffmpeg.exe"] {
+                            let p = parent.join(name);
+                            if p.exists() {
+                                ffmpeg_path = Some(p.to_string_lossy().to_string());
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    let args = build_yt_dlp_args(&payload, ffmpeg_path.clone());
+        let args = build_yt_dlp_args(&payload, ffmpeg_path.clone());
 
     #[cfg(debug_assertions)]
     {
@@ -395,6 +397,7 @@ pub async fn start_download(
     });
 
     Ok(download_id)
+}
 }
 
 #[tauri::command]

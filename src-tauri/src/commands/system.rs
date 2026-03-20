@@ -31,26 +31,26 @@ fn dirs_path() -> String {
 }
 
 #[tauri::command]
-pub async fn open_folder(path: String) -> Result<(), String> {
+pub async fn open_folder(_path: String) -> Result<(), String> {
     // Use the OS to open the folder
     #[cfg(target_os = "windows")]
     {
         std::process::Command::new("explorer")
-            .arg(&path)
+            .arg(&_path)
             .spawn()
             .map_err(|e| e.to_string())?;
     }
     #[cfg(target_os = "macos")]
     {
         std::process::Command::new("open")
-            .arg(&path)
+            .arg(&_path)
             .spawn()
             .map_err(|e| e.to_string())?;
     }
     #[cfg(target_os = "linux")]
     {
         std::process::Command::new("xdg-open")
-            .arg(&path)
+            .arg(&_path)
             .spawn()
             .map_err(|e| e.to_string())?;
     }

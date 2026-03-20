@@ -32,23 +32,36 @@ class DownloadArgs {
 class OmnigrabYtdlPlugin(private val activity: Activity): Plugin(activity) {
     private val TAG = "OmnigrabYtdl"
 
-    override fun load(webView: android.webkit.WebView) {
-        super.load(webView)
+    private var isInitialized = false
+
+    private synchronized fun ensureInit() {
+        if (isInitialized) return
         try {
-            YoutubeDL.getInstance().init(activity.application)
-            FFmpeg.getInstance().init(activity.application)
+            YoutubeDL.getInstance().init(activity)
+            FFmpeg.getInstance().init(activity)
+            isInitialized = true
             Log.i(TAG, "YoutubeDL and FFmpeg initialized successfully.")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize YoutubeDL", e)
+            Log.e(TAG, "Failed to initialize YoutubeDL/FFmpeg", e)
         }
+    }
+
+    override fun load(webView: android.webkit.WebView) {
+        super.load(webView)
+        ensureInit()
     }
 
     @Command
     fun getVideoInfo(invoke: Invoke) {
+        ensureInit()
         val args = invoke.parseArgs(VideoInfoArgs::class.java)
         
         Thread {
             try {
+                if (!isInitialized) {
+                    invoke.reject("YoutubeDL instance not successfully initialized")
+                    return@Thread
+                }
                 val request = YoutubeDLRequest(args.url)
                 request.addOption("--dump-json")
                 request.addOption("--no-playlist")
@@ -68,10 +81,15 @@ class OmnigrabYtdlPlugin(private val activity: Activity): Plugin(activity) {
 
     @Command
     fun startDownload(invoke: Invoke) {
+        ensureInit()
         val args = invoke.parseArgs(DownloadArgs::class.java)
         
         Thread {
             try {
+                if (!isInitialized) {
+                    invoke.reject("YoutubeDL instance not successfully initialized")
+                    return@Thread
+                }
                 val request = YoutubeDLRequest(args.url)
                 request.addOption("-o", args.outputPath)
                 request.addOption("-f", args.format)

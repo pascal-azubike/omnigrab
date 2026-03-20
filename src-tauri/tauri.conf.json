@@ -38,8 +38,8 @@
       "icons/icon.ico"
     ],
     "externalBin": [
-      "yt-dlp",
-      "ffmpeg"
+      "binaries/yt-dlp",
+      "binaries/ffmpeg"
     ]
   },
   "plugins": {

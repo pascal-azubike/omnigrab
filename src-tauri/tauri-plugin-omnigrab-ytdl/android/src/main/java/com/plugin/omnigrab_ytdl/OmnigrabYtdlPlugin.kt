@@ -33,18 +33,18 @@ class OmnigrabYtdlPlugin(private val activity: Activity): Plugin(activity) {
     private val TAG = "OmnigrabYtdl"
 
     private var isInitialized = false
+    private var lastInitError: String? = null
 
-    private fun ensureInit() {
-        synchronized(this) {
-            if (isInitialized) return
-            try {
-                YoutubeDL.getInstance().init(activity)
-                FFmpeg.getInstance().init(activity)
-                isInitialized = true
-                Log.i(TAG, "YoutubeDL and FFmpeg initialized successfully.")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize YoutubeDL/FFmpeg", e)
-            }
+    private synchronized fun ensureInit() {
+        if (isInitialized) return
+        try {
+            YoutubeDL.getInstance().init(activity.application)
+            FFmpeg.getInstance().init(activity.application)
+            isInitialized = true
+            Log.i(TAG, "YoutubeDL and FFmpeg initialized successfully.")
+        } catch (e: Exception) {
+            lastInitError = e.message ?: e.toString()
+            Log.e(TAG, "Failed to initialize YoutubeDL/FFmpeg: $lastInitError", e)
         }
     }
 
@@ -61,7 +61,7 @@ class OmnigrabYtdlPlugin(private val activity: Activity): Plugin(activity) {
         Thread {
             try {
                 if (!isInitialized) {
-                    invoke.reject("YoutubeDL instance not successfully initialized")
+                    invoke.reject("YoutubeDL instance not successfully initialized: $lastInitError")
                     return@Thread
                 }
                 val request = YoutubeDLRequest(args.url)
@@ -89,7 +89,7 @@ class OmnigrabYtdlPlugin(private val activity: Activity): Plugin(activity) {
         Thread {
             try {
                 if (!isInitialized) {
-                    invoke.reject("YoutubeDL instance not successfully initialized")
+                    invoke.reject("YoutubeDL instance not successfully initialized: $lastInitError")
                     return@Thread
                 }
                 val request = YoutubeDLRequest(args.url)

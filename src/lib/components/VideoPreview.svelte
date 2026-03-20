@@ -16,7 +16,7 @@
     onOutputChange: (p: string) => void;
     onOptionChange: (key: string, val: boolean | string) => void;
     onDownload: () => void;
-    onBrowse?: () => void;
+    onBrowse: () => void;
   }
 
   let {
@@ -127,12 +127,10 @@
             bind:value={outputPath}
             type="text"
             class="input"
-            placeholder="Enter download path..."
-            readonly={!onBrowse}
+            placeholder="Select output folder..."
+            readonly
           />
-          {#if onBrowse}
-            <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
-          {/if}
+          <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
         </div>
       </div>
     </div>

@@ -96,16 +96,29 @@ const FFMPEG_TARGETS = [
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, {
-      headers: { 'User-Agent': 'OmniGrab-BinaryDownloader/1.0' }
-    }, (res) => {
+    const headers = { 'User-Agent': 'OmniGrab-BinaryDownloader/1.0' };
+    if (process.env.GITHUB_TOKEN) {
+      headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+    }
+
+    https.get(url, { headers }, (res) => {
       if (res.statusCode === 302 || res.statusCode === 301) {
         return fetchJson(res.headers.location).then(resolve).catch(reject);
       }
+      
+      if (res.statusCode !== 200) {
+        return reject(new Error(`GitHub API returned ${res.statusCode} for ${url}. ${res.statusCode === 403 ? 'Rate limit exceeded.' : ''}`));
+      }
+
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
-        try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
+        try {
+          const parsed = JSON.parse(data);
+          resolve(parsed);
+        } catch (e) {
+          reject(new Error(`Failed to parse JSON response from ${url}: ${e.message}`));
+        }
       });
     }).on('error', reject);
   });

@@ -37,6 +37,8 @@ jobs:
 
       - name: download sidecars
         run: node scripts/download-binaries.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: install dependencies
         run: npm ci

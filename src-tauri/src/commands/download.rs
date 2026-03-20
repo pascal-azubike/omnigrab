@@ -1,7 +1,13 @@
+#[cfg(not(target_os = "android"))]
 use crate::{DownloadMap, DownloadPayload, DownloadStatus, PlaylistProgressEvent, ProgressEvent};
-use tauri::{AppHandle, Emitter, Manager};
-use tauri_plugin_shell::ShellExt;
+#[cfg(target_os = "android")]
+use crate::{DownloadMap, DownloadPayload, DownloadStatus, ProgressEvent};
 
+#[cfg(not(target_os = "android"))]
+use tauri_plugin_shell::ShellExt;
+use tauri::{AppHandle, Emitter, Manager};
+
+#[cfg(not(target_os = "android"))]
 fn build_yt_dlp_args(payload: &DownloadPayload, ffmpeg_path: Option<String>) -> Vec<String> {
     let mut args: Vec<String> = Vec::new();
 
@@ -114,6 +120,7 @@ fn build_yt_dlp_args(payload: &DownloadPayload, ffmpeg_path: Option<String>) -> 
     args
 }
 
+#[cfg(not(target_os = "android"))]
 fn parse_progress_line(line: &str) -> Option<(f64, u64, u64, String, String)> {
     if !line.starts_with("PROG|") {
         return None;

@@ -11,7 +11,7 @@ import app.tauri.plugin.Invoke
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
 import com.yausername.youtubedl_android.YoutubeDLRequest
-import com.yausername.ffmpeg_android.FFmpeg
+import com.yausername.youtubedl_android.ffmpeg.FFmpeg
 
 @InvokeArg
 class VideoInfoArgs {

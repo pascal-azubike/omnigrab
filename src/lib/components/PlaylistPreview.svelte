@@ -12,7 +12,7 @@
     onSelectAll: () => void;
     onDeselectAll: () => void;
     onDownload: (selected: number[]) => void;
-    onBrowse: () => void;
+    onBrowse?: () => void;
   }
 
   let {
@@ -82,9 +82,11 @@
       </div>
 
       <div class="path-input">
-        <input bind:value={outputPath} type="text" class="input" readonly placeholder="Output folder..." />
-        <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
-      </div>
+        <input bind:value={outputPath} type="text" class="input" readonly={!onBrowse} placeholder="Output folder..." />
+          {#if onBrowse}
+            <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
+          {/if}
+        </div>
     </div>
 
     <!-- Selection controls -->

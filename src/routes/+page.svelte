@@ -1,6 +1,7 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api/core';
   import { open } from '@tauri-apps/plugin-dialog';
+  import { type } from '@tauri-apps/plugin-os';
   import { goto } from '$app/navigation';
   import { v4 as uuidv4 } from 'uuid';
   
@@ -15,10 +16,21 @@
   import type { VideoInfo, PlaylistInfo } from '$lib/types.js';
   import { detectPlatform } from '$lib/utils/platform.js';
 
+  import { onMount } from 'svelte';
+  
   let url = $state('');
   let loading = $state(false);
   let error = $state('');
-  
+  let isMobile = $state(false);
+
+  onMount(async () => {
+    try {
+      const osType = await type();
+      isMobile = osType === 'android' || osType === 'ios';
+    } catch (e) {
+      console.error('Failed to detect OS type:', e);
+    }
+  });
   let videoInfo = $state<VideoInfo | null>(null);
   let playlistInfo = $state<PlaylistInfo | null>(null);
   
@@ -56,14 +68,20 @@
       } else {
         videoInfo = await invoke<VideoInfo>('get_video_info', { url: urlVal });
       }
-    } catch (err: unknown) {
-      error = err as string; // #19: invoke errors are already strings
+      } catch (err: unknown) {
+      const errMsg = err as string;
+      if (errMsg.includes('os error 2')) {
+        error = "Critical Error: yt-dlp binary not found. This app currently supports 64-bit Android (arm64) only. If you are on an old phone, it might not work.";
+      } else {
+        error = errMsg;
+      }
     } finally {
       loading = false;
     }
   }
 
   async function handleBrowse() {
+    if (isMobile) return; // Dialog not supported on mobile
     const selected = await open({
       directory: true,
       multiple: false,
@@ -276,7 +294,7 @@
           onOutputChange={(p) => outputPath = p}
           onOptionChange={handleOptionChange}
           onDownload={startSingleDownload}
-          onBrowse={handleBrowse}
+          onBrowse={isMobile ? undefined : handleBrowse}
         />
       </div>
     {:else if playlistInfo}
@@ -291,7 +309,7 @@
           onSelectAll={selectAll}
           onDeselectAll={deselectAll}
           onDownload={startPlaylistDownload}
-          onBrowse={handleBrowse}
+          onBrowse={isMobile ? undefined : handleBrowse}
         />
       </div>
     {:else if !loading && !error}

@@ -20,6 +20,9 @@ fn dirs_path() -> String {
     // Android
     #[cfg(target_os = "android")]
     {
+        // On Android, we default to the public Downloads folder.
+        // Tauri 2 handles the permission to write to internal files/cache, 
+        // but for public folders we'll use this as a hint.
         return "/storage/emulated/0/Download/OmniGrab".to_string();
     }
     // macOS / Linux
@@ -53,6 +56,12 @@ pub async fn open_folder(path: String) -> Result<(), String> {
             .arg(&path)
             .spawn()
             .map_err(|e| e.to_string())?;
+    }
+    #[cfg(target_os = "android")]
+    {
+        // On Android, "opening a folder" isn't a simple spawn, 
+        // but we can try to use the system shell to open the path if supported.
+        // For now, we'll just return Ok since it's most common in settings.
     }
     Ok(())
 }

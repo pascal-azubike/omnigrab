@@ -14,7 +14,7 @@ import { fileURLToPath } from 'url';
 import { createWriteStream } from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const BINARIES_DIR = path.join(__dirname, '..', 'src-tauri');
+const BINARIES_DIR = path.join(__dirname, '..', 'src-tauri', 'binaries');
 
 // Ensure the directory exists (though it should as it's the root of src-tauri)
 if (!fs.existsSync(BINARIES_DIR)) {

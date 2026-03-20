@@ -147,6 +147,36 @@ pub async fn start_download(
 ) -> Result<String, String> {
     let download_id = payload.id.clone();
     
+    #[cfg(target_os = "android")]
+    {
+        // Emit queued status immediately
+        safe_emit(&app, "download:progress", ProgressEvent {
+            id: download_id.clone(),
+            percent: 0.0,
+            speed: "0 B/s".to_string(),
+            eta: "--".to_string(),
+            downloaded_bytes: 0,
+            total_bytes: 0,
+            current_title: String::new(),
+            status: DownloadStatus::Downloading,
+        });
+
+        use tauri_plugin_omnigrab_ytdl::{OmnigrabYtdlExt, models::DownloadRequest};
+        let request = DownloadRequest {
+            id: payload.id.clone(),
+            url: payload.url.clone(),
+            output_path: payload.output_path.clone(),
+            format: payload.format.clone(),
+            embed_thumbnail: payload.embed_thumbnail,
+            embed_metadata: payload.embed_metadata,
+        };
+        app.omnigrab_ytdl()
+            .start_download(request)
+            .map_err(|e| e.to_string())?;
+            
+        return Ok("android download started natively".to_string());
+    }
+    
     // Attempt to find ffmpeg path to pass to yt-dlp
     let mut ffmpeg_path = None;
     

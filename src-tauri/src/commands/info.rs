@@ -36,21 +36,33 @@ pub fn map_yt_dlp_error(stderr: &str) -> String {
 
 #[tauri::command]
 pub async fn get_video_info(app: AppHandle, url: String) -> Result<VideoInfo, String> {
-    let output = app
-        .shell()
-        .sidecar("yt-dlp")
-        .map_err(|e| e.to_string())?
-        .args(["--dump-json", "--no-playlist", "--no-warnings", &url])
-        .output()
-        .await
-        .map_err(|e| e.to_string())?;
+    #[cfg(target_os = "android")]
+    let stdout = {
+        use tauri_plugin_omnigrab_ytdl::{OmnigrabYtdlExt, models::VideoInfoRequest};
+        let response = app
+            .omnigrab_ytdl()
+            .get_video_info(VideoInfoRequest { url: url.clone() })
+            .map_err(|e| e.to_string())?;
+        response.data
+    };
 
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-        return Err(map_yt_dlp_error(&stderr));
-    }
+    #[cfg(not(target_os = "android"))]
+    let stdout = {
+        let output = app
+            .shell()
+            .sidecar("yt-dlp")
+            .map_err(|e| e.to_string())?
+            .args(["--dump-json", "--no-playlist", "--no-warnings", &url])
+            .output()
+            .await
+            .map_err(|e| e.to_string())?;
 
-    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+            return Err(map_yt_dlp_error(&stderr));
+        }
+        String::from_utf8_lossy(&output.stdout).to_string()
+    };
     let json: serde_json::Value =
         serde_json::from_str(&stdout).map_err(|e| format!("JSON parse error: {}", e))?;
 

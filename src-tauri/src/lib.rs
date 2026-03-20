@@ -122,6 +122,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_omnigrab_ytdl::init())
         // #3: updater removed — pubkey was empty, would fail silently at runtime
         // Re-enable when you have a real signing key: .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![

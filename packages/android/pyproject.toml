@@ -1,0 +1,43 @@
+[tool.briefcase]
+project_name = "OmniGrab"
+bundle = "com.omnigrab"
+version = "1.0.0"
+url = "https://github.com/pascal-azubike/omnigrab"
+license = "MIT"
+author = "OmniGrab Contributors"
+author_email = "hello@omnigrab.app"
+
+[tool.briefcase.app.omnigrab-android]
+formal_name = "OmniGrab"
+description = "Download any video from any platform"
+long_description = """OmniGrab lets you download videos, audio, and playlists from 1800+
+platforms including YouTube, TikTok, Instagram, Twitter, Vimeo, Twitch and more."""
+icon = "src/omnigrab_android/resources/omnigrab"
+sources = ["src/omnigrab_android"]
+test_sources = ["tests"]
+
+requires = [
+  "fastapi>=0.115.0",
+  "uvicorn>=0.30.0",
+  "yt-dlp>=2024.1.1",
+  "aiofiles>=23.0.0",
+  "python-multipart>=0.0.9",
+]
+
+[tool.briefcase.app.omnigrab-android.android]
+requires = [
+  "toga-android>=0.4.5",
+]
+
+permissions = {
+  "android.permission.INTERNET" = true,
+  "android.permission.READ_EXTERNAL_STORAGE" = true,
+  "android.permission.WRITE_EXTERNAL_STORAGE" = true,
+  "android.permission.READ_MEDIA_VIDEO" = true,
+  "android.permission.READ_MEDIA_AUDIO" = true,
+  "android.permission.READ_MEDIA_IMAGES" = true,
+  "android.permission.FOREGROUND_SERVICE" = true,
+  "android.permission.POST_NOTIFICATIONS" = true,
+}
+
+supported_abis = ["arm64-v8a", "x86_64"]

@@ -1,17 +1,49 @@
-.DS_Store
-node_modules
-/build
-/.svelte-kit
-/package
-.env
-.env.*
-!.env.example
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-*.exe
-*.msi
-*.deb
+# ── Node / SvelteKit ──────────────────────────────────────────────
+node_modules/
+packages/ui/.svelte-kit/
+packages/ui/build/
+
+# Desktop UI build output
+packages/desktop/ui-dist/
+
+# ── Rust / Tauri ──────────────────────────────────────────────────
+packages/desktop/src-tauri/target/
+packages/desktop/src-tauri/gen/
+
+# ── Python / Briefcase ────────────────────────────────────────────
+packages/android/build/
+packages/android/dist/
+packages/android/.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+.eggs/
+
+# ── Android signing — NEVER commit these ─────────────────────────
+*.jks
+*.keystore
+*.jks.b64
+
+# ── Build outputs ─────────────────────────────────────────────────
 *.apk
-src-tauri/yt-dlp*
-src-tauri/ffmpeg*
-src-tauri/binaries/
+*.aab
+*.apks
+*.AppImage
+*.dmg
+*.exe
+bundletool.jar
+
+# ── Secrets & env ─────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+packages/android/src/omnigrab_android/settings.json
+
+# ── OS ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log

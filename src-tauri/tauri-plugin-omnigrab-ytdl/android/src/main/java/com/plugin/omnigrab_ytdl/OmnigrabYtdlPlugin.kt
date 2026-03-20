@@ -34,15 +34,17 @@ class OmnigrabYtdlPlugin(private val activity: Activity): Plugin(activity) {
 
     private var isInitialized = false
 
-    private synchronized fun ensureInit() {
-        if (isInitialized) return
-        try {
-            YoutubeDL.getInstance().init(activity)
-            FFmpeg.getInstance().init(activity)
-            isInitialized = true
-            Log.i(TAG, "YoutubeDL and FFmpeg initialized successfully.")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize YoutubeDL/FFmpeg", e)
+    private fun ensureInit() {
+        synchronized(this) {
+            if (isInitialized) return
+            try {
+                YoutubeDL.getInstance().init(activity)
+                FFmpeg.getInstance().init(activity)
+                isInitialized = true
+                Log.i(TAG, "YoutubeDL and FFmpeg initialized successfully.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to initialize YoutubeDL/FFmpeg", e)
+            }
         }
     }
 

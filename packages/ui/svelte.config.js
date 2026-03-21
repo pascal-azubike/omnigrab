@@ -5,7 +5,7 @@ import path from 'path';
 const mode = process.env.VITE_MODE || 'desktop';
 const pages = mode === 'android' 
   ? '../android/src/omnigrab_android/ui' 
-  : '../desktop/ui-dist';
+  : '../desktop/src-tauri/ui-dist';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

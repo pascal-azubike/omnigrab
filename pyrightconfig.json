@@ -1,0 +1,16 @@
+{
+  "typeCheckingMode": "standard",
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportAttributeAccessIssue": "warning",
+  "reportOptionalMemberAccess": "warning",
+  "reportPrivateImportUsage": "none",
+  "reportArgumentType": "warning",
+  "reportReturnType": "warning",
+  "venvPath": "packages/android",
+  "venv": ".venv",
+  "extraPaths": [
+    "packages/android/src",
+    "packages/android/.venv/Lib/site-packages"
+  ]
+}

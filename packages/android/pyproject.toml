@@ -1,9 +1,29 @@
+[project]
+name = "omnigrab"
+version = "1.0.0"
+description = "Download any video from any platform"
+requires-python = ">=3.9"
+dependencies = [
+    "toga-android>=0.4.5",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "yt-dlp>=2024.1.1",
+    "aiofiles>=23.0.0",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pyright",
+]
+
 [tool.briefcase]
 project_name = "OmniGrab"
 bundle = "com.omnigrab"
 version = "1.0.0"
 url = "https://github.com/pascal-azubike/omnigrab"
-license = "MIT"
+license.text = "MIT"
 author = "OmniGrab Contributors"
 author_email = "hello@omnigrab.app"
 
@@ -29,15 +49,14 @@ requires = [
   "toga-android>=0.4.5",
 ]
 
-permissions = {
-  "android.permission.INTERNET" = true,
-  "android.permission.READ_EXTERNAL_STORAGE" = true,
-  "android.permission.WRITE_EXTERNAL_STORAGE" = true,
-  "android.permission.READ_MEDIA_VIDEO" = true,
-  "android.permission.READ_MEDIA_AUDIO" = true,
-  "android.permission.READ_MEDIA_IMAGES" = true,
-  "android.permission.FOREGROUND_SERVICE" = true,
-  "android.permission.POST_NOTIFICATIONS" = true,
-}
+[tool.briefcase.app.omnigrab-android.android.permissions]
+"android.permission.INTERNET" = true
+"android.permission.READ_EXTERNAL_STORAGE" = true
+"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.READ_MEDIA_VIDEO" = true
+"android.permission.READ_MEDIA_AUDIO" = true
+"android.permission.READ_MEDIA_IMAGES" = true
+"android.permission.FOREGROUND_SERVICE" = true
+"android.permission.POST_NOTIFICATIONS" = true
 
 supported_abis = ["arm64-v8a", "x86_64"]

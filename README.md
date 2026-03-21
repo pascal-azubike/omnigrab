@@ -23,33 +23,36 @@
 - [Rust](https://rustup.rs/) (stable)
 - OS-specific build tools (C++ build tools on Windows, Xcode on macOS, build-essential on Linux)
 
-## Setup & Development
+## 📁 Monorepo Setup
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+1. **Install Root Dependencies:** `npm install`
+2. **Build Shared UI:**
+   - `cd packages/ui`
+   - `npm run build:desktop` (for Windows/Desktop)
+   - `npm run build:android` (for Android)
 
-2. **Download Sidecar Binaries (CRITICAL):**
-   Before running or building, you **must** download the `yt-dlp` and `ffmpeg` executables for your platform. A script is provided to automate this:
-   ```bash
-   node scripts/download-binaries.js
-   ```
+## 🚀 Running the App
 
-3. **Run in Development Mode:**
-   ```bash
-   npm run tauri dev
-   ```
+### Desktop (Tauri)
+- `cd packages/desktop`
+- `npm run tauri dev`
 
-## Building for Production
+### Android (Briefcase)
+- `cd packages/android`
+- `.\.venv\Scripts\Activate.ps1`
+- `python -m briefcase dev`
 
-To compile an optimized release build for your current platform:
+## 📦 Building for Production
 
-```bash
-npm run tauri build
-```
+### Desktop (Windows/Mac/Linux)
+1. Build UI: `cd packages/ui && npm run build:desktop`
+2. Build App: `cd ../desktop && npm run tauri build`
+*Extract from: `packages/desktop/src-tauri/target/release/bundle/`*
 
-The resulting installers (e.g., `.msi` for Windows, `.dmg` for macOS, `.AppImage` for Linux) will be located in `src-tauri/target/release/bundle/`.
+### Android (APK/AAB)
+1. Build UI: `cd packages/ui && npm run build:android`
+2. Build App: `cd ../android && .\.venv\Scripts\Activate.ps1 && python -m briefcase package android`
+*Extract from: `packages/android/dist/`*
 
 ## Application Architecture
 

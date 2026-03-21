@@ -1,0 +1,47 @@
+name: Linux Build
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/ui/**'
+      - 'packages/desktop/**'
+      - '.github/workflows/linux.yml'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+          
+      - name: install project dependencies
+        run: npm install
+        
+      - name: build UI
+        run: npm --prefix packages/ui run build:desktop
+        
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: packages/desktop
+          tagName: v__VERSION__
+          releaseName: 'OmniGrab v__VERSION__ (Linux)'
+          releaseBody: 'Linux version build.'
+          releaseDraft: true
+          prerelease: false

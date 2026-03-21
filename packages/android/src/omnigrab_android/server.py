@@ -55,11 +55,20 @@ def _get_download_dir() -> Path:
 @app.get("/health")
 async def health():
     try:
-        import yt_dlp
-        version = yt_dlp.version.__version__
+        from yt_dlp.version import __version__
+        version = __version__
     except Exception:
         version = "unknown"
     return {"status": "ok", "yt_dlp_version": version}
+
+
+@app.get("/config")
+async def get_config():
+    """Return backend configuration/environment info."""
+    return {
+        "download_path": str(_get_download_dir()),
+        "platform": "android",
+    }
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -88,16 +97,21 @@ async def get_info(url: str):
                 "height": f.get("height"),
                 "fps": f.get("fps"),
                 "filesize": f.get("filesize"),
+                "vcodec": f.get("vcodec"),
+                "acodec": f.get("acodec"),
+                "format_note": f.get("format_note"),
             }
             for f in info.get("formats", [])
-            if f.get("height")
         ]
         return {
+            "id": info.get("id"),
             "title": info.get("title"),
             "thumbnail": info.get("thumbnail"),
             "duration": info.get("duration"),
             "uploader": info.get("uploader"),
             "platform": info.get("extractor_key"),
+            "webpage_url": info.get("webpage_url") or url,
+            "ext": info.get("ext"),
             "is_playlist": False,
             "formats": formats,
         }
@@ -122,6 +136,7 @@ async def get_playlist(url: str):
         return {
             "playlist_title": info.get("title"),
             "playlist_uploader": info.get("uploader"),
+            "playlist_thumbnail": info.get("thumbnail"),
             "total_count": len(info.get("entries", [])),
             "entries": [
                 {
@@ -138,7 +153,7 @@ async def get_playlist(url: str):
         return JSONResponse(status_code=400, content={"error": _friendly_error(str(exc))})
 
 
-def _extract_info(url: str, opts: dict) -> dict:
+def _extract_info(url: str, opts: Any) -> Any:
     import yt_dlp
     with yt_dlp.YoutubeDL(opts) as ydl:
         return ydl.extract_info(url, download=False)
@@ -277,7 +292,7 @@ def _push_event(download_id: str, event: dict):
         pass
 
 
-def _run_download(ydl_opts: dict, url: str, download_id: str):
+def _run_download(ydl_opts: Any, url: str, download_id: str):
     """Synchronous yt-dlp download, called from a thread pool executor."""
     import yt_dlp
     try:
@@ -306,7 +321,7 @@ def _friendly_error(raw: str) -> str:
     for key, msg in checks:
         if key.lower() in raw_lower:
             return msg
-    return f"Download failed: {raw[:300]}"
+    return f"Download failed: {raw[0:300]}"  # type: ignore
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -361,7 +376,7 @@ async def cancel_download(download_id: str):
 @app.get("/history")
 async def get_history():
     dl_dir = _get_download_dir()
-    files = []
+    files: list[dict[str, Any]] = []
     for f in sorted(dl_dir.iterdir(), key=lambda x: x.stat().st_mtime, reverse=True):
         if f.is_file() and not f.name.startswith("."):
             stat = f.stat()
@@ -371,7 +386,7 @@ async def get_history():
                 "size": stat.st_size,
                 "modified": stat.st_mtime,
             })
-    return {"files": files[:100]}
+    return {"files": files[:100]}  # type: ignore
 
 
 # ──────────────────────────────────────────────────────────────────────────────

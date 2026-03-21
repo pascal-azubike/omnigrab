@@ -7,7 +7,6 @@ import threading
 import time
 import toga
 from toga.style import Pack
-from toga.style.pack import COLUMN
 
 
 SERVER_PORT = 8765
@@ -17,7 +16,7 @@ SERVER_READY_TIMEOUT = 15  # seconds
 class OmniGrabAndroid(toga.App):
     def startup(self):
         """Called by Briefcase when the app starts."""
-        self.main_window = toga.MainWindow(
+        window = toga.MainWindow(
             title="OmniGrab",
             resizable=False
         )
@@ -29,16 +28,17 @@ class OmniGrabAndroid(toga.App):
 
         main_box = toga.Box(
             children=[self.webview],
-            style=Pack(direction=COLUMN, flex=1)
+            style=Pack(direction="column", flex=1)
         )
 
-        self.main_window.content = main_box
-        self.main_window.show()
+        window.content = main_box
+        self.main_window = window
+        window.show()
 
-        # Add background task: start the FastAPI server, then load the UI
+        # Queue the async boot routine
         self.add_background_task(self._boot)
 
-    async def _boot(self, widget):
+    async def _boot(self, app: toga.App, **kwargs):
         """Start the FastAPI server in a daemon thread, then load the WebView."""
         from omnigrab_android.server import start_server
 

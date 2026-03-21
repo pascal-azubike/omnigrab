@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source:*)",
+      "Bash(python3:*)",
+      "Bash(npx pyright:*)",
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(cygpath:*)",
+      "WebSearch",
+      "Bash(npm run:*)",
+      "Bash(rm:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}

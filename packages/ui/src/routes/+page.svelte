@@ -1,28 +1,45 @@
 <script lang="ts">
-  import { invoke } from '@tauri-apps/api/core';
-  import { open } from '@tauri-apps/plugin-dialog';
   import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
   import { v4 as uuidv4 } from 'uuid';
-  
+
+  import { getPlatform } from '$lib/utils/platform';
+  import { getVideoInfo, getPlaylistInfo, startDownload, getDefaultDownloadPath } from '$lib/utils/api';
   import { settingsStore } from '$lib/stores/settings.svelte.js';
   import { downloadStore } from '$lib/stores/downloads.svelte.js';
-  
+
   import UrlInput from '$lib/components/UrlInput.svelte';
   import VideoPreview from '$lib/components/VideoPreview.svelte';
   import PlaylistPreview from '$lib/components/PlaylistPreview.svelte';
   import SiteLogos from '$lib/components/SiteLogos.svelte';
-  
+
   import type { VideoInfo, PlaylistInfo } from '$lib/types.js';
-  import { detectPlatform } from '$lib/utils/platform.js';
+
+  /** Infer a platform name from the URL hostname for playlist downloads */
+  function guessPlatform(u: string): string {
+    try {
+      const host = new URL(u).hostname.replace('www.', '');
+      if (host.includes('youtube') || host.includes('youtu.be')) return 'YouTube';
+      if (host.includes('tiktok')) return 'TikTok';
+      if (host.includes('instagram')) return 'Instagram';
+      if (host.includes('twitter') || host.includes('x.com')) return 'Twitter';
+      if (host.includes('vimeo')) return 'Vimeo';
+      if (host.includes('twitch')) return 'Twitch';
+      return host;
+    } catch {
+      return 'Unknown';
+    }
+  }
+
 
   let url = $state('');
   let loading = $state(false);
   let error = $state('');
-  
+  let isDesktop = $state(true);
+
   let videoInfo = $state<VideoInfo | null>(null);
   let playlistInfo = $state<PlaylistInfo | null>(null);
-  
-  // Local active settings for the current download
+
   let quality = $state(settingsStore.settings.defaultQuality);
   let format = $state(settingsStore.settings.defaultFormat);
   let outputPath = $state(settingsStore.settings.defaultDownloadPath);
@@ -30,11 +47,17 @@
   let embedMetadata = $state(settingsStore.settings.embedMetadata);
   let downloadSubtitles = $state(settingsStore.settings.downloadSubtitles);
   let subtitleLang = $state(settingsStore.settings.subtitleLang);
-  
-  // Playlist selection
+
   let selectedItems = $state<Set<number>>(new Set());
 
-  // Keep path synced with settings if it changes externally
+  onMount(async () => {
+    const p = await getPlatform();
+    isDesktop = p === 'desktop';
+    if (!outputPath) {
+      outputPath = await getDefaultDownloadPath();
+    }
+  });
+
   $effect(() => {
     if (!outputPath && settingsStore.settings.defaultDownloadPath) {
       outputPath = settingsStore.settings.defaultDownloadPath;
@@ -47,23 +70,26 @@
     videoInfo = null;
     playlistInfo = null;
     selectedItems = new Set();
-    
+
     try {
       if (isPlaylist) {
-        playlistInfo = await invoke<PlaylistInfo>('get_playlist_info', { url: urlVal });
-        // Auto-select all by default
+        playlistInfo = await getPlaylistInfo(urlVal);
         selectedItems = new Set(playlistInfo.entries.map((_, i) => i));
       } else {
-        videoInfo = await invoke<VideoInfo>('get_video_info', { url: urlVal });
+        videoInfo = await getVideoInfo(urlVal);
       }
     } catch (err: unknown) {
-      error = err as string; // #19: invoke errors are already strings
+      error = err instanceof Error ? err.message : String(err);
     } finally {
       loading = false;
     }
   }
 
   async function handleBrowse() {
+    // Desktop only — no filesystem picker on Android
+    if (!isDesktop) return;
+    const { open } = await import('@tauri-apps/plugin-dialog');
+    const { invoke } = await import('@tauri-apps/api/core');
     const selected = await open({
       directory: true,
       multiple: false,
@@ -72,7 +98,6 @@
     });
     if (selected && typeof selected === 'string') {
       outputPath = selected;
-      // Also update global default if changed from home page
       settingsStore.update({ defaultDownloadPath: selected });
     }
   }
@@ -92,16 +117,12 @@
       url: videoInfo.webpage_url,
       format,
       quality,
-      output_path: outputPath,
       embed_thumbnail: embedThumbnail,
       embed_metadata: embedMetadata,
       download_subtitles: downloadSubtitles,
       subtitle_lang: subtitleLang,
       is_playlist: false,
-      playlist_items: null,
-      rate_limit: settingsStore.settings.speedLimit,
-      use_cookies: settingsStore.settings.useCookies,
-      cookies_path: settingsStore.settings.useCookies ? settingsStore.settings.cookiesPath : null,
+      output_path: outputPath,
     };
 
     downloadStore.addItem({
@@ -127,10 +148,10 @@
     });
 
     try {
-      await invoke('start_download', { payload });
+      await startDownload(payload);
       goto('/queue');
     } catch (err: any) {
-      error = `Failed to start: ${err}`;
+      error = `Failed to start: ${err.message ?? err}`;
       downloadStore.removeItem(id);
     }
   }
@@ -138,34 +159,28 @@
   async function startPlaylistDownload(selectedIndices: number[]) {
     if (!playlistInfo || !outputPath || selectedIndices.length === 0) return;
 
-    // Convert 0-based indices to 1-based yt-dlp item selection
-    // e.g. "1,3,4"
-    const itemsStr = selectedIndices.map(i => i + 1).sort((a,b)=>a-b).join(',');
-    
+    const itemsStr = selectedIndices.map(i => i + 1).sort((a, b) => a - b).join(',');
     const id = uuidv4();
     const payload = {
       id,
-      url: url, // original playlist URL
+      url,
       format,
       quality,
-      output_path: outputPath,
       embed_thumbnail: embedThumbnail,
       embed_metadata: embedMetadata,
       download_subtitles: downloadSubtitles,
       subtitle_lang: subtitleLang,
       is_playlist: true,
       playlist_items: itemsStr,
-      rate_limit: settingsStore.settings.speedLimit,
-      use_cookies: settingsStore.settings.useCookies,
-      cookies_path: settingsStore.settings.useCookies ? settingsStore.settings.cookiesPath : null,
+      output_path: outputPath,
     };
 
     downloadStore.addItem({
       id,
-      url: url,
+      url,
       title: playlistInfo.playlist_title,
       thumbnail: playlistInfo.playlist_thumbnail,
-      platform: videoInfo?.platform ?? detectPlatform(url)?.name ?? 'Unknown', // #18: derive from URL when videoInfo is not loaded
+      platform: videoInfo?.platform ?? guessPlatform(url),
       format,
       quality,
       outputPath,
@@ -175,7 +190,7 @@
       eta: '--',
       downloadedBytes: 0,
       totalBytes: 0,
-      currentTitle: 'Starting playlist extraction...',
+      currentTitle: 'Starting playlist...',
       isPlaylist: true,
       playlistTotal: selectedIndices.length,
       playlistCurrent: 0,
@@ -183,30 +198,25 @@
     });
 
     try {
-      await invoke('start_download', { payload });
+      await startDownload(payload);
       goto('/queue');
     } catch (err: any) {
-      error = `Failed to start: ${err}`;
+      error = `Failed to start: ${err.message ?? err}`;
       downloadStore.removeItem(id);
     }
   }
 
   function togglePlaylistItem(index: number) {
     const next = new Set(selectedItems);
-    if (next.has(index)) {
-      next.delete(index);
-    } else {
-      next.add(index);
-    }
-    selectedItems = next; // proper Svelte 5 reactivity trigger
+    if (next.has(index)) next.delete(index);
+    else next.add(index);
+    selectedItems = next;
   }
 
   function selectAll() {
-    if (playlistInfo) {
-      selectedItems = new Set(playlistInfo.entries.map((_, i) => i));
-    }
+    if (playlistInfo) selectedItems = new Set(playlistInfo.entries.map((_, i) => i));
   }
-  
+
   function deselectAll() {
     selectedItems = new Set();
   }
@@ -229,16 +239,16 @@
         <line x1="12" y1="15" x2="12" y2="3"/>
       </svg>
     </div>
-    
+
     <h1 class="text-3xl font-bold mb-4">Download any video, anywhere.</h1>
     <p class="text-secondary mb-8 text-lg">
       Paste a URL from YouTube, TikTok, Instagram, Twitter, and over 1,800 other sites.
     </p>
 
-    <UrlInput 
-      bind:value={url} 
-      {loading} 
-      onsubmit={handleFetch} 
+    <UrlInput
+      bind:value={url}
+      {loading}
+      onsubmit={handleFetch}
     />
 
     {#if error}
@@ -271,6 +281,7 @@
           bind:embedMetadata
           bind:downloadSubtitles
           bind:subtitleLang
+          {isDesktop}
           onQualityChange={(q) => quality = q}
           onFormatChange={(f) => format = f}
           onOutputChange={(p) => outputPath = p}
@@ -287,6 +298,7 @@
           bind:format
           bind:outputPath
           bind:selectedItems
+          {isDesktop}
           onToggleItem={togglePlaylistItem}
           onSelectAll={selectAll}
           onDeselectAll={deselectAll}
@@ -295,7 +307,6 @@
         />
       </div>
     {:else if !loading && !error}
-      <!-- Empty state logos -->
       <div class="animate-fade-in text-center mt-12 mb-8">
         <h3 class="text-sm font-semibold text-secondary uppercase tracking-widest mb-6">Supported Platforms</h3>
         <SiteLogos />

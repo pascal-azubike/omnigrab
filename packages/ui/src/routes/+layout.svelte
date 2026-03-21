@@ -114,7 +114,7 @@
 
     <!-- Mobile Bottom Navigation — only shown in Android WebView -->
     {#if platform === 'android-webview'}
-      <nav class="mobile-nav" role="navigation" aria-label="Main navigation">
+      <nav class="mobile-nav" aria-label="Main navigation">
         {#each navItems as item}
           {@const isActive = page.url.pathname === item.path || (item.path !== '/' && page.url.pathname.startsWith(item.path))}
           <a href={item.path} class="mobile-nav-item" class:active={isActive} aria-label={item.label}>

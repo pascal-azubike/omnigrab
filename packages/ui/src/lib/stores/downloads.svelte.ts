@@ -1,6 +1,5 @@
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
-import type { UnlistenFn } from '@tauri-apps/api/event';
+import { cancelDownload as apiCancelDownload, listenProgress } from '$lib/utils/api';
+import type { ProgressEvent } from '$lib/utils/api';
 import { historyStore } from './history.svelte.js';
 
 export interface DownloadItem {
@@ -19,7 +18,6 @@ export interface DownloadItem {
   downloadedBytes: number;
   totalBytes: number;
   currentTitle: string;
-  // Playlist
   isPlaylist: boolean;
   playlistTotal: number;
   playlistCurrent: number;
@@ -27,119 +25,111 @@ export interface DownloadItem {
   addedAt: number;
 }
 
-interface ProgressEvent {
-  id: string;
-  percent: number;
-  speed: string;
-  eta: string;
-  downloaded_bytes: number;
-  total_bytes: number;
-  current_title: string;
-  status: string;
-}
-
-interface PlaylistProgressEvent {
-  id: string;
-  current_index: number;
-  total_count: number;
-  current_title: string;
-}
+// Cleanup functions keyed by download ID
+type Unlisten = () => void;
+const unlisteners = new Map<string, Unlisten>();
 
 function createDownloadStore() {
   let items = $state<DownloadItem[]>([]);
-  let unlistenProgress: UnlistenFn | null = null;
-  let unlistenPlaylist: UnlistenFn | null = null;
-  let unlistenCancelled: UnlistenFn | null = null;
+  let initialized = false;
 
   async function init() {
-    if (unlistenProgress) return; // Guard: don't double-register listeners
-    unlistenProgress = await listen<ProgressEvent>('download:progress', async ({ payload }) => {
-      const idx = items.findIndex(i => i.id === payload.id);
-      if (idx === -1) return;
-      
-      const wasComplete = items[idx].status === 'complete';
-      
-      items[idx] = {
-        ...items[idx],
-        percent: payload.percent,
-        speed: payload.speed,
-        eta: payload.eta,
-        downloadedBytes: payload.downloaded_bytes,
-        totalBytes: payload.total_bytes,
-        currentTitle: payload.current_title || items[idx].currentTitle,
-        status: payload.status as DownloadItem['status'],
-        errorMessage: payload.status === 'error' ? payload.current_title : undefined,
-      };
-
-      // Add to history if newly completed
-      if (payload.status === 'complete' && !wasComplete) {
-        const item = items[idx];
-        try {
-          await historyStore.addItem({
-            id: item.id,
-            url: item.url,
-            title: item.currentTitle || item.title,
-            thumbnail: item.thumbnail,
-            platform: item.platform,
-            format: item.format,
-            quality: item.quality,
-            outputPath: item.outputPath,
-            filePath: '',
-            fileSize: item.totalBytes || item.downloadedBytes,
-            downloadedAt: Date.now(),
-            isPlaylist: item.isPlaylist,
-            playlistTotal: item.playlistTotal,
-          });
-        } catch (e) {
-          console.error('Failed to save to history:', e);
-        }
-      }
-    });
-
-    unlistenPlaylist = await listen<PlaylistProgressEvent>('download:playlist-progress', ({ payload }) => {
-      const idx = items.findIndex(i => i.id === payload.id);
-      if (idx === -1) return;
-      items[idx] = {
-        ...items[idx],
-        playlistCurrent: payload.current_index,
-        playlistTotal: payload.total_count > 0 ? payload.total_count : items[idx].playlistTotal,
-        currentTitle: payload.current_title || items[idx].currentTitle,
-      };
-    });
-
-    unlistenCancelled = await listen<{ id: string }>('download:cancelled', ({ payload }) => {
-      const idx = items.findIndex(i => i.id === payload.id);
-      if (idx !== -1) {
-        items[idx] = { ...items[idx], status: 'cancelled' };
-      }
-    });
+    if (initialized) return;
+    initialized = true;
+    // Nothing global to listen to on init — listeners are registered per-download
   }
 
   function addItem(item: DownloadItem) {
     items = [...items, item];
+    // Start listening for progress events for this download
+    _listenForItem(item.id);
+  }
+
+  async function _listenForItem(id: string) {
+    const unlisten = await listenProgress(id, (event: ProgressEvent) => {
+      const idx = items.findIndex(i => i.id === id);
+      if (idx === -1) return;
+
+      const wasComplete = items[idx].status === 'complete';
+
+      // Parse percent as number (API sends "45.3%" string)
+      const percentNum = parseFloat(String(event.percent ?? '0').replace('%', '')) || 0;
+
+      items[idx] = {
+        ...items[idx],
+        percent: percentNum,
+        speed: event.speed ?? items[idx].speed,
+        eta: event.eta ?? items[idx].eta,
+        downloadedBytes: event.downloaded ?? items[idx].downloadedBytes,
+        totalBytes: event.total ?? items[idx].totalBytes,
+        currentTitle: event.filename
+          ? _basename(event.filename)
+          : items[idx].currentTitle,
+        status: event.status as DownloadItem['status'],
+        errorMessage: event.status === 'error' ? event.error : undefined,
+      };
+
+      // Save to history when newly completed
+      if (event.status === 'complete' && !wasComplete) {
+        const item = items[idx];
+        historyStore.addItem({
+          id: item.id,
+          url: item.url,
+          title: item.currentTitle || item.title,
+          thumbnail: item.thumbnail,
+          platform: item.platform,
+          format: item.format,
+          quality: item.quality,
+          outputPath: item.outputPath,
+          filePath: event.filename ?? '',
+          fileSize: item.totalBytes || item.downloadedBytes,
+          downloadedAt: Date.now(),
+          isPlaylist: item.isPlaylist,
+          playlistTotal: item.playlistTotal,
+        }).catch((e) => console.error('Failed to save history:', e));
+
+        // Stop listening after completion
+        unlisteners.get(id)?.();
+        unlisteners.delete(id);
+      }
+
+      if (event.status === 'cancelled' || event.status === 'error') {
+        unlisteners.get(id)?.();
+        unlisteners.delete(id);
+      }
+    });
+
+    unlisteners.set(id, unlisten);
   }
 
   function removeItem(id: string) {
+    unlisteners.get(id)?.();
+    unlisteners.delete(id);
     items = items.filter(i => i.id !== id);
   }
 
   async function cancelDownload(id: string) {
     try {
-      await invoke('cancel_download', { downloadId: id });
+      await apiCancelDownload(id);
+      const idx = items.findIndex(i => i.id === id);
+      if (idx !== -1) {
+        items[idx] = { ...items[idx], status: 'cancelled' };
+      }
     } catch (e) {
       console.error('Cancel failed:', e);
     }
   }
 
   function cleanup() {
-    unlistenProgress?.();
-    unlistenPlaylist?.();
-    unlistenCancelled?.();
+    unlisteners.forEach((unlisten) => unlisten());
+    unlisteners.clear();
   }
 
   return {
     get items() { return items; },
-    get activeCount() { return items.filter(i => i.status === 'downloading' || i.status === 'processing').length; },
+    get activeCount() {
+      return items.filter(i => i.status === 'downloading' || i.status === 'processing').length;
+    },
     get queuedCount() { return items.filter(i => i.status === 'queued').length; },
     init,
     addItem,
@@ -147,6 +137,10 @@ function createDownloadStore() {
     cancelDownload,
     cleanup,
   };
+}
+
+function _basename(path: string): string {
+  return path.split(/[\\/]/).pop() ?? path;
 }
 
 export const downloadStore = createDownloadStore();

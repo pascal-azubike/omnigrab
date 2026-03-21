@@ -1,4 +1,5 @@
 import { Store } from '@tauri-apps/plugin-store';
+import { getPlatform } from '$lib/utils/platform';
 
 export interface HistoryItem {
   id: string;
@@ -17,22 +18,33 @@ export interface HistoryItem {
 }
 
 const STORE_KEY = 'download_history';
-// #16: Named constant — max history items before oldest are trimmed
+// Named constant — max history items before oldest are trimmed
 const MAX_HISTORY = 500;
 
-// #15: Debounce timer to batch disk writes (avoids writing on every addItem/removeItem)
+// Debounce timer to batch disk writes (avoids writing on every addItem/removeItem)
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
 
 function createHistoryStore() {
   let items = $state<HistoryItem[]>([]);
-  let store: Store | null = null;
+  let tauriStore: Store | null = null;
+  let isDesktop = false;
 
   async function init() {
+    isDesktop = (await getPlatform()) === 'desktop';
+    
     try {
-      store = await Store.load('omnigrab_history.json');
-      const saved = await store.get<HistoryItem[]>(STORE_KEY);
-      if (saved && Array.isArray(saved)) {
-        items = saved;
+      if (isDesktop) {
+        tauriStore = await Store.load('omnigrab_history.json');
+        const saved = await tauriStore.get<HistoryItem[]>(STORE_KEY);
+        if (saved && Array.isArray(saved)) {
+          items = saved;
+        }
+      } else {
+        // Fallback for Android WebView / Web Environment
+        const saved = localStorage.getItem(STORE_KEY);
+        if (saved) {
+          items = JSON.parse(saved);
+        }
       }
     } catch (e) {
       console.error('Failed to load history:', e);
@@ -63,7 +75,7 @@ function createHistoryStore() {
     );
   }
 
-  // #15: Debounce: batch multiple rapid writes into one disk write after 300ms
+  // Debounce: batch multiple rapid writes into one disk write after 300ms
   function debouncedPersist() {
     if (persistTimer) clearTimeout(persistTimer);
     persistTimer = setTimeout(() => persist(), 300);
@@ -71,8 +83,12 @@ function createHistoryStore() {
 
   async function persist() {
     try {
-      await store?.set(STORE_KEY, items);
-      await store?.save();
+      if (isDesktop && tauriStore) {
+        await tauriStore.set(STORE_KEY, items);
+        await tauriStore.save();
+      } else {
+        localStorage.setItem(STORE_KEY, JSON.stringify(items));
+      }
     } catch (e) {
       console.error('Failed to save history:', e);
     }

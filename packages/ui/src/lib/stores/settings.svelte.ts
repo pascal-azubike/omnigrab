@@ -1,5 +1,4 @@
-import { Store } from '@tauri-apps/plugin-store';
-import { invoke } from '@tauri-apps/api/core';
+import { isDesktop, getDefaultDownloadPath, getSettings, saveSettings } from '$lib/utils/api';
 
 export interface AppSettings {
   // General
@@ -45,18 +44,24 @@ const STORE_KEY = 'settings';
 
 function createSettingsStore() {
   let settings = $state<AppSettings>({ ...DEFAULTS });
-  let store: Store | null = null;
+  let tauriStore: any = null;
 
   async function init() {
     try {
-      store = await Store.load('omnigrab_settings.json');
-      const saved = await store.get<AppSettings>(STORE_KEY);
-      if (saved) {
-        settings = { ...DEFAULTS, ...saved };
+      if (await isDesktop()) {
+        const { Store } = await import('@tauri-apps/plugin-store');
+        tauriStore = await Store.load('omnigrab_settings.json');
+        const saved = (await tauriStore.get(STORE_KEY)) as AppSettings | null;
+        if (saved) settings = { ...DEFAULTS, ...saved };
+      } else {
+        // Android / Browser
+        const saved = await getSettings<AppSettings>();
+        if (saved) settings = { ...DEFAULTS, ...saved };
       }
-      // Fetch default download path from Rust if not set
+
+      // Fetch default download path if not set
       if (!settings.defaultDownloadPath) {
-        const path = await invoke<string>('get_default_download_path');
+        const path = await getDefaultDownloadPath();
         settings = { ...settings, defaultDownloadPath: path };
         await persist();
       }
@@ -73,6 +78,7 @@ function createSettingsStore() {
   }
 
   function applyTheme(theme: AppSettings['theme']) {
+    if (typeof document === 'undefined') return;
     const root = document.documentElement;
     if (theme === 'dark') {
       root.removeAttribute('data-theme');
@@ -91,8 +97,12 @@ function createSettingsStore() {
 
   async function persist() {
     try {
-      await store?.set(STORE_KEY, settings);
-      await store?.save();
+      if (await isDesktop()) {
+        await tauriStore?.set(STORE_KEY, $state.snapshot(settings));
+        await tauriStore?.save();
+      } else {
+        await saveSettings($state.snapshot(settings));
+      }
     } catch (e) {
       console.error('Failed to save settings:', e);
     }

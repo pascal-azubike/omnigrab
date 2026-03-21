@@ -1,3 +1,14 @@
 {
-  "svelte.enable-ts-plugin": true
+  "python.defaultInterpreterPath": "packages/android/.venv/Scripts/python.exe",
+  "python.analysis.extraPaths": [
+    "packages/android/src",
+    "packages/android/.venv/Lib/site-packages"
+  ],
+  "python.analysis.typeCheckingMode": "standard",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportAttributeAccessIssue": "warning",
+    "reportOptionalMemberAccess": "warning",
+    "reportPrivateImportUsage": "none",
+    "reportMissingImports": "warning"
+  }
 }

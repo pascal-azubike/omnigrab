@@ -17,6 +17,7 @@
     onOptionChange: (key: string, val: boolean | string) => void;
     onDownload: () => void;
     onBrowse: () => void;
+    isDesktop: boolean;
   }
 
   let {
@@ -30,6 +31,7 @@
     subtitleLang = $bindable(),
     onDownload,
     onBrowse,
+    isDesktop,
   }: Props = $props();
 
   let imgLoaded = $state(false);
@@ -130,7 +132,9 @@
             placeholder="Select output folder..."
             readonly
           />
-          <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
+          {#if isDesktop}
+            <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
+          {/if}
         </div>
       </div>
     </div>

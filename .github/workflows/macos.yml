@@ -1,0 +1,42 @@
+name: macOS Build
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/ui/**'
+      - 'packages/desktop/**'
+      - '.github/workflows/macos.yml'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: install project dependencies
+        run: npm install
+        
+      - name: build UI
+        run: npm --prefix packages/ui run build:desktop
+        
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: packages/desktop
+          tagName: v__VERSION__
+          releaseName: 'OmniGrab v__VERSION__ (macOS)'
+          releaseBody: 'macOS version build.'
+          releaseDraft: true
+          prerelease: false

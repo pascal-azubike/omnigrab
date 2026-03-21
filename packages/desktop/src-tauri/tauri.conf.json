@@ -4,10 +4,10 @@
   "version": "1.3.6",
   "identifier": "com.omnigrab.app",
   "build": {
-    "beforeDevCommand": "cd ../../ui && npm run dev",
+    "beforeDevCommand": "npm run dev:ui",
     "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "cd ../../ui && npm run build:desktop",
-    "frontendDist": "../../ui/../desktop/ui-dist"
+    "beforeBuildCommand": "npm run build:ui",
+    "frontendDist": "./ui-dist"
   },
   "app": {
     "windows": [

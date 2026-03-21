@@ -13,6 +13,7 @@
     onDeselectAll: () => void;
     onDownload: (selected: number[]) => void;
     onBrowse: () => void;
+    isDesktop: boolean;
   }
 
   let {
@@ -26,6 +27,7 @@
     onDeselectAll,
     onDownload,
     onBrowse,
+    isDesktop,
   }: Props = $props();
 
   let allSelected = $derived(selectedItems.size === info.entries.length);
@@ -83,7 +85,9 @@
 
       <div class="path-input">
         <input bind:value={outputPath} type="text" class="input" readonly placeholder="Output folder..." />
-        <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
+        {#if isDesktop}
+          <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
+        {/if}
       </div>
     </div>
 

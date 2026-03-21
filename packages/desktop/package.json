@@ -1,0 +1,16 @@
+{
+  "name": "@omnigrab/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "dev:ui": "cd ../ui && npm run dev",
+    "build:ui": "cd ../ui && npm run build:desktop",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

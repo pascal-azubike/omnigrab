@@ -1,0 +1,67 @@
+Loading svelte-check in workspace: c:\Users\pascal\Desktop\youyube downloader\packages\ui
+Getting Svelte diagnostics...
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\DownloadItem.svelte[39m:4:12
+[31mError[39m: '"$lib/utils/platform.js"' has no exported member named 'detectPlatform'. Did you mean 'getPlatform'? (ts)
+[36m  import { formatBytes, formatSpeed, formatEta } from '$lib/utils/formatBytes.js';
+  import { [35mdetectPlatform[36m } from '$lib/utils/platform.js';[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\HistoryItem.svelte[39m:3:12
+[31mError[39m: '"$lib/utils/platform.js"' has no exported member named 'detectPlatform'. Did you mean 'getPlatform'? (ts)
+[36m  import type { HistoryItem } from '$lib/stores/history.svelte.js';
+  import { [35mdetectPlatform[36m } from '$lib/utils/platform.js';
+  import { formatBytes, formatRelativeTime } from '$lib/utils/formatBytes.js';[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\QueueItem.svelte[39m:3:12
+[31mError[39m: '"$lib/utils/platform.js"' has no exported member named 'detectPlatform'. Did you mean 'getPlatform'? (ts)
+[36m  import type { DownloadItem as IDownloadItem } from '$lib/stores/downloads.svelte.js';
+  import { [35mdetectPlatform[36m } from '$lib/utils/platform.js';[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\SiteLogos.svelte[39m:2:12
+[31mError[39m: '"$lib/utils/platform.js"' has no exported member named 'PLATFORMS'. Did you mean 'Platform'? (ts)
+[36m<script lang="ts">
+  import { [35mPLATFORMS[36m } from '$lib/utils/platform.js';[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\SiteLogos.svelte[39m:4:56
+[31mError[39m: 'p' is of type 'unknown'. (ts)
+[36m
+  const logos = Object.values(PLATFORMS).filter(p => !![35mp[36m.icon);
+</script>[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\SiteLogos.svelte[39m:10:37
+[31mError[39m: 'logo' is of type 'unknown'. (ts)
+[36m    {#each [...logos, ...logos] as logo, i}
+      <div class="logo-item" title={[35mlogo[36m.name}>
+        <img[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\SiteLogos.svelte[39m:12:33
+[31mError[39m: 'logo' is of type 'unknown'. (ts)
+[36m        <img
+          src="/platform-icons/{[35mlogo[36m.icon}.svg"
+          alt={logo.name}[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\SiteLogos.svelte[39m:13:16
+[31mError[39m: 'logo' is of type 'unknown'. (ts)
+[36m          src="/platform-icons/{logo.icon}.svg"
+          alt={[35mlogo[36m.name}
+          width="24"[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\SiteLogos.svelte[39m:19:34
+[31mError[39m: 'logo' is of type 'unknown'. (ts)
+[36m        />
+        <span class="logo-name">{[35mlogo[36m.name}</span>
+      </div>[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\UrlInput.svelte[39m:2:12
+[31mError[39m: '"$lib/utils/platform.js"' has no exported member named 'detectPlatform'. Did you mean 'getPlatform'? (ts)
+[36m<script lang="ts">
+  import { [35mdetectPlatform[36m, isPlaylistUrl } from '$lib/utils/platform.js';[39m
+
+c:\Users\pascal\Desktop\youyube downloader\packages\ui\[32msrc\lib\components\UrlInput.svelte[39m:2:28
+[31mError[39m: Module '"$lib/utils/platform.js"' has no exported member 'isPlaylistUrl'. (ts)
+[36m<script lang="ts">
+  import { detectPlatform, [35misPlaylistUrl[36m } from '$lib/utils/platform.js';[39m
+
+====================================
+[31msvelte-check found 11 errors and 0 warnings in 5 files
+[39m

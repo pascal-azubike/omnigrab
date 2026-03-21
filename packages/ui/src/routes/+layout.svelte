@@ -5,8 +5,7 @@
     History,
     Settings,
     CloudDownload,
-    Menu,
-    X,
+    List,
   } from "lucide-svelte";
   import { page } from "$app/state";
   import QueuePanel from "$lib/components/QueuePanel.svelte";
@@ -15,10 +14,10 @@
   let { children } = $props();
 
   let showQueue = $state(true);
-  let mobileMenuOpen = $state(false);
 
   const navItems = [
     { href: "/", icon: Home, label: "Home" },
+    { href: "/queue", icon: List, label: "Queue" },
     { href: "/history", icon: History, label: "History" },
     { href: "/settings", icon: Settings, label: "Settings" },
   ];
@@ -30,7 +29,7 @@
 </script>
 
 <div
-  class="h-screen w-full flex overflow-hidden bg-background text-foreground font-sans selection:bg-indigo-500/30"
+  class="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-background text-foreground font-sans selection:bg-indigo-500/30"
 >
   <!-- Desktop Sidebar -->
   <aside
@@ -75,44 +74,53 @@
   </aside>
 
   <!-- Main Content Area -->
-  <main class="flex-grow flex flex-col min-w-0 relative">
+  <main class="flex-grow flex flex-col min-w-0 relative h-full">
     <!-- Top Header (Mobile Only) -->
     <header
-      class="md:hidden flex items-center justify-between p-4 border-b border-border bg-background/50 backdrop-blur-xl"
+      class="md:hidden flex items-center justify-between px-6 py-4 border-b border-border bg-background/50 backdrop-blur-xl shrink-0"
     >
       <div class="flex items-center gap-3">
-        <CloudDownload class="h-6 w-6 text-indigo-500" />
+        <div class="h-8 w-8 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+          <CloudDownload class="h-4 w-4 text-white" />
+        </div>
         <span class="font-black italic tracking-tighter text-xl uppercase"
           >OmniGrab</span
         >
       </div>
-      <button
-        onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
-        class="p-2 text-muted-foreground"
-      >
-        {#if mobileMenuOpen}
-          <X />
-        {:else}
-          <Menu />
-        {/if}
-      </button>
+      <ThemeToggle />
     </header>
 
     <!-- Content Router -->
     <div
-      class="flex-grow flex flex-col overflow-y-auto custom-scrollbar p-6 md:p-12 lg:p-20"
+      class="flex-grow flex flex-col overflow-y-auto custom-scrollbar p-6 md:p-12 lg:p-20 pb-24 md:pb-12"
     >
       <div class="max-w-6xl mx-auto w-full">
         {@render children()}
       </div>
     </div>
 
-    <!-- Toggle Queue Button -->
+    <!-- Bottom Navigation (Mobile Only) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-card/80 backdrop-blur-xl border-t border-border flex items-center justify-around px-4 pb-safe z-50">
+      {#each navItems as item}
+        <a
+          href={item.href}
+          class="flex flex-col items-center gap-1 transition-colors {isActive(item.href) ? 'text-indigo-400' : 'text-muted-foreground'}"
+        >
+          <item.icon class="h-5 w-5" />
+          <span class="text-[10px] font-bold uppercase tracking-widest">{item.label}</span>
+          {#if isActive(item.href)}
+            <div class="absolute bottom-1 h-1 w-4 bg-indigo-500 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+          {/if}
+        </a>
+      {/each}
+    </nav>
+
+    <!-- Toggle Queue Button (Desktop Only) -->
     <button
       onclick={() => (showQueue = !showQueue)}
-      class="absolute right-6 bottom-6 h-12 w-12 bg-card border border-border rounded-2xl flex items-center justify-center shadow-2xl hover:bg-accent transition-all z-40 md:flex hidden"
+      class="absolute right-6 bottom-6 h-12 w-12 bg-card border border-border rounded-2xl md:flex hidden items-center justify-center shadow-2xl hover:bg-accent transition-all z-40"
     >
-      <CloudDownload
+      <List
         class="h-6 w-6 {showQueue ? 'text-indigo-400' : 'text-muted-foreground'}"
       />
     </button>
@@ -122,36 +130,6 @@
   {#if showQueue}
     <div class="w-[400px] border-l border-border hidden lg:block">
       <QueuePanel />
-    </div>
-  {/if}
-
-  <!-- Mobile Menu Overlay -->
-  {#if mobileMenuOpen}
-    <div
-      class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 p-8 space-y-12 flex flex-col items-center justify-center animate-in fade-in duration-300"
-    >
-      <button
-        onclick={() => (mobileMenuOpen = false)}
-        class="absolute top-8 right-8 p-2 text-foreground"
-      >
-        <X class="h-8 w-8" />
-      </button>
-      <div class="flex flex-col items-center gap-8">
-        {#each navItems as item}
-          <a
-            href={item.href}
-            onclick={() => (mobileMenuOpen = false)}
-            class="text-4xl font-black italic tracking-tighter uppercase transition-colors {isActive(
-              item.href,
-            )
-              ? 'text-indigo-500'
-              : 'text-muted-foreground'}"
-          >
-            {item.label}
-          </a>
-        {/each}
-      </div>
-      <ThemeToggle />
     </div>
   {/if}
 </div>

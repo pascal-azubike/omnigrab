@@ -29,11 +29,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         
       - name: install project dependencies
-        run: npm install
-
-      - name: install UI dependencies
-        run: npm install
-        working-directory: packages/ui
+        run: |
+          Remove-Item -Path "package-lock.json" -ErrorAction SilentlyContinue
+          npm install
         
       - name: build UI
         run: npm run build

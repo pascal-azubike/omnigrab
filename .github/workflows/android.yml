@@ -67,9 +67,10 @@ jobs:
           pip install briefcase
 
       # ── SvelteKit UI ─────────────────────────────────────────────
-      - name: Install UI dependencies
-        run: npm install
-        working-directory: packages/ui
+      - name: Install dependencies
+        run: |
+          rm -f package-lock.json
+          npm install
 
       - name: Build SvelteKit UI (android mode)
         run: npm run build:android
@@ -123,18 +124,13 @@ jobs:
       # ── Briefcase: build signed release AAB ──────────────────────
       - name: Build signed release AAB
         if: steps.signing_check.outputs.available == 'true'
-        env:
-          KEYSTORE_PATH: ${{ github.workspace }}/packages/android/omnigrab-release.jks
-          KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           briefcase package android --no-input \
             -- \
-            "-Pandroid.injected.signing.store.file=${KEYSTORE_PATH}" \
-            "-Pandroid.injected.signing.store.password=${KEYSTORE_PASS}" \
-            "-Pandroid.injected.signing.key.alias=${KEY_ALIAS}" \
-            "-Pandroid.injected.signing.key.password=${KEY_PASS}"
+            -Pandroid.injected.signing.store.file=$(pwd)/omnigrab-release.jks \
+            "-Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            "-Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }}" \
+            "-Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}"
         working-directory: packages/android
 
       # ── BundleTool: convert AAB → universal APK ──────────────────
@@ -159,12 +155,9 @@ jobs:
           VER="${VERSION#v}"
           AAB_PATH="packages/android/dist/OmniGrab-${VER}.aab"
 
-          # Fix 4: Add AAB path debug logging before the existence check
-          echo "Contents of packages/android/dist/:"
-          ls -la packages/android/dist/ || echo "(dist/ does not exist yet)"
-
           if [ ! -f "$AAB_PATH" ]; then
             echo "❌ AAB not found at $AAB_PATH"
+            ls -la packages/android/dist/ || true
             exit 1
           fi
 

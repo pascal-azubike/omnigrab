@@ -14,8 +14,9 @@ class OmniGrabAndroid(toga.App):
     def startup(self):
         self.main_window = toga.MainWindow(
             title="OmniGrab",
-            resizable=False,
         )
+        # Clear toolbar to ensure no native Android action bar shows up
+        self.main_window.toolbar.clear()
 
         # Full-screen WebView — this IS the entire UI
         self.webview = toga.WebView(

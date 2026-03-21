@@ -1,19 +1,32 @@
+```html
 <script lang="ts">
   import "../app.css";
+  import { onMount } from 'svelte';
   import {
     Home,
     History,
     Settings,
     CloudDownload,
     List,
+    Sun,
+    Moon,
+    Monitor,
   } from "lucide-svelte";
   import { page } from "$app/state";
+  import { downloadStore } from '$lib/stores/downloads.svelte';
   import QueuePanel from "$lib/components/QueuePanel.svelte";
   import ThemeToggle from "$lib/components/ThemeToggle.svelte";
 
   let { children } = $props();
 
-  let showQueue = $state(true);
+  let showQueue = $state(false);
+  let isAndroid = $state(false);
+
+  onMount(() => {
+    isAndroid = navigator.userAgent.includes('OmniGrabAndroid');
+  });
+
+  const isMobile = $derived(isAndroid); // We can extend this if needed
 
   const navItems = [
     { href: "/", icon: Home, label: "Home" },
@@ -31,9 +44,9 @@
 <div
   class="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-background text-foreground font-sans selection:bg-indigo-500/30"
 >
-  <!-- Desktop Sidebar -->
+  <!-- Desktop Sidebar (Hidden on mobile) -->
   <aside
-    class="hidden md:flex flex-col w-20 h-full border-r border-border bg-background/50 backdrop-blur-xl shrink-0"
+    class="{(isMobile ? 'hidden' : 'hidden md:flex')} w-24 lg:w-32 flex-col items-center py-10 bg-card border-r border-border shrink-0"
   >
     <div class="p-6 flex items-center justify-center">
       <div
@@ -77,7 +90,7 @@
   <main class="flex-grow flex flex-col min-w-0 relative h-full">
     <!-- Top Header (Mobile Only) -->
     <header
-      class="md:hidden flex items-center justify-between px-6 py-4 border-b border-border bg-background/50 backdrop-blur-xl shrink-0"
+      class="{(isMobile ? 'flex' : 'md:hidden flex')} items-center justify-between px-6 py-4 border-b border-border bg-background/50 backdrop-blur-xl shrink-0"
     >
       <div class="flex items-center gap-3">
         <div class="h-8 w-8 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -99,8 +112,10 @@
       </div>
     </div>
 
-    <!-- Bottom Navigation (Mobile Only) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-card/80 backdrop-blur-xl border-t border-border flex items-center justify-around px-4 pb-safe z-50">
+    <!-- Mobile Bottom Navigation (Visible only on mobile) -->
+    <nav
+      class="{(isMobile ? 'fixed' : 'md:hidden fixed')} bottom-0 left-0 right-0 h-16 bg-card/80 backdrop-blur-2xl border-t border-border flex items-center justify-around px-4 z-50 pb-safe"
+    >
       {#each navItems as item}
         <a
           href={item.href}

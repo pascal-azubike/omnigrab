@@ -19,6 +19,7 @@ packages/android/.venv/
 packages/android/__pycache__/
 **/__pycache__/
 *.pyc
+packages/android/src/omnigrab_android/ui/
 
 # Android signing — NEVER commit these
 *.jks

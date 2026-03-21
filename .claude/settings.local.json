@@ -19,7 +19,8 @@
       "Bash(\"/c/Program Files/Java/latest/bin/keytool.exe\":*)",
       "Bash(\"/c/Program Files/Java/jdk-26/bin/keytool\":*)",
       "Bash(ls:*)",
-      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)"
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)",
+      "Bash(node:*)"
     ]
   }
 }

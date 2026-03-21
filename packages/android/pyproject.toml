@@ -17,8 +17,11 @@ icon = "src/omnigrab_android/resources/omnigrab"
 sources = ["src/omnigrab_android"]
 test_sources = ["tests"]
 
+requires = []
+
+[tool.briefcase.app.omnigrab-android.android]
 requires = [
-    "toga==0.4.7",
+    "toga-android==0.4.7",
     "fastapi>=0.115.0",
     "uvicorn>=0.30.0",
     "yt-dlp>=2024.12.13",
@@ -26,11 +29,6 @@ requires = [
     "httpx>=0.27.0",
     "python-multipart>=0.0.9",
     "anyio>=4.0.0",
-]
-
-[tool.briefcase.app.omnigrab-android.android]
-requires = [
-    "toga-android==0.4.7",
 ]
 
 build_gradle_dependencies = [

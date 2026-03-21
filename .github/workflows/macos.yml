@@ -29,20 +29,25 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         
       - name: install project dependencies
-        run: |
-          rm -f package-lock.json
-          npm install --include=optional
+        run: npm ci
         
       - name: build UI
-        run: npm --prefix packages/ui run build:desktop
+        run: npm run build
+        working-directory: packages/ui
+
+      - name: Download yt-dlp + ffmpeg binaries
+        run: node scripts/download-binaries.js
+        working-directory: packages/desktop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: packages/desktop
-          tagName: v__VERSION__
-          releaseName: 'OmniGrab v__VERSION__ (macOS)'
+          tagName: ${{ github.ref_name }}
+          releaseName: 'OmniGrab ${{ github.ref_name }}'
           releaseBody: 'macOS version build.'
           releaseDraft: true
           prerelease: false

@@ -52,17 +52,22 @@ jobs:
             "ndk;25.2.9519653"
 
       # ── Python deps ───────────────────────────────────────────────
-      - name: Install Briefcase and app requirements
+      - name: Install system dependencies for Briefcase
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            gobject-introspection \
+            libgirepository1.0-dev
+
+      - name: Install Briefcase
         run: |
           python -m pip install --upgrade pip
           pip install briefcase
-          cd packages/android
-          pip install -r requirements.txt
 
       # ── SvelteKit UI ─────────────────────────────────────────────
-      - name: Install UI dependencies
+      - name: Install dependencies
         run: npm ci
-        working-directory: packages/ui
 
       - name: Build SvelteKit UI (android mode)
         run: npm run build:android

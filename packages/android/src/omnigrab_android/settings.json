@@ -1,0 +1,17 @@
+{
+  "defaultDownloadPath": "C:\\Users\\pascal\\Downloads\\OmniGrab",
+  "defaultQuality": "best",
+  "defaultFormat": "mp4",
+  "maxConcurrentDownloads": 3,
+  "showNotifications": true,
+  "embedThumbnail": true,
+  "embedMetadata": true,
+  "downloadSubtitles": false,
+  "subtitleLang": "en",
+  "speedLimit": "",
+  "downloadDelay": 3,
+  "useCookies": false,
+  "cookiesPath": "",
+  "ytPoToken": "",
+  "theme": "dark"
+}

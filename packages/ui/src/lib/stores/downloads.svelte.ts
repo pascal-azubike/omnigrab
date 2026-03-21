@@ -1,146 +1,81 @@
-import { cancelDownload as apiCancelDownload, listenProgress } from '$lib/utils/api';
-import type { ProgressEvent } from '$lib/utils/api';
-import { historyStore } from './history.svelte.js';
+import { listenProgress, cancelDownload as apiCancelDownload } from '$lib/utils/api';
+import type { ProgressEvent, DownloadPayload } from '$lib/types';
 
-export interface DownloadItem {
-  id: string;
-  url: string;
-  title: string;
-  thumbnail: string;
-  platform: string;
-  format: string;
-  quality: string;
-  outputPath: string;
+export interface DownloadItem extends DownloadPayload {
   status: 'queued' | 'downloading' | 'processing' | 'complete' | 'error' | 'cancelled';
   percent: number;
   speed: string;
   eta: string;
-  downloadedBytes: number;
-  totalBytes: number;
-  currentTitle: string;
-  isPlaylist: boolean;
-  playlistTotal: number;
-  playlistCurrent: number;
-  errorMessage?: string;
-  addedAt: number;
+  downloaded_bytes: number;
+  total_bytes: number;
+  current_title: string;
+  error?: string;
+  added_at: number;
 }
-
-// Cleanup functions keyed by download ID
-type Unlisten = () => void;
-const unlisteners = new Map<string, Unlisten>();
 
 function createDownloadStore() {
   let items = $state<DownloadItem[]>([]);
-  let initialized = false;
+  const unlisteners = new Map<string, () => void>();
 
-  async function init() {
-    if (initialized) return;
-    initialized = true;
-    // Nothing global to listen to on init — listeners are registered per-download
-  }
-
-  function addItem(item: DownloadItem) {
-    items = [...items, item];
-    // Start listening for progress events for this download
-    _listenForItem(item.id);
-  }
-
-  async function _listenForItem(id: string) {
-    const unlisten = await listenProgress(id, (event: ProgressEvent) => {
-      const idx = items.findIndex(i => i.id === id);
-      if (idx === -1) return;
-
-      const wasComplete = items[idx].status === 'complete';
-
-      // Parse percent as number (API sends "45.3%" string)
-      const percentNum = parseFloat(String(event.percent ?? '0').replace('%', '')) || 0;
-
-      items[idx] = {
-        ...items[idx],
-        percent: percentNum,
-        speed: event.speed ?? items[idx].speed,
-        eta: event.eta ?? items[idx].eta,
-        downloadedBytes: event.downloaded ?? items[idx].downloadedBytes,
-        totalBytes: event.total ?? items[idx].totalBytes,
-        currentTitle: event.filename
-          ? _basename(event.filename)
-          : items[idx].currentTitle,
-        status: event.status as DownloadItem['status'],
-        errorMessage: event.status === 'error' ? event.error : undefined,
+  async function addDownload(payload: DownloadPayload) {
+    const newItem: DownloadItem = {
+      ...payload,
+      status: 'queued',
+      percent: 0,
+      speed: '0 B/s',
+      eta: '--:--',
+      downloaded_bytes: 0,
+      total_bytes: 0,
+      current_title: 'Initializing...',
+      added_at: Date.now()
+    };
+    
+    items.push(newItem);
+    
+    const unlisten = await listenProgress(payload.id, (event) => {
+      const index = items.findIndex(i => i.id === event.id);
+      if (index === -1) return;
+      
+      items[index] = {
+        ...items[index],
+        ...event,
+        // Ensure percent is a number if it comes as a string from backend
+        percent: typeof event.percent === 'string' 
+          ? parseFloat(event.percent.replace('%', '')) 
+          : event.percent
       };
-
-      // Save to history when newly completed
-      if (event.status === 'complete' && !wasComplete) {
-        const item = items[idx];
-        historyStore.addItem({
-          id: item.id,
-          url: item.url,
-          title: item.currentTitle || item.title,
-          thumbnail: item.thumbnail,
-          platform: item.platform,
-          format: item.format,
-          quality: item.quality,
-          outputPath: item.outputPath,
-          filePath: event.filename ?? '',
-          fileSize: item.totalBytes || item.downloadedBytes,
-          downloadedAt: Date.now(),
-          isPlaylist: item.isPlaylist,
-          playlistTotal: item.playlistTotal,
-        }).catch((e) => console.error('Failed to save history:', e));
-
-        // Stop listening after completion
-        unlisteners.get(id)?.();
-        unlisteners.delete(id);
-      }
-
-      if (event.status === 'cancelled' || event.status === 'error') {
-        unlisteners.get(id)?.();
-        unlisteners.delete(id);
+      
+      if (event.status === 'complete' || event.status === 'error' || event.status === 'cancelled') {
+        const cleanup = unlisteners.get(event.id);
+        if (cleanup) cleanup();
+        unlisteners.delete(event.id);
       }
     });
-
-    unlisteners.set(id, unlisten);
+    
+    unlisteners.set(payload.id, unlisten);
   }
 
-  function removeItem(id: string) {
-    unlisteners.get(id)?.();
+  async function cancelDownload(id: string) {
+    await apiCancelDownload(id);
+    const index = items.findIndex(i => i.id === id);
+    if (index !== -1) {
+      items[index].status = 'cancelled';
+    }
+  }
+
+  function removeDownload(id: string) {
+    const cleanup = unlisteners.get(id);
+    if (cleanup) cleanup();
     unlisteners.delete(id);
     items = items.filter(i => i.id !== id);
   }
 
-  async function cancelDownload(id: string) {
-    try {
-      await apiCancelDownload(id);
-      const idx = items.findIndex(i => i.id === id);
-      if (idx !== -1) {
-        items[idx] = { ...items[idx], status: 'cancelled' };
-      }
-    } catch (e) {
-      console.error('Cancel failed:', e);
-    }
-  }
-
-  function cleanup() {
-    unlisteners.forEach((unlisten) => unlisten());
-    unlisteners.clear();
-  }
-
   return {
     get items() { return items; },
-    get activeCount() {
-      return items.filter(i => i.status === 'downloading' || i.status === 'processing').length;
-    },
-    get queuedCount() { return items.filter(i => i.status === 'queued').length; },
-    init,
-    addItem,
-    removeItem,
+    addDownload,
     cancelDownload,
-    cleanup,
+    removeDownload
   };
-}
-
-function _basename(path: string): string {
-  return path.split(/[\\/]/).pop() ?? path;
 }
 
 export const downloadStore = createDownloadStore();

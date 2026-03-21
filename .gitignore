@@ -1,49 +1,37 @@
-# ── Node / SvelteKit ──────────────────────────────────────────────
+# Node
 node_modules/
-packages/ui/.svelte-kit/
 packages/ui/build/
+packages/ui/.svelte-kit/
 
-# Desktop UI build output
-packages/desktop/ui-dist/
-
-# ── Rust / Tauri ──────────────────────────────────────────────────
+# Rust/Tauri
 packages/desktop/src-tauri/target/
-packages/desktop/src-tauri/gen/
+packages/desktop/src-tauri/binaries/
 
-# ── Python / Briefcase ────────────────────────────────────────────
+# Python/Briefcase
 packages/android/build/
 packages/android/dist/
 packages/android/.venv/
-__pycache__/
+packages/android/__pycache__/
 **/__pycache__/
 *.pyc
-*.pyo
-*.pyd
-*.egg-info/
-dist/
-.eggs/
 
-# ── Android signing — NEVER commit these ─────────────────────────
+# Android signing — NEVER commit these
 *.jks
 *.keystore
 *.jks.b64
+packages/android/omnigrab-release.jks
 
-# ── Build outputs ─────────────────────────────────────────────────
+# Build outputs
+dist/
 *.apk
 *.aab
 *.apks
-*.AppImage
-*.dmg
-*.exe
-bundletool.jar
 
-# ── Secrets & env ─────────────────────────────────────────────────
+# Secrets
 .env
 .env.local
 .env.*.local
-packages/android/src/omnigrab_android/settings.json
 
-# ── OS ────────────────────────────────────────────────────────────
+# OS
 .DS_Store
 Thumbs.db
-*.log

@@ -5,9 +5,12 @@
     "packages/*"
   ],
   "scripts": {
-    "build:ui": "npm --prefix packages/ui run build:desktop",
+    "build:ui": "npm --prefix packages/ui run build",
+    "build:ui:android": "npm --prefix packages/ui run build:android",
     "dev:desktop": "npm --prefix packages/desktop run dev",
     "build:desktop": "npm --prefix packages/desktop run build",
-    "dev:android": "cd packages/android && .\\.venv\\Scripts\\Activate.ps1 && python -m briefcase dev"
+    "dev:android": "cd packages/android && briefcase dev",
+    "build:android": "cd packages/android && briefcase build android",
+    "package:android": "cd packages/android && briefcase package android"
   }
 }

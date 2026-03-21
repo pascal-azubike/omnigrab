@@ -14,9 +14,9 @@ export interface VideoInfo {
 export interface Format {
   format_id: string;
   ext: string;
-  height?: number;
-  fps?: number;
-  filesize?: number;
+  height: number | null;
+  fps: number | null;
+  filesize: number | null;
   vcodec?: string;
   acodec?: string;
   format_note?: string;
@@ -36,4 +36,37 @@ export interface PlaylistEntry {
   url: string;
   thumbnail: string;
   duration: number;
+}
+
+export interface DownloadPayload {
+  id: string;
+  url: string;
+  quality: string;
+  format: string;
+  embed_thumbnail: boolean;
+  embed_metadata: boolean;
+  download_subtitles: boolean;
+  subtitle_lang: string;
+  is_playlist: boolean;
+  playlist_items?: string;
+  output_path?: string;
+  use_cookies?: boolean;
+  cookies_path?: string;
+}
+
+export interface ProgressEvent {
+  id: string;
+  status: 'downloading' | 'processing' | 'complete' | 'error' | 'cancelled';
+  percent: number;
+  speed: string;
+  eta: string;
+  downloaded_bytes: number;
+  total_bytes: number;
+  current_title: string;
+  error?: string;
+}
+
+export interface VersionInfo {
+  version: string;
+  ok: boolean;
 }

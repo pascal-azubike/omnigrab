@@ -1,0 +1,760 @@
+Date/Time:       2026-03-21 13:19:21 
+Command line:    C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\__main__.py run android
+
+OS Release:      Windows 11
+OS Version:      10.0.26200
+Architecture:    AMD64
+Platform:        Windows-11-10.0.26200-SP0
+
+Python exe:      C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Scripts\python.exe
+Python version:  3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]
+Virtual env:     True
+Conda env:       False
+
+Briefcase:       0.4.1
+Target platform: android
+Target format:   gradle
+
+Environment Variables:
+	ALLUSERSPROFILE=C:\ProgramData
+	ANTHROPIC_AUTH_TOKEN=********************
+	ANTHROPIC_BASE_URL=http://localhost:11434
+	APPDATA=C:\Users\pascal\AppData\Roaming
+	BUNDLED_DEBUGPY_PATH=c:\Users\pascal\.vscode\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\libs\debugpy
+	CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_27120_EIVBDCJDJKKFEARG
+	CLAUDE_CODE_SSE_PORT=11530
+	COLORTERM=truecolor
+	COMMONPROGRAMFILES=C:\Program Files\Common Files
+	COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files
+	COMMONPROGRAMW6432=C:\Program Files\Common Files
+	COMPUTERNAME=DESKTOP-RROI6M1
+	COMSPEC=C:\WINDOWS\system32\cmd.exe
+	DRIVERDATA=C:\Windows\System32\Drivers\DriverData
+	GIT_ASKPASS=********************
+	HOMEDRIVE=C:
+	HOMEPATH=\Users\pascal
+	LANG=en_US.UTF-8
+	LOCALAPPDATA=C:\Users\pascal\AppData\Local
+	LOGONSERVER=\\DESKTOP-RROI6M1
+	NUMBER_OF_PROCESSORS=12
+	OLLAMA_MAX_LOADED_MODELS=1
+	OLLAMA_NUM_CTX=2048
+	OLLAMA_NUM_THREADS=6
+	ONEDRIVE=C:\Users\pascal\OneDrive
+	OS=Windows_NT
+	PATH=C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Scripts;c:\Users\pascal\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\pascal\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;C:\Users\pascal\AppData\Local\Programs\Microsoft VS Code;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\pascal\.cargo\bin;C:\Users\pascal\AppData\Local\Microsoft\WindowsApps;C:\Users\pascal\AppData\Local\Programs\Antigravity\bin;C:\Users\pascal\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\pascal\.dotnet\tools;C:\Users\pascal\AppData\Local\Python\bin;C:\Users\pascal\.bun\bin;C:\Users\pascal\AppData\Roaming\npm;C:\Users\pascal\AppData\Local\Programs\Ollama;C:\Users\pascal\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe;c:\Users\pascal\.vscode\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\scripts\noConfigScripts
+	PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+	PROCESSOR_ARCHITECTURE=AMD64
+	PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
+	PROCESSOR_LEVEL=6
+	PROCESSOR_REVISION=9e0a
+	PROGRAMDATA=C:\ProgramData
+	PROGRAMFILES=C:\Program Files
+	PROGRAMFILES(X86)=C:\Program Files (x86)
+	PROGRAMW6432=C:\Program Files
+	PSMODULEPATH=C:\Users\pascal\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules;C:\Program Files\Microsoft SQL Server\170\Tools\PowerShell\Modules\
+	PUBLIC=C:\Users\Public
+	PYDEVD_DISABLE_FILE_VALIDATION=1
+	PYTHONSTARTUP=c:\Users\pascal\AppData\Roaming\Code\User\workspaceStorage\676e5e6b276fda36a6bb41fcd3360504\ms-python.python\pythonrc.py
+	PYTHON_BASIC_REPL=1
+	SYSTEMDRIVE=C:
+	SYSTEMROOT=C:\WINDOWS
+	TEMP=C:\Users\pascal\AppData\Local\Temp
+	TERM_PROGRAM=vscode
+	TERM_PROGRAM_VERSION=1.111.0
+	TMP=C:\Users\pascal\AppData\Local\Temp
+	USERDOMAIN=DESKTOP-RROI6M1
+	USERDOMAIN_ROAMINGPROFILE=DESKTOP-RROI6M1
+	USERNAME=pascal
+	USERPROFILE=C:\Users\pascal
+	VIRTUAL_ENV=C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv
+	VIRTUAL_ENV_PROMPT=.venv
+	VSCODE_DEBUGPY_ADAPTER_ENDPOINTS=c:\Users\pascal\.vscode\extensions\ms-python.debugpy-2025.18.0-win32-x64\.noConfigDebugAdapterEndpoints\endpoint-0cdf80b575e410d6.txt
+	VSCODE_GIT_ASKPASS_EXTRA_ARGS=********************
+	VSCODE_GIT_ASKPASS_MAIN=********************
+	VSCODE_GIT_ASKPASS_NODE=********************
+	VSCODE_GIT_IPC_HANDLE=\\.\pipe\vscode-git-01a30244f6-sock
+	VSCODE_INJECTION=1
+	VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+	WINDIR=C:\WINDOWS
+	ZES_ENABLE_SYSMAN=1
+	_OLD_VIRTUAL_PATH=c:\Users\pascal\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\pascal\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;C:\Users\pascal\AppData\Local\Programs\Microsoft VS Code;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\pascal\.cargo\bin;C:\Users\pascal\AppData\Local\Microsoft\WindowsApps;C:\Users\pascal\AppData\Local\Programs\Antigravity\bin;C:\Users\pascal\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\pascal\.dotnet\tools;C:\Users\pascal\AppData\Local\Python\bin;C:\Users\pascal\.bun\bin;C:\Users\pascal\AppData\Roaming\npm;C:\Users\pascal\AppData\Local\Programs\Ollama;C:\Users\pascal\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe;c:\Users\pascal\.vscode\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\scripts\noConfigScripts
+
+pyproject.toml:
+[project]
+name = "omnigrab"
+version = "1.0.0"
+description = "Download any video from any platform"
+requires-python = ">=3.9"
+dependencies = [
+    "toga-android>=0.4.5",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "yt-dlp>=2024.1.1",
+    "aiofiles>=23.0.0",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pyright",
+]
+
+[tool.briefcase]
+project_name = "OmniGrab"
+bundle = "com.omnigrab"
+version = "1.0.0"
+url = "https://github.com/pascal-azubike/omnigrab"
+license.text = "MIT"
+author = "OmniGrab Contributors"
+author_email = "hello@omnigrab.app"
+
+[tool.briefcase.app.omnigrab-android]
+formal_name = "OmniGrab"
+description = "Download any video from any platform"
+long_description = """OmniGrab lets you download videos, audio, and playlists from 1800+
+platforms including YouTube, TikTok, Instagram, Twitter, Vimeo, Twitch and more."""
+icon = "src/omnigrab_android/resources/omnigrab"
+sources = ["src/omnigrab_android"]
+test_sources = ["tests"]
+
+requires = [
+  "fastapi>=0.115.0",
+  "uvicorn>=0.30.0",
+  "yt-dlp>=2024.1.1",
+  "aiofiles>=23.0.0",
+  "python-multipart>=0.0.9",
+]
+
+[tool.briefcase.app.omnigrab-android.android]
+requires = [
+  "toga-android>=0.4.5",
+]
+
+[tool.briefcase.app.omnigrab-android.android.permissions]
+"android.permission.INTERNET" = true
+"android.permission.READ_EXTERNAL_STORAGE" = true
+"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.READ_MEDIA_VIDEO" = true
+"android.permission.READ_MEDIA_AUDIO" = true
+"android.permission.READ_MEDIA_IMAGES" = true
+"android.permission.FOREGROUND_SERVICE" = true
+"android.permission.POST_NOTIFICATIONS" = true
+
+supported_abis = ["arm64-v8a", "x86_64"]
+
+Briefcase Log:
+[13:18:32]                                                                                                                                                               java.py:246
+           [java] A Java 17 JDK was not found; downloading and installing...                                                                                             java.py:246
+           To use an existing JDK 17 instance, specify its root directory path in the JAVA_HOME environment variable.                                                    java.py:253
+                                                                                                                                                                         java.py:258
+[13:18:37] Downloading OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip...                                                                                              file.py:227
+[13:19:19]                                                                                                                                                            __main__.py:42
+           Unable to download Java 17 JDK; is your computer offline?                                                                                                  __main__.py:43
+                                                                                                                                                                      __main__.py:43
+           The reported cause of the problem was The read operation timed out                                                                                         __main__.py:43
+           Saving log... started                                                                                                                                      console.py:443
+
+Main thread traceback:
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpx\_transports\default.py:101 in map_httpcore_exceptions                                  │
+│                                                                                                                                                                                  │
+│    98 │   if len(HTTPCORE_EXC_MAP) == 0:                                                       ╭───────────────── locals ─────────────────╮                                      │
+│    99 │   │   HTTPCORE_EXC_MAP = _load_httpcore_exceptions()                                   │ message = 'The read operation timed out' │                                      │
+│   100 │   try:                                                                                 ╰──────────────────────────────────────────╯                                      │
+│ ❱ 101 │   │   yield                                                                                                                                                              │
+│   102 │   except Exception as exc:                                                                                                                                               │
+│   103 │   │   mapped_exc = None                                                                                                                                                  │
+│   104                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpx\_transports\default.py:127 in __iter__                                                 │
+│                                                                                                                                                                                  │
+│   124 │                                                                                                                                                                          │
+│   125 │   def __iter__(self) -> typing.Iterator[bytes]:                                                                                                                          │
+│   126 │   │   with map_httpcore_exceptions():                                                                                                                                    │
+│ ❱ 127 │   │   │   for part in self._httpcore_stream:                                                                                                                             │
+│   128 │   │   │   │   yield part                                                                                                                                                 │
+│   129 │                                                                                                                                                                          │
+│   130 │   def close(self) -> None:                                                                                                                                               │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │ part = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x9a9\x9… │ │
+│ │ self = <httpx._transports.default.ResponseStream object at 0x000001DF0051E210>                                                                                               │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py:407 in __iter__                                            │
+│                                                                                                                                                                                  │
+│   404 │   │   │   │   yield part                                                                                                                                                 │
+│   405 │   │   except BaseException as exc:                                                                                                                                       │
+│   406 │   │   │   self.close()                                                                                                                                                   │
+│ ❱ 407 │   │   │   raise exc from None                                                                                                                                            │
+│   408 │                                                                                                                                                                          │
+│   409 │   def close(self) -> None:                                                                                                                                               │
+│   410 │   │   if not self._closed:                                                                                                                                               │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │ part = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x9a9\x9… │ │
+│ │ self = <httpcore._sync.connection_pool.PoolByteStream object at 0x000001DF0051E350>                                                                                          │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py:403 in __iter__                                            │
+│                                                                                                                                                                                  │
+│   400 │                                                                                                                                                                          │
+│   401 │   def __iter__(self) -> typing.Iterator[bytes]:                                                                                                                          │
+│   402 │   │   try:                                                                                                                                                               │
+│ ❱ 403 │   │   │   for part in self._stream:                                                                                                                                      │
+│   404 │   │   │   │   yield part                                                                                                                                                 │
+│   405 │   │   except BaseException as exc:                                                                                                                                       │
+│   406 │   │   │   self.close()                                                                                                                                                   │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │ part = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x9a9\x9… │ │
+│ │ self = <httpcore._sync.connection_pool.PoolByteStream object at 0x000001DF0051E350>                                                                                          │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_sync\http11.py:342 in __iter__                                                     │
+│                                                                                                                                                                                  │
+│   339 │   │   │   # before raising that exception.                                                                                                                               │
+│   340 │   │   │   with ShieldCancellation():                                                                                                                                     │
+│   341 │   │   │   │   self.close()                                                                                                                                               │
+│ ❱ 342 │   │   │   raise exc                                                                                                                                                      │
+│   343 │                                                                                                                                                                          │
+│   344 │   def close(self) -> None:                                                                                                                                               │
+│   345 │   │   if not self._closed:                                                                                                                                               │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │  chunk = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x9a9\… │ │
+│ │ kwargs = {'request': <Request [b'GET']>}                                                                                                                                     │ │
+│ │   self = <httpcore._sync.http11.HTTP11ConnectionByteStream object at 0x000001DF0051E0D0>                                                                                     │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_sync\http11.py:334 in __iter__                                                     │
+│                                                                                                                                                                                  │
+│   331 │   │   kwargs = {"request": self._request}                                                                                                                                │
+│   332 │   │   try:                                                                                                                                                               │
+│   333 │   │   │   with Trace("receive_response_body", logger, self._request, kwargs):                                                                                            │
+│ ❱ 334 │   │   │   │   for chunk in self._connection._receive_response_body(**kwargs):                                                                                            │
+│   335 │   │   │   │   │   yield chunk                                                                                                                                            │
+│   336 │   │   except BaseException as exc:                                                                                                                                       │
+│   337 │   │   │   # If we get an exception while streaming the response,                                                                                                         │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │  chunk = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x9a9\… │ │
+│ │ kwargs = {'request': <Request [b'GET']>}                                                                                                                                     │ │
+│ │   self = <httpcore._sync.http11.HTTP11ConnectionByteStream object at 0x000001DF0051E0D0>                                                                                     │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_sync\http11.py:203 in _receive_response_body                                       │
+│                                                                                                                                                                                  │
+│   200 │   │   timeout = timeouts.get("read", None)                                                                                                                               │
+│   201 │   │                                                                                                                                                                      │
+│   202 │   │   while True:                                                                                                                                                        │
+│ ❱ 203 │   │   │   event = self._receive_event(timeout=timeout)                                                                                                                   │
+│   204 │   │   │   if isinstance(event, h11.Data):                                                                                                                                │
+│   205 │   │   │   │   yield bytes(event.data)                                                                                                                                    │
+│   206 │   │   │   elif isinstance(event, (h11.EndOfMessage, h11.PAUSED)):                                                                                                        │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │    event = Data(                                                                                                                                                             │ │
+│ │            │                                                                                                                                                                 │ │
+│ │            data=bytearray(b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x9… │ │
+│ │            \x84\x8e\x8a\x91\x8aa\xcb\xad\xc7\x99\r3&\xc7\x04\xdc\xb7\x8b\x1b\xf6\xec\xe4\x9a\xfd\xe6\xbaA\x84\xfa\xf5\xe8\xa3b\xcc6J7\xf4k\xder\xe0\xfd\xf2\xcb\x99\xf6\xb6… │ │
+│ │            \xb3\x1b78\xfe\x9e\xde\x19\xc3q\x93e\xc6\x06\xfc\x0b\xf3K\x82\xb2\x07r\xb7\x8d]\xe0|\xf3\x93\xdd\x86\xdd\x18\xb3\xde\xe5\xbb)ceEZ\xd5\x0b3\x87\xa75\x15\xef\x8b\… │ │
+│ │            \x9a\xb1\xb2\xb3\xcb_\xc8\xceX\xf07]~x\'\x97\xcf\xfb/\xb9\xfc\x7f\xcd\x96\x84\xb0N=\x0c\x88\xe0\xe7\x17\x9ew\x88\xf5Ao\xe3\xbb\xba\te\x81:\xb7F}\xf1\xe4\xf7}\xf… │ │
+│ │            \xc9ocp\x9f\xf4\x9e3|\xc4\xa6\x9f$c\xde\xae2\x9b\xa1|x\x85\x89\xc1\x9a\xed\xcc\xc4\xe6\xc5k\xde\\\x93\xc8\xb7\x89\x87\xdc\x9e\x93\xb9\xa1\xc1\xea\xd6\x82m\x9a\x… │ │
+│ │            \xad\xe8\xce\x13\xb5\x0f\xf5\xeb\xb5\xcc#\x9f\x9fZ\xfd\x9b\x81\x0bk\x8b\xd5\xd4\xf3}\xa4\xeb\xb4\xdf\x0e^3\xebJ\x92~=\x7fRIhx\xb7\x9e1z\t\xa3\xd7\xdd\xf8\x1e\x9… │ │
+│ │            ;9\r\x9e\xf8\x97\xad8n\xfa\xe0\xf4\x06\xcbr\xdcchpE\xce-\xbf\xc6\x93\x0b\x9e\xb4\x9e\x15\x14\x1b\xcd\x1fX\xf5:y\x96\x81\xfc\x17;\xe5\xda\xe8\xd1%\x03\xd8S\xff\x… │ │
+│ │            \xa3\xb6%\xe2\x00o\xa1\xc3\x99\xdf\xd2v\xec\x1b\xdf\xd7\xed\x11\xcd5\xa9E\xedy\xe1\x04\x97?\'o=c#06\x19\x1a6$\xce\xdf\xb3\xf4\xc9\xe6+C\xc2\xda>|>\xdf\x16v/(\xd… │ │
+│ │            \xcc\xff}\xdf3\xb3\x1f\xf9\x80                                                                                                                                    │ │
+│ │            \xb5\xf7\xb9\xcf\xbd<\x9a\x9d9s\xe6\xcc9\xefy\xdf\xf7\xfc\xdes~s\xc6w{\x95M\xb0\xd9lv\xf8\xdf0l\xb6\xad6\xfe\xcfk;\xf7?g\x8a\xcd\x96q\xc5\x9b\x19\xb6\xd7&\xec\x… │ │
+│ │            \xb9\xc6\x92\xf7$j\xcf\x156.\xef\xbf\x90\xbc\xffpc\x82\xbc?\x8a\xc6\xfb\xe7\r\x1c\x1c\x8c\xa9\x1a\xb5\xbe\xfe\xa1\xa4\x1a\xd2\xf5/\xd2\xf5\x99t\xfd\xb7\xc3\xaf\… │ │
+│ │            +\xeeO\xe0>\xa8\x93\xc2\x9au\xd6.^a\xc3\xfe\x9d\xa4\xb3\x86Xe\xe0\t\xd8\xbd\x8de\x934\xe8^\xab\x165ZH\x8b\x9f\x0c\xef\x8fR\x97\x93\xbaB\xda\x9a\x92\x92\x02\xe2\… │ │
+│ │            \x19K\xb2+"\xa5\x0f\x91\xbd\xab~\xd9\xe5R\xfd\x8bx\xabf\xc9l\x91+Gvw\xa9\xe2+\xb5\xb2\xbbC\x0f\xa7\x7fK\x13\xb6\xe9\x02\x0c\xc4\nx\x85\xec*^\xfb\xb9\x95\xd3\x1c… │ │
+│ │            [\xf2\xec\x90D}\x87\xe4\xd9\xa6\xfb\xa3\x92\xb8p\x9b\xeao\xd0=\xd1\xf5_\xd6@\xa9\xd4\xb0}\xae&D4wCqq\xb1u\xbf\\YxF\xae,2*\x9d\xa0\xd7\x82\x8a\xea\xf6\x91*\xbc\x… │ │
+│ │            9\xdf\xc0\x99\xb4\xfe\xea\x94\xd24\x995\xf6f\xf5W\xa7\x96:\xa47N\x1b\x86\xd1;QaM\xfd\xd5\xf62A:\xb1\x17\xee(\x84\\e.\xcc0\x9e_\x87\xcc\xf6\xd24\x895\xf5f\xf4W;J… │ │
+│ │            \x83\x8e0\r<\xd8\xb6h7\xa6\xb9\xe8\x08\xd3r\xa5\xe8i\x87d\x14\x82\x01\x8b\x15\xbb(\xc4y\xc9\xd5@u\xeaEi\xafAi\x97\xa0\x07Y\x84\x1e\xa4Pe\r\xd0\x96eh`\xee>\x94}\… │ │
+│ │            \x7f\xa8\xbb\x1c\xb7\xf2\xb0\x06G8\'\x93\xb8;\\\xe5*\x81\xd1\x8cd\xac\xc0Hv\xca\x01\xad\x04\x1d-\xf4\xf9\x0f\xe2\x03\x9f\xbc$\x05\xf5\xb3\xd4\x05\x08\xe5z\x97\x… │ │
+│ │            _\x0c\x08P\x9fA\xbe\x8b\x97$\x84\x8d\xf9\xe8<"$\x8d\x1e\xa6\x81\xb0\x8f\xa2\xd9\xfb\xfc]l\xa5]f\xa7e\x06\x81\x1a\xfb\x83\xc4\xa2\x12\x80\x08t\x16<7z\x0e\xf0\x17… │ │
+│ │            C\x00\xc2nOW\x846vS\xa6\xb0\x17\xea\xb6\x19{\xd1\xffu\x18\xe7\xa1\x03\xdc\x11\xd9J\x82\x0eh\x80c\x9c\xfc\xf14\xac\x9f\xec\x8e\xb2Mt"\xbeRO\xd7d\xcf\xd3\xae\x17Q… │ │
+│ │            \x0b-0\xf0\x00\x1a,\x10\xb7\xd8S*S\xe1GNI\xa9,H\xa1\x83\xd4\xca\x82T\x90\xac                                                                                      │ │
+│ │            \x05\xaa\x8d\xb2\x1dT-U\xd8\xa5\x08\x07\x10\n\xff\x0c[\x9a\x83-5#\x0b\x84\x83\x96\x84k\xe2\xf1\x136-\x0b\xc1*\xd5\x19\xe5\xaa\xb0>\x001\xf3\xe1\xc1\xd0\x12;D\x1… │ │
+│ │            F\xf0V\xce\xc1_\xc1[y}\x8a\xe2i^\xbdK\x13\xea\x10\x8a\xfdn4(\x16\xabo6\x0f\xb9\x16\'\x04]_\xb9&1\xe8\xba\x1f\x8c\xeb$V:!\xe8\x92X\x0f\xf8K\x0c\xbd\xce81\xf4:\r\… │ │
+│ │            \x1f\x06\xc3e}<>k\x84\xf8\xacQ\xf2\xd4\x82\x9eC|VK\xf1Y\xe3\xfa\xebn\x02\xb1\xa4bv\xa1Fs7\x8e\x18\x9f\xc9\x95\x18\xc2y\xed\x14\xa3u\xa3\xdd\xe7k\xc2\x01M\xf8\x0… │ │
+│ │            \xbf\x8av\x0b\xf8\x15!\xf0\x9b\xc1\x81\x1f]\xbe\xb4\xa2}D\xdc\'\xb3=\x05\xe1Y\x10\xad\xbd\x8f\xc1\t\xf5\x803z*\x0b\xe1\x9c\x97Zh\xc2\xb9\x98<\x00Q\xc4\x03\xb8\x… │ │
+│ │            \x9e\xcc\x8a\xc5\x9b\xde\xdc\x12\xcb?\xf5\xde,s\'\x00\xd9\x86\xc4\xa7Y\x12\xdd\x10\x8b?\x9b\xf06\x8aAGvH\n\x94\xd7xVL\x96\x8cW0\x1e5\x01\x00\xc5\xa2\xe0\xe8W     │ │
+│ │            \xda4G\xf8\xd8\xf0\x8e\xb6\xe8\xf3wS\xd03\x1e\x97\xd4B8\xf9\x18\xfe\x07\'b:o<\xfe\x9c\xcf\xe3\xcf\xed\xd4\xb1\x0b\xc1\x9a\x97\x82\xfc\xee\x86\x80\xa7]b\x0b!\xfe… │ │
+│ │            z\x16\xc5>rG\xa1\x8bt\xa8l}\xf5\x00\xc8\x08\xbbG\r\xcfuhB$\xdeS\xba\xbb\x13\x11J\xb6\x1c\xf2\x0e\x04\xaa\xa1#\xbc\xd0E\xd0[\x10o\x86\xbdN-\x9c\x9e\xaay\x9a\xd7}… │ │
+│ │            \xcd\xa5\x19\x92\xb8\xbdIF\x93L+\x8a\x80\xffh%\xb1\xd9\xbd;\x86\xf9d\xa1\xde\xc2|\x1dO\xec\x1aZ\xdc\x88\xf2\xc0\xd5U\xf0\xba*(\xae{\x1f\x8d:~\x18\xd0\x07\x14v\x… │ │
+│ │            yC\xfaE`\x98x=\xdd\x81\xc9\x98\x02\xd8\x91\x88g\xcdt\x9b#)\xb7\x03\n\xb1\xf3\xec\xe8Zc\xb7x\xf6\xac\xfe\'\xc9\xd3\xf1\xe8l\xb0\xd8z\x88H\xeb\xe4\xd9\xb5\xfdm\xf… │ │
+│ │            \xac#\xf1\xa0\x12-\x1f\xcd\x1e\xd7-qFE\x8d/\\\x8e\xd5\x03\xc8Ik\x96\xe8\x01\xa6\'x\x80K\xd0\x03\x0c\x8f(\xe5\xd9\xbb\xd0\x05\x809)\xd3;\xc1\x11L5\x1d\x01\xad7\x… │ │
+│ │            _\x19I\\]DV\xa5\xcf?P\xe5c7\xf3\xf8\xa0\x89\xc0\xd5\x12\x88\xe7\xe6\xd1z\xa2,T\xc7\xd6\x13\xbf*yv\xad\x9f\x84\x8b\x87\x90\xb6\x8b\x02\x00\x8c\xe5\x9cV,g\x86r\x1… │ │
+│ │            \x9f:\xe3\xeb)\xa6\x8cq&\xd8\xa1\x87\xbf\r\x01\xf3,\x97l\x8ee>P)\x100\xf8\x8f\x8f\xa9\xd4E.\x900\x05}\x10\xb7\x90\x8c!\n\x11\xf6\xfa\xfc\xe9.\xc9\xb3\x07\x85\\\… │ │
+│ │            w\xbdO\xd8e4\x83\x9e\xfeN7C\xa2\x98\xb0\xac\xb6k\x81m\xb4Xg\x89K\x0c~|\x06;c\x16\xcdR\'u\xc6]\xd6\x8c\xfdY\xe3\x1b\x1e\xd7H\xac{\xd8r\xdd\x08\xebu\xbb\xff\xf93\… │ │
+│ │            \xd7p\x88\xef\xb0\xf6(\r\xf00h\xa8\xecdB\x9cH\xd1\xc3&\x1b\'\x03\xaa\x10>\xe84i\x1bZ\xc5\x97\x1e\n97\x90&R\xc1\xdb\xe4\xe3\xdc\xd8J\xe2#\xc8\xac\x8b\xe2K\x8d\xb… │ │
+│ │            \xda\xfe\x03\xc4\xbf\xe2\xd2(\x9c<a\xff\x01\xa0^J\xddh\xa5l\x04\xd4;4\x05\xb0.\xa2\xdc\xa1\xc9\x9e\xce\xd5/#\xd8\xbdJbu2\xfc\x97W\x7f\xa2M\x9e\xc1\xa1.\xe8\xe6\… │ │
+│ │            Q\x16\x95\x050l\x92\ty\xc7fB\xadq\x13*\x1c\xd9\x84Z-\x13j\xe5&\xa4\xe4\x1d(\x08\xcf\x99p\xa2S\x9e\xb1?\xd8O\x00\x16\x19\xb2\xf2uq\x03\xea\x9dCLX\xec\xe5\\\x8bor… │ │
+│ │            Q\xf1t\x01\x90\xedR<;\xe0g\x87\xe2\xd9\xb7\xe16\xd9\xd3\xb8a\x11\x8e\x0c\x00\xa2\xa0\xd9\xfe#\x9c                                                                 │ │
+│ │            j\xdfH\xe6\xaf\x0b^\'Ml6\xe7E\xb8\xbd\x94\xcfq\xdaJ\xedRhZ9\xe2WOt\xdd\xc7\xbaP\x0bV.\x19\x8d\xb8\x90\xd3E\xb5\'\xcfN\x88\xf5\xe3\x14\xae|\x08\x92P`\xe4ob        │ │
+│ │            \xc9\xe4\\\'\xe3\x15\xbe\x1e\xc1\t\x0eY\xc9\xf0\x15G\xb3\x12\x84\'\x16~E\xf0j\xad\xf1LN\xc2\xad2{\x81\x04J$\x06s\r\xc1Ix\xdc\\\xef\x89R\xa9Ki\xbdGbw\x03v\xed\xc… │ │
+│ │            │   chunk_start=False,                                                                                                                                            │ │
+│ │            │   chunk_end=False                                                                                                                                               │ │
+│ │            )                                                                                                                                                                 │ │
+│ │  request = <Request [b'GET']>                                                                                                                                                │ │
+│ │     self = <HTTP11Connection ['https://release-assets.githubusercontent.com:443', CLOSED, Request Count: 1]>                                                                 │ │
+│ │  timeout = 5.0                                                                                                                                                               │ │
+│ │ timeouts = {'connect': 5.0, 'read': 5.0, 'write': 5.0, 'pool': 5.0}                                                                                                          │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_sync\http11.py:217 in _receive_event                                               │
+│                                                                                                                                                                                  │
+│   214 │   │   │   │   event = self._h11_state.next_event()                                                                                                                       │
+│   215 │   │   │                                                                                                                                                                  │
+│   216 │   │   │   if event is h11.NEED_DATA:                                                                                                                                     │
+│ ❱ 217 │   │   │   │   data = self._network_stream.read(                                                                                                                          │
+│   218 │   │   │   │   │   self.READ_NUM_BYTES, timeout=timeout                                                                                                                   │
+│   219 │   │   │   │   )                                                                                                                                                          │
+│   220                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────── locals ───────────────────────────────────────────────────╮                                                                  │
+│ │    self = <HTTP11Connection ['https://release-assets.githubusercontent.com:443', CLOSED, Request Count: 1]> │                                                                  │
+│ │ timeout = 5.0                                                                                               │                                                                  │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                  │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_backends\sync.py:126 in read                                                       │
+│                                                                                                                                                                                  │
+│   123 │                                                                                                                                                                          │
+│   124 │   def read(self, max_bytes: int, timeout: float | None = None) -> bytes:                                                                                                 │
+│   125 │   │   exc_map: ExceptionMapping = {socket.timeout: ReadTimeout, OSError: ReadError}                                                                                      │
+│ ❱ 126 │   │   with map_exceptions(exc_map):                                                                                                                                      │
+│   127 │   │   │   self._sock.settimeout(timeout)                                                                                                                                 │
+│   128 │   │   │   return self._sock.recv(max_bytes)                                                                                                                              │
+│   129                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────── locals ────────────────────────────────────────────────────────╮                                                        │
+│ │   exc_map = {<class 'TimeoutError'>: <class 'httpcore.ReadTimeout'>, <class 'OSError'>: <class 'httpcore.ReadError'>} │                                                        │
+│ │ max_bytes = 65536                                                                                                     │                                                        │
+│ │      self = <httpcore._backends.sync.SyncStream object at 0x000001DF00477360>                                         │                                                        │
+│ │   timeout = 5.0                                                                                                       │                                                        │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                        │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py:162 in __exit__                                                                                        │
+│                                                                                                                                                                                  │
+│   159 │   │   │   │   # tell if we get the same exception back                                                                                                                   │
+│   160 │   │   │   │   value = typ()                                                                                                                                              │
+│   161 │   │   │   try:                                                                                                                                                           │
+│ ❱ 162 │   │   │   │   self.gen.throw(value)                                                                                                                                      │
+│   163 │   │   │   except StopIteration as exc:                                                                                                                                   │
+│   164 │   │   │   │   # Suppress StopIteration *unless* it's the same exception that                                                                                             │
+│   165 │   │   │   │   # was passed to throw().  This prevents a StopIteration                                                                                                    │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────── locals ────────────────────────────────────╮                                                                                               │
+│ │      self = <contextlib._GeneratorContextManager object at 0x000001DF004B3F50> │                                                                                               │
+│ │ traceback = <traceback object at 0x000001DF7EE9E540>                           │                                                                                               │
+│ │     value = TimeoutError('The read operation timed out')                       │                                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────╯                                                                                               │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpcore\_exceptions.py:14 in map_exceptions                                                 │
+│                                                                                                                                                                                  │
+│   11 │   except Exception as exc:  # noqa: PIE786                                                                                                                                │
+│   12 │   │   for from_exc, to_exc in map.items():                                                                                                                                │
+│   13 │   │   │   if isinstance(exc, from_exc):                                                                                                                                   │
+│ ❱ 14 │   │   │   │   raise to_exc(exc) from exc                                                                                                                                  │
+│   15 │   │   raise  # pragma: nocover                                                                                                                                            │
+│   16                                                                                                                                                                             │
+│   17                                                                                                                                                                             │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────────────── locals ─────────────────────────────────────────────────────╮                                                              │
+│ │ map = {<class 'TimeoutError'>: <class 'httpcore.ReadTimeout'>, <class 'OSError'>: <class 'httpcore.ReadError'>} │                                                              │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                              │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ReadTimeout: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\file.py:228 in download                                               │
+│                                                                                                                                                                                  │
+│   225 │   │   │   │   │   self.tools.console.info(f"{cache_name} already downloaded")                                                                                            │
+│   226 │   │   │   │   else:                                                                                                                                                      │
+│   227 │   │   │   │   │   self.tools.console.info(f"Downloading {cache_name}...")                                                                                                │
+│ ❱ 228 │   │   │   │   │   self._fetch_and_write_content(response, filename)                                                                                                      │
+│   229 │   │   except httpx.RequestError as e:                                                                                                                                    │
+│   230 │   │   │   if role:                                                                                                                                                       │
+│   231 │   │   │   │   description = role                                                                                                                                         │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────────────────────────────── locals ────────────────────────────────────────────────────────────────────╮                               │
+│ │ cache_full_name = 'OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip'                                                                          │                               │
+│ │      cache_name = 'OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip'                                                                          │                               │
+│ │     description = 'Java 17 JDK'                                                                                                                │                               │
+│ │   download_path = WindowsPath('C:/Users/pascal/AppData/Local/BeeWare/briefcase/Cache/tools')                                                   │                               │
+│ │        filename = WindowsPath('C:/Users/pascal/AppData/Local/BeeWare/briefcase/Cache/tools/OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip') │                               │
+│ │    header_value = 'attachment; filename=OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip'                                                     │                               │
+│ │            hint = 'is your computer offline?\n\nThe reported cause of the problem was The read operat'+13                                      │                               │
+│ │             msg = <email.message.Message object at 0x000001DF004EF460>                                                                         │                               │
+│ │        response = <Response [200 OK]>                                                                                                          │                               │
+│ │            role = 'Java 17 JDK'                                                                                                                │                               │
+│ │            self = <briefcase.integrations.file.File object at 0x000001DF7EEA42F0>                                                              │                               │
+│ │             url = 'https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.17+10/'+49                                        │                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                               │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\file.py:313 in _fetch_and_write_content                               │
+│                                                                                                                                                                                  │
+│   310 │   │   │   │   │   progress_bar = self.tools.console.progress_bar()                                                                                                       │
+│   311 │   │   │   │   │   task_id = progress_bar.add_task("Downloader", total=int(total))                                                                                        │
+│   312 │   │   │   │   │   with progress_bar:                                                                                                                                     │
+│ ❱ 313 │   │   │   │   │   │   for data in response.iter_bytes(chunk_size=1024 * 1024):                                                                                           │
+│   314 │   │   │   │   │   │   │   temp_file.write(data)                                                                                                                          │
+│   315 │   │   │   │   │   │   │   progress_bar.update(task_id, advance=len(data))                                                                                                │
+│   316                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │     filename = WindowsPath('C:/Users/pascal/AppData/Local/BeeWare/briefcase/Cache/tools/OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip')                                  │ │
+│ │ progress_bar = <rich.progress.Progress object at 0x000001DF00559BE0>                                                                                                         │ │
+│ │     response = <Response [200 OK]>                                                                                                                                           │ │
+│ │         self = <briefcase.integrations.file.File object at 0x000001DF7EEA42F0>                                                                                               │ │
+│ │      task_id = 0                                                                                                                                                             │ │
+│ │    temp_file = <_TemporaryFileWrapper file=<_io.BufferedRandom                                                                                                               │ │
+│ │                name='C:\\Users\\pascal\\AppData\\Local\\BeeWare\\briefcase\\Cache\\tools\\OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip.xl9mmp53.download'>>             │ │
+│ │        total = '190698548'                                                                                                                                                   │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpx\_models.py:897 in iter_bytes                                                           │
+│                                                                                                                                                                                  │
+│    894 │   │   │   decoder = self._get_content_decoder()                                                                                                                         │
+│    895 │   │   │   chunker = ByteChunker(chunk_size=chunk_size)                                                                                                                  │
+│    896 │   │   │   with request_context(request=self._request):                                                                                                                  │
+│ ❱  897 │   │   │   │   for raw_bytes in self.iter_raw():                                                                                                                         │
+│    898 │   │   │   │   │   decoded = decoder.decode(raw_bytes)                                                                                                                   │
+│    899 │   │   │   │   │   for chunk in chunker.decode(decoded):                                                                                                                 │
+│    900 │   │   │   │   │   │   yield chunk                                                                                                                                       │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │ chunk_size = 1048576                                                                                                                                                         │ │
+│ │    chunker = <httpx._decoders.ByteChunker object at 0x000001DF0051EFD0>                                                                                                      │ │
+│ │    decoded = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x… │ │
+│ │    decoder = <httpx._decoders.IdentityDecoder object at 0x000001DF0051E990>                                                                                                  │ │
+│ │  raw_bytes = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x… │ │
+│ │       self = <Response [200 OK]>                                                                                                                                             │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpx\_models.py:951 in iter_raw                                                             │
+│                                                                                                                                                                                  │
+│    948 │   │   chunker = ByteChunker(chunk_size=chunk_size)                                                                                                                      │
+│    949 │   │                                                                                                                                                                     │
+│    950 │   │   with request_context(request=self._request):                                                                                                                      │
+│ ❱  951 │   │   │   for raw_stream_bytes in self.stream:                                                                                                                          │
+│    952 │   │   │   │   self._num_bytes_downloaded += len(raw_stream_bytes)                                                                                                       │
+│    953 │   │   │   │   for chunk in chunker.decode(raw_stream_bytes):                                                                                                            │
+│    954 │   │   │   │   │   yield chunk                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │            chunk = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec… │ │
+│ │       chunk_size = None                                                                                                                                                      │ │
+│ │          chunker = <httpx._decoders.ByteChunker object at 0x000001DF00477CE0>                                                                                                │ │
+│ │ raw_stream_bytes = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec… │ │
+│ │             self = <Response [200 OK]>                                                                                                                                       │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpx\_client.py:153 in __iter__                                                             │
+│                                                                                                                                                                                  │
+│    150 │   │   self._start = start                                                                                                                                               │
+│    151 │                                                                                                                                                                         │
+│    152 │   def __iter__(self) -> typing.Iterator[bytes]:                                                                                                                         │
+│ ❱  153 │   │   for chunk in self._stream:                                                                                                                                        │
+│    154 │   │   │   yield chunk                                                                                                                                                   │
+│    155 │                                                                                                                                                                         │
+│    156 │   def close(self) -> None:                                                                                                                                              │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │ chunk = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x9a9\x… │ │
+│ │  self = <httpx._client.BoundSyncStream object at 0x000001DF0051E5D0>                                                                                                         │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpx\_transports\default.py:126 in __iter__                                                 │
+│                                                                                                                                                                                  │
+│   123 │   │   self._httpcore_stream = httpcore_stream                                                                                                                            │
+│   124 │                                                                                                                                                                          │
+│   125 │   def __iter__(self) -> typing.Iterator[bytes]:                                                                                                                          │
+│ ❱ 126 │   │   with map_httpcore_exceptions():                                                                                                                                    │
+│   127 │   │   │   for part in self._httpcore_stream:                                                                                                                             │
+│   128 │   │   │   │   yield part                                                                                                                                                 │
+│   129                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │ part = b'c5\xabGt?\xdb\xab-SFW\xadh\xb7\x88Z\xef\xd4L\xbf8\xa5e\x92\xe9\xe9\xe6\xeakW\xf6:yE\x1c\x9a\x1d\xfbjf\x15wg\xec\xb8q\x9bC\xc7/\xd1\x1ap<\xa8\x98}{\xec\xab\x9a9\x9… │ │
+│ │ self = <httpx._transports.default.ResponseStream object at 0x000001DF0051E210>                                                                                               │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py:162 in __exit__                                                                                        │
+│                                                                                                                                                                                  │
+│   159 │   │   │   │   # tell if we get the same exception back                                                                                                                   │
+│   160 │   │   │   │   value = typ()                                                                                                                                              │
+│   161 │   │   │   try:                                                                                                                                                           │
+│ ❱ 162 │   │   │   │   self.gen.throw(value)                                                                                                                                      │
+│   163 │   │   │   except StopIteration as exc:                                                                                                                                   │
+│   164 │   │   │   │   # Suppress StopIteration *unless* it's the same exception that                                                                                             │
+│   165 │   │   │   │   # was passed to throw().  This prevents a StopIteration                                                                                                    │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────── locals ────────────────────────────────────╮                                                                                               │
+│ │      self = <contextlib._GeneratorContextManager object at 0x000001DF004B3EE0> │                                                                                               │
+│ │ traceback = <traceback object at 0x000001DF0056D9C0>                           │                                                                                               │
+│ │     value = ReadTimeout(TimeoutError('The read operation timed out'))          │                                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────╯                                                                                               │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\httpx\_transports\default.py:118 in map_httpcore_exceptions                                  │
+│                                                                                                                                                                                  │
+│   115 │   │   │   raise                                                                        ╭───────────────── locals ─────────────────╮                                      │
+│   116 │   │                                                                                    │ message = 'The read operation timed out' │                                      │
+│   117 │   │   message = str(exc)                                                               ╰──────────────────────────────────────────╯                                      │
+│ ❱ 118 │   │   raise mapped_exc(message) from exc                                                                                                                                 │
+│   119                                                                                                                                                                            │
+│   120                                                                                                                                                                            │
+│   121 class ResponseStream(SyncByteStream):                                                                                                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ReadTimeout: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\__main__.py:27 in main                                                             │
+│                                                                                                                                                                                  │
+│   24 │   │   │   Path.cwd() / "pyproject.toml",                                                                                                                                  │
+│   25 │   │   │   overrides=overrides,                                                                                                                                            │
+│   26 │   │   )                                                                                                                                                                   │
+│ ❱ 27 │   │   command(**options)                                                                                                                                                  │
+│   28 │   except HelpText as e:                                                                                                                                                   │
+│   29 │   │   console.info()                                                                                                                                                      │
+│   30 │   │   console.info(str(e))                                                                                                                                                │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────────────────────╮                    │
+│ │       command = <briefcase.platforms.android.gradle.GradleRunCommand object at 0x000001DF7EC8F230>                                                        │                    │
+│ │       console = <briefcase.console.Console object at 0x000001DF7EC8DA90>                                                                                  │                    │
+│ │             e = NetworkFailure('download Java 17 JDK', 'is your computer offline?\n\nThe reported cause of the problem was The read operation timed out') │                    │
+│ │ extra_cmdline = []                                                                                                                                        │                    │
+│ │       options = {                                                                                                                                         │                    │
+│ │                 │   'appname': None,                                                                                                                      │                    │
+│ │                 │   'update': False,                                                                                                                      │                    │
+│ │                 │   'update_requirements': False,                                                                                                         │                    │
+│ │                 │   'update_support': False,                                                                                                              │                    │
+│ │                 │   'update_stub': False,                                                                                                                 │                    │
+│ │                 │   'update_resources': False,                                                                                                            │                    │
+│ │                 │   'no_update': False,                                                                                                                   │                    │
+│ │                 │   'test_mode': False,                                                                                                                   │                    │
+│ │                 │   'debugger': None,                                                                                                                     │                    │
+│ │                 │   'debugger_host': 'localhost',                                                                                                         │                    │
+│ │                 │   ... +8                                                                                                                                │                    │
+│ │                 }                                                                                                                                         │                    │
+│ │     overrides = {}                                                                                                                                        │                    │
+│ │        result = 200                                                                                                                                       │                    │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                    │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\commands\run.py:374 in __call__                                                    │
+│                                                                                                                                                                                  │
+│   371 │   │                                                                                                                                                                      │
+│   372 │   │   # Confirm host compatibility, that all required tools are available,                                                                                               │
+│   373 │   │   # and that the app configuration is finalized.                                                                                                                     │
+│ ❱ 374 │   │   self.finalize(                                                                                                                                                     │
+│   375 │   │   │   apps=[app],                                                                                                                                                    │
+│   376 │   │   │   test_mode=test_mode,                                                                                                                                           │
+│   377 │   │   │   debugger=debugger,                                                                                                                                             │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────── locals ─────────────────────────────────────────────────╮                                                                     │
+│ │                 app = <com.omnigrab.omnigrab-android v1.0.0 AppConfig>                                   │                                                                     │
+│ │             appname = None                                                                               │                                                                     │
+│ │            debugger = None                                                                               │                                                                     │
+│ │       debugger_host = 'localhost'                                                                        │                                                                     │
+│ │       debugger_port = 5678                                                                               │                                                                     │
+│ │           no_update = False                                                                              │                                                                     │
+│ │             options = {                                                                                  │                                                                     │
+│ │                       │   'device_or_avd': None,                                                         │                                                                     │
+│ │                       │   'extra_emulator_args': None,                                                   │                                                                     │
+│ │                       │   'shutdown_on_exit': False,                                                     │                                                                     │
+│ │                       │   'revoke_permissions': None,                                                    │                                                                     │
+│ │                       │   'forward_ports': None,                                                         │                                                                     │
+│ │                       │   'reverse_ports': None                                                          │                                                                     │
+│ │                       }                                                                                  │                                                                     │
+│ │         passthrough = []                                                                                 │                                                                     │
+│ │                self = <briefcase.platforms.android.gradle.GradleRunCommand object at 0x000001DF7EC8F230> │                                                                     │
+│ │           test_mode = False                                                                              │                                                                     │
+│ │              update = False                                                                              │                                                                     │
+│ │ update_requirements = False                                                                              │                                                                     │
+│ │    update_resources = False                                                                              │                                                                     │
+│ │         update_stub = False                                                                              │                                                                     │
+│ │      update_support = False                                                                              │                                                                     │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                     │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\commands\base.py:740 in finalize                                                   │
+│                                                                                                                                                                                  │
+│    737 │   │   :param debugger_port: The port to use for the debugger                                                                                                            │
+│    738 │   │   """                                                                                                                                                               │
+│    739 │   │   self.verify_host()                                                                                                                                                │
+│ ❱  740 │   │   self.verify_tools()                                                                                                                                               │
+│    741 │   │                                                                                                                                                                     │
+│    742 │   │   for app in apps:                                                                                                                                                  │
+│    743 │   │   │   if hasattr(app, "__draft__"):                                                                                                                                 │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────── locals ──────────────────────────────────────────────╮                                                                           │
+│ │          apps = [<com.omnigrab.omnigrab-android v1.0.0 AppConfig>]                                 │                                                                           │
+│ │      debugger = None                                                                               │                                                                           │
+│ │ debugger_host = 'localhost'                                                                        │                                                                           │
+│ │ debugger_port = 5678                                                                               │                                                                           │
+│ │          self = <briefcase.platforms.android.gradle.GradleRunCommand object at 0x000001DF7EC8F230> │                                                                           │
+│ │     test_mode = False                                                                              │                                                                           │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                           │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\platforms\android\gradle.py:381 in verify_tools                                    │
+│                                                                                                                                                                                  │
+│   378 │   supports_debugger = True                                                                                                                                               │
+│   379 │                                                                                                                                                                          │
+│   380 │   def verify_tools(self):                                                                                                                                                │
+│ ❱ 381 │   │   super().verify_tools()                                                                                                                                             │
+│   382 │   │   self.tools.android_sdk.verify_emulator()                                                                                                                           │
+│   383 │                                                                                                                                                                          │
+│   384 │   def add_options(self, parser):                                                                                                                                         │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────── locals ──────────────────────────────────────────╮                                                                                    │
+│ │ self = <briefcase.platforms.android.gradle.GradleRunCommand object at 0x000001DF7EC8F230> │                                                                                    │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────╯                                                                                    │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\platforms\android\gradle.py:153 in verify_tools                                    │
+│                                                                                                                                                                                  │
+│   150 │   │   """Verify that the Android APK tools in `briefcase` will operate on this system,                                                                                   │
+│   151 │   │   downloading tools as needed."""                                                                                                                                    │
+│   152 │   │   super().verify_tools()                                                                                                                                             │
+│ ❱ 153 │   │   AndroidSDK.verify(tools=self.tools)                                                                                                                                │
+│   154 │   │   if not self.is_clone:                                                                                                                                              │
+│   155 │   │   │   self.console.add_log_file_extra(self.tools.android_sdk.list_packages)                                                                                          │
+│   156                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────── locals ──────────────────────────────────────────╮                                                                                    │
+│ │ self = <briefcase.platforms.android.gradle.GradleRunCommand object at 0x000001DF7EC8F230> │                                                                                    │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────╯                                                                                    │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\base.py:115 in verify                                                 │
+│                                                                                                                                                                                  │
+│   112 │   │   **kwargs,                                                                                                                                                          │
+│   113 │   ) -> ManagedToolT:                                                                                                                                                     │
+│   114 │   │   """Confirm the managed tool is installed and available."""                                                                                                         │
+│ ❱ 115 │   │   return super().verify(tools=tools, app=app, install=install, **kwargs)                                                                                             │
+│   116 │                                                                                                                                                                          │
+│   117 │   @abstractmethod                                                                                                                                                        │
+│   118 │   def exists(self) -> bool:                                                                                                                                              │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────── locals ────────────────────────────────────╮                                                                                               │
+│ │     app = None                                                                 │                                                                                               │
+│ │ install = True                                                                 │                                                                                               │
+│ │  kwargs = {}                                                                   │                                                                                               │
+│ │   tools = <briefcase.integrations.base.ToolCache object at 0x000001DF7EC8FA10> │                                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────╯                                                                                               │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\base.py:79 in verify                                                  │
+│                                                                                                                                                                                  │
+│    76 │   ) -> ToolT:                                                                          ╭─────────────────────────────────── locals ────────────────────────────────────╮ │
+│    77 │   │   """Confirm the tool is available and usable on the host platform."""             │    app = None                                                                 │ │
+│    78 │   │   cls.verify_host(tools=tools)                                                     │ kwargs = {'install': True}                                                    │ │
+│ ❱  79 │   │   tool = cls.verify_install(tools=tools, app=app, **kwargs)                        │  tools = <briefcase.integrations.base.ToolCache object at 0x000001DF7EC8FA10> │ │
+│    80 │   │   return tool                                                                      ╰───────────────────────────────────────────────────────────────────────────────╯ │
+│    81 │                                                                                                                                                                          │
+│    82 │   @classmethod                                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\android_sdk.py:264 in verify_install                                  │
+│                                                                                                                                                                                  │
+│    261 │   │   if hasattr(tools, "android_sdk"):                                                                                                                                 │
+│    262 │   │   │   return tools.android_sdk                                                                                                                                      │
+│    263 │   │                                                                                                                                                                     │
+│ ❱  264 │   │   JDK.verify(tools=tools, install=install)                                                                                                                          │
+│    265 │   │                                                                                                                                                                     │
+│    266 │   │   sdk = None                                                                                                                                                        │
+│    267                                                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────── locals ────────────────────────────────────╮                                                                                               │
+│ │ install = True                                                                 │                                                                                               │
+│ │  kwargs = {'app': None}                                                        │                                                                                               │
+│ │   tools = <briefcase.integrations.base.ToolCache object at 0x000001DF7EC8FA10> │                                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────╯                                                                                               │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\base.py:115 in verify                                                 │
+│                                                                                                                                                                                  │
+│   112 │   │   **kwargs,                                                                                                                                                          │
+│   113 │   ) -> ManagedToolT:                                                                                                                                                     │
+│   114 │   │   """Confirm the managed tool is installed and available."""                                                                                                         │
+│ ❱ 115 │   │   return super().verify(tools=tools, app=app, install=install, **kwargs)                                                                                             │
+│   116 │                                                                                                                                                                          │
+│   117 │   @abstractmethod                                                                                                                                                        │
+│   118 │   def exists(self) -> bool:                                                                                                                                              │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────── locals ────────────────────────────────────╮                                                                                               │
+│ │     app = None                                                                 │                                                                                               │
+│ │ install = True                                                                 │                                                                                               │
+│ │  kwargs = {}                                                                   │                                                                                               │
+│ │   tools = <briefcase.integrations.base.ToolCache object at 0x000001DF7EC8FA10> │                                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────╯                                                                                               │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\base.py:79 in verify                                                  │
+│                                                                                                                                                                                  │
+│    76 │   ) -> ToolT:                                                                          ╭─────────────────────────────────── locals ────────────────────────────────────╮ │
+│    77 │   │   """Confirm the tool is available and usable on the host platform."""             │    app = None                                                                 │ │
+│    78 │   │   cls.verify_host(tools=tools)                                                     │ kwargs = {'install': True}                                                    │ │
+│ ❱  79 │   │   tool = cls.verify_install(tools=tools, app=app, **kwargs)                        │  tools = <briefcase.integrations.base.ToolCache object at 0x000001DF7EC8FA10> │ │
+│    80 │   │   return tool                                                                      ╰───────────────────────────────────────────────────────────────────────────────╯ │
+│    81 │                                                                                                                                                                          │
+│    82 │   @classmethod                                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\java.py:259 in verify_install                                         │
+│                                                                                                                                                                                  │
+│   256 │   │   │   │   │   │   f"variable."                                                                                                                                       │
+│   257 │   │   │   │   │   )                                                                                                                                                      │
+│   258 │   │   │   │   │   tools.console.info()                                                                                                                                   │
+│ ❱ 259 │   │   │   │   │   java.install()                                                                                                                                         │
+│   260 │   │   │   │   else:                                                                                                                                                      │
+│   261 │   │   │   │   │   raise MissingToolError("Java")                                                                                                                         │
+│   262                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────── locals ───────────────────────────────────────────────╮                                                                          │
+│ │         install = True                                                                              │                                                                          │
+│ │ install_message = None                                                                              │                                                                          │
+│ │            java = <briefcase.integrations.java.JDK object at 0x000001DF7EEA4C20>                    │                                                                          │
+│ │       java_home = WindowsPath('C:/Users/pascal/AppData/Local/BeeWare/briefcase/Cache/tools/java17') │                                                                          │
+│ │          kwargs = {'app': None}                                                                     │                                                                          │
+│ │           tools = <briefcase.integrations.base.ToolCache object at 0x000001DF7EC8FA10>              │                                                                          │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                          │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\java.py:283 in install                                                │
+│                                                                                                                                                                                  │
+│   280 │                                                                                        ╭─────────────────────────────── locals ────────────────────────────────╮         │
+│   281 │   def install(self):                                                                   │ self = <briefcase.integrations.java.JDK object at 0x000001DF7EEA4C20> │         │
+│   282 │   │   """Download and install a JDK."""                                                ╰───────────────────────────────────────────────────────────────────────╯         │
+│ ❱ 283 │   │   jdk_zip_path = self.tools.file.download(                                                                                                                           │
+│   284 │   │   │   url=self.OpenJDK_download_url,                                                                                                                                 │
+│   285 │   │   │   download_path=self.tools.base_path,                                                                                                                            │
+│   286 │   │   │   role=f"Java {self.JDK_MAJOR_VER} JDK",                                                                                                                         │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\integrations\file.py:277 in download                                               │
+│                                                                                                                                                                                  │
+│   274 │   │   │   │   │   f"The reported cause of the problem was {e}"                                                                                                           │
+│   275 │   │   │   │   )                                                                                                                                                          │
+│   276 │   │   │                                                                                                                                                                  │
+│ ❱ 277 │   │   │   raise NetworkFailure(                                                                                                                                          │
+│   278 │   │   │   │   f"download {description}",                                                                                                                                 │
+│   279 │   │   │   │   hint,                                                                                                                                                      │
+│   280 │   │   │   ) from e                                                                                                                                                       │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────────────────────────────── locals ────────────────────────────────────────────────────────────────────╮                               │
+│ │ cache_full_name = 'OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip'                                                                          │                               │
+│ │      cache_name = 'OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip'                                                                          │                               │
+│ │     description = 'Java 17 JDK'                                                                                                                │                               │
+│ │   download_path = WindowsPath('C:/Users/pascal/AppData/Local/BeeWare/briefcase/Cache/tools')                                                   │                               │
+│ │        filename = WindowsPath('C:/Users/pascal/AppData/Local/BeeWare/briefcase/Cache/tools/OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip') │                               │
+│ │    header_value = 'attachment; filename=OpenJDK17U-jdk_x64_windows_hotspot_17.0.17_10.zip'                                                     │                               │
+│ │            hint = 'is your computer offline?\n\nThe reported cause of the problem was The read operat'+13                                      │                               │
+│ │             msg = <email.message.Message object at 0x000001DF004EF460>                                                                         │                               │
+│ │        response = <Response [200 OK]>                                                                                                          │                               │
+│ │            role = 'Java 17 JDK'                                                                                                                │                               │
+│ │            self = <briefcase.integrations.file.File object at 0x000001DF7EEA42F0>                                                              │                               │
+│ │             url = 'https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.17+10/'+49                                        │                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+NetworkFailure: Unable to download Java 17 JDK; is your computer offline?
+
+The reported cause of the problem was The read operation timed out

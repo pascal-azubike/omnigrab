@@ -1,336 +1,138 @@
 <script lang="ts">
-  import { formatDuration } from '$lib/utils/formatBytes.js';
-  import type { PlaylistInfo, PlaylistEntry } from '$lib/types.js';
+  import { Download, CheckCircle2, Circle, ListVideo } from 'lucide-svelte';
+  import type { PlaylistInfo } from '$lib/types';
+  import { startDownload } from '$lib/utils/api';
+  import { downloadStore } from '$lib/stores/downloads.svelte';
+  import { v4 as uuidv4 } from 'uuid';
 
-  interface Props {
-    info: PlaylistInfo;
-    quality: string;
-    format: string;
-    outputPath: string;
-    selectedItems: Set<number>;
-    onToggleItem: (index: number) => void;
-    onSelectAll: () => void;
-    onDeselectAll: () => void;
-    onDownload: (selected: number[]) => void;
-    onBrowse: () => void;
-    isDesktop: boolean;
+  let { playlist } = $props<{ playlist: PlaylistInfo }>();
+
+  let selectedIndices = $state<number[]>(playlist.entries.map(e => e.index));
+  let quality = $state('best');
+  let format = $state('mp4');
+
+  function toggleSelect(index: number) {
+    if (selectedIndices.includes(index)) {
+      selectedIndices = selectedIndices.filter(i => i !== index);
+    } else {
+      selectedIndices = [...selectedIndices, index];
+    }
   }
 
-  let {
-    info,
-    quality = $bindable(),
-    format = $bindable(),
-    outputPath = $bindable(),
-    selectedItems = $bindable(new Set()),
-    onToggleItem,
-    onSelectAll,
-    onDeselectAll,
-    onDownload,
-    onBrowse,
-    isDesktop,
-  }: Props = $props();
+  function toggleAll() {
+    if (selectedIndices.length === playlist.entries.length) {
+      selectedIndices = [];
+    } else {
+      selectedIndices = playlist.entries.map(e => e.index);
+    }
+  }
 
-  let allSelected = $derived(selectedItems.size === info.entries.length);
-  let selectedCount = $derived(selectedItems.size);
+  async function handleDownload() {
+    if (selectedIndices.length === 0) return;
 
-  const QUALITY_OPTIONS = [
-    { value: 'best', label: 'Best' },
-    { value: '1080', label: '1080p' },
-    { value: '720', label: '720p' },
-    { value: '480', label: '480p' },
-    { value: '360', label: '360p' },
-    { value: 'audio', label: 'Audio Only' },
-  ];
+    const id = uuidv4();
+    const payload = {
+      id,
+      url: playlist.entries[0].url, // use the first entry URL as a base or the playlist URL if available
+      quality,
+      format,
+      embed_thumbnail: true,
+      embed_metadata: true,
+      download_subtitles: false,
+      subtitle_lang: 'en',
+      is_playlist: true,
+      playlist_items: selectedIndices.join(',')
+    };
 
-  const FORMAT_OPTIONS = [
-    { value: 'mp4', label: 'MP4' },
-    { value: 'mkv', label: 'MKV' },
-    { value: 'mp3', label: 'MP3' },
-    { value: 'm4a', label: 'M4A' },
-  ];
-
-  function handleDownload() {
-    onDownload([...selectedItems]);
+    await downloadStore.addDownload(payload);
+    await startDownload(payload);
   }
 </script>
 
-<div class="playlist-preview animate-fade-in">
-  <!-- Header -->
-  <div class="playlist-header">
-    <div class="playlist-meta">
-      {#if info.playlist_thumbnail}
-        <img src={info.playlist_thumbnail} alt="" class="playlist-thumb" />
-      {/if}
-      <div class="playlist-info">
-        <h2 class="playlist-title">{info.playlist_title}</h2>
-        <p class="playlist-uploader">{info.playlist_uploader}</p>
-        <span class="badge badge-accent">{info.total_count} videos</span>
+<div class="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+  <div class="p-8 border-b border-zinc-800 flex flex-wrap items-center justify-between gap-6">
+    <div class="flex items-center gap-6">
+      <div class="h-20 w-20 rounded-2xl overflow-hidden shadow-lg border border-zinc-800">
+        <img src={playlist.playlist_thumbnail} alt={playlist.playlist_title} class="w-full h-full object-cover" />
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-white leading-tight">{playlist.playlist_title}</h2>
+        <p class="text-zinc-400 font-medium">{playlist.playlist_uploader} &bull; {playlist.total_count} videos</p>
       </div>
     </div>
 
-    <!-- Options row -->
-    <div class="options-row">
-      <div class="selects">
-        <select bind:value={quality} class="input">
-          {#each QUALITY_OPTIONS as opt}
-            <option value={opt.value}>{opt.label}</option>
-          {/each}
-        </select>
-        <select bind:value={format} class="input">
-          {#each FORMAT_OPTIONS as opt}
-            <option value={opt.value}>{opt.label}</option>
-          {/each}
+    <div class="flex items-center gap-4">
+      <div class="flex flex-col gap-1">
+        <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Quality</label>
+        <select bind:value={quality} class="bg-zinc-800 border-none rounded-xl text-white px-3 py-2 text-sm outline-none">
+          <option value="best">Best</option>
+          <option value="1080">1080p</option>
+          <option value="720">720p</option>
+          <option value="audio">Audio</option>
         </select>
       </div>
-
-      <div class="path-input">
-        <input bind:value={outputPath} type="text" class="input" readonly placeholder="Output folder..." />
-        {#if isDesktop}
-          <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
-        {/if}
-      </div>
-    </div>
-
-    <!-- Selection controls -->
-    <div class="selection-bar">
-      <div class="selection-actions">
-        <button class="btn btn-ghost btn-sm" onclick={onSelectAll} disabled={allSelected}>
-          Select all
-        </button>
-        <button class="btn btn-ghost btn-sm" onclick={onDeselectAll} disabled={selectedCount === 0}>
-          Deselect all
-        </button>
-        <span class="selection-count text-secondary text-sm">{selectedCount} selected</span>
-      </div>
-
-      <button
-        class="btn btn-primary"
+      
+      <button 
         onclick={handleDownload}
-        disabled={selectedCount === 0}
+        disabled={selectedIndices.length === 0}
+        class="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-800 disabled:text-zinc-600 text-white font-bold rounded-xl transition-all shadow-xl flex items-center gap-2 active:scale-95"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download Selected ({selectedCount})
+        <Download class="h-5 w-5" />
+        Download {selectedIndices.length} items
       </button>
     </div>
   </div>
 
-  <!-- Entry list -->
-  <div class="entry-list">
-    {#each info.entries as entry, i}
-      {@const isSelected = selectedItems.has(i)}
-      <div
-        class="entry-row"
-        class:selected={isSelected}
-        onclick={() => onToggleItem(i)}
-        role="checkbox"
-        aria-checked={isSelected}
-        tabindex="0"
-        onkeydown={(e) => e.key === ' ' && onToggleItem(i)}
+  <div class="max-h-[500px] overflow-y-auto custom-scrollbar">
+    <div class="p-4 space-y-2">
+      <button 
+        onclick={toggleAll}
+        class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/50 transition-colors group"
       >
-        <div class="entry-check">
-          <div class="checkbox" class:checked={isSelected}>
-            {#if isSelected}
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
+        <div class="flex items-center gap-3">
+          {#if selectedIndices.length === playlist.entries.length}
+            <CheckCircle2 class="h-5 w-5 text-indigo-500" />
+          {:else if selectedIndices.length > 0}
+            <div class="h-5 w-5 bg-indigo-500/20 rounded flex items-center justify-center">
+              <div class="w-2.5 h-0.5 bg-indigo-500 rounded-full"></div>
+            </div>
+          {:else}
+            <Circle class="h-5 w-5 text-zinc-600 group-hover:text-zinc-400" />
+          {/if}
+          <span class="text-sm font-bold text-white">Select All</span>
+        </div>
+        <span class="text-xs font-medium text-zinc-500">{selectedIndices.length}/{playlist.entries.length} selected</span>
+      </button>
+
+      {#each playlist.entries as entry}
+        <button 
+          onclick={() => toggleSelect(entry.index)}
+          class="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-zinc-800/50 transition-colors group {selectedIndices.includes(entry.index) ? 'bg-zinc-800/30' : ''}"
+        >
+          <div class="flex-shrink-0">
+            {#if selectedIndices.includes(entry.index)}
+              <CheckCircle2 class="h-5 w-5 text-indigo-500" />
+            {:else}
+              <Circle class="h-5 w-5 text-zinc-600 group-hover:text-zinc-400" />
             {/if}
           </div>
-        </div>
+          
+          <div class="h-12 w-20 rounded-lg overflow-hidden bg-zinc-800 flex-shrink-0">
+            <img src={entry.thumbnail} alt={entry.title} class="w-full h-full object-cover" />
+          </div>
 
-        <div class="entry-thumb-container">
-          {#if entry.thumbnail}
-            <img src={entry.thumbnail} alt={entry.title} class="entry-thumb" loading="lazy" />
-          {:else}
-            <div class="entry-thumb-fallback">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
+          <div class="flex-grow text-left overflow-hidden">
+            <h4 class="text-sm font-medium text-white line-clamp-1 group-hover:text-indigo-400 transition-colors uppercase tracking-tight leading-none mb-1">
+              {entry.title}
+            </h4>
+            <div class="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
+              <span>#{entry.index}</span>
+              <span>&bull;</span>
+              <span>{Math.floor(entry.duration / 60)}:{(entry.duration % 60).toString().padStart(2, '0')}</span>
             </div>
-          {/if}
-        </div>
-
-        <div class="entry-info">
-          <span class="entry-index">#{entry.index}</span>
-          <span class="entry-title">{entry.title}</span>
-        </div>
-
-        {#if entry.duration}
-          <span class="entry-duration font-mono">{formatDuration(entry.duration)}</span>
-        {/if}
-      </div>
-    {/each}
+          </div>
+        </button>
+      {/each}
+    </div>
   </div>
 </div>
-
-<style>
-  .playlist-preview {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-  }
-
-  .playlist-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .playlist-meta {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-  }
-
-  .playlist-thumb {
-    width: 80px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-  }
-
-  .playlist-info { display: flex; flex-direction: column; gap: 6px; }
-
-  .playlist-title {
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .playlist-uploader {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  .options-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .selects {
-    display: flex;
-    gap: 8px;
-  }
-
-  .selects .input { width: 130px; }
-
-  .path-input {
-    display: flex;
-    gap: 8px;
-    flex: 1;
-  }
-
-  .path-input .input { flex: 1; min-width: 0; cursor: default; }
-
-  .selection-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .selection-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .entry-list {
-    max-height: 420px;
-    overflow-y: auto;
-  }
-
-  .entry-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 24px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border);
-    transition: background 150ms;
-  }
-
-  .entry-row:last-child { border-bottom: none; }
-  .entry-row:hover { background: var(--surface-raised); }
-  .entry-row.selected { background: color-mix(in srgb, var(--accent) 8%, transparent); }
-
-  .entry-check { flex-shrink: 0; }
-
-  .checkbox {
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 150ms;
-  }
-
-  .checkbox.checked {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-
-  .entry-thumb-container {
-    width: 56px;
-    height: 40px;
-    border-radius: 6px;
-    overflow: hidden;
-    flex-shrink: 0;
-    background: var(--surface-raised);
-  }
-
-  .entry-thumb {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .entry-thumb-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-  }
-
-  .entry-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .entry-index {
-    font-size: 11px;
-    color: var(--text-secondary);
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .entry-title {
-    font-size: 13px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .entry-duration {
-    font-size: 11px;
-    color: var(--text-secondary);
-    flex-shrink: 0;
-  }
-</style>

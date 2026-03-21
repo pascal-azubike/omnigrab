@@ -1,69 +1,77 @@
-<div align="center">
-  <img src="landing/favicon.png" alt="OmniGrab Logo" width="120" />
-  <h1>OmniGrab</h1>
-  <p><strong>Universal Video & Audio Downloader</strong></p>
-  <p>Powered by yt-dlp, built with Tauri v2 + Svelte 5 + Tailwind v4</p>
-</div>
+# OmniGrab &bull; Universal Video Downloader
 
----
+OmniGrab is a high-performance, cross-platform media extraction tool built with a single SvelteKit frontend and dual-target backends (Tauri for Desktop and BeeWare for Android).
 
-## Features
+## 🚀 Key Features
 
-- **1800+ Supported Sites**: Downloads from YouTube, TikTok, Instagram, X (Twitter), Reddit, Twitch, Vimeo, SoundCloud, and thousands more.
-- **Universal Cross-Platform App**: Runs natively on Windows, macOS, Linux, and Android.
-- **100% Local Processing**: No external servers, no cloud APIs. `yt-dlp` and `ffmpeg` are bundled as portable sidecar binaries.
-- **Playlist Extraction**: Grid UI with checkboxes for downloading specific items from playlists or channels.
-- **Metadata Embedding**: Options to embed thumbnails and write ID3/MP4 metadata tags.
-- **Subtitle Support**: Auto-fetches requested subtitle languages (e.g., `en,es`).
-- **Cookie Authentication**: Supports importing browser `cookies.txt` for downloading private/age-restricted content.
+- **1800+ Sites Supported**: Powered by `yt-dlp` core.
+- **Dual-Target Architecture**: Native-feeling apps for Windows, macOS, Linux, and Android.
+- **Unified UI**: Shared Svelte 5 frontend with a premium dark theme.
+- **Real-time Progress**: Live streaming of download status and speed.
+- **Metadata Bliss**: Automatic embedding of thumbnails, subtitles, and tags.
+- **Open Source**: Built with privacy and transparency in mind.
 
-## Prerequisites
+## 📁 Project Structure
 
-- [Node.js](https://nodejs.org/) (v20+)
-- [Rust](https://rustup.rs/) (stable)
-- OS-specific build tools (C++ build tools on Windows, Xcode on macOS, build-essential on Linux)
+```text
+omnigrab/
+├── packages/
+│   ├── ui/        ← Shared SvelteKit frontend (Svelte 5 + Tailwind 4)
+│   ├── desktop/   ← Tauri v2 (Rust) desktop backend
+│   └── android/   ← BeeWare Briefcase (Python 3.12 + FastAPI) Android backend
+├── landing/       ← Static landing page (Vercel)
+└── .github/       ← CI/CD workflows for all targets
+```
 
-## 📁 Monorepo Setup
+## 🛠️ Development Setup
 
-1. **Install Root Dependencies:** `npm install`
-2. **Build Shared UI:**
-   - `cd packages/ui`
-   - `npm run build:desktop` (for Windows/Desktop)
-   - `npm run build:android` (for Android)
+### Prerequisites
+- **Node.js**: 20.x or higher
+- **Rust**: 1.75+ (for Desktop)
+- **Python**: 3.12 (for Android)
+- **BeeWare Briefcase**: `pip install briefcase`
 
-## 🚀 Running the App
+### Getting Started
 
-### Desktop (Tauri)
-- `cd packages/desktop`
-- `npm run tauri dev`
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Android (Briefcase)
-- `cd packages/android`
-- `.\.venv\Scripts\Activate.ps1`
-- `python -m briefcase dev`
+2. **Run Desktop (Dev)**:
+   ```bash
+   npm run dev:desktop
+   ```
 
-## 📦 Building for Production
+3. **Run Android (Dev)**:
+   ```bash
+   npm run dev:android
+   ```
 
-### Desktop (Windows/Mac/Linux)
-1. Build UI: `cd packages/ui && npm run build:desktop`
-2. Build App: `cd ../desktop && npm run tauri build`
-*Extract from: `packages/desktop/src-tauri/target/release/bundle/`*
+## 📦 Building Releases
 
-### Android (APK/AAB)
-1. Build UI: `cd packages/ui && npm run build:android`
-2. Build App: `cd ../android && .\.venv\Scripts\Activate.ps1 && python -m briefcase package android`
-*Extract from: `packages/android/dist/`*
+### Desktop
+Releases are automatically built and published via GitHub Actions when a new version tag (e.g., `v2.0.0`) is pushed.
 
-## Application Architecture
+### Android
+1. Build the UI for Android:
+   ```bash
+   npm run build:ui:android
+   ```
+2. Build and package the APK:
+   ```bash
+   npm run build:android
+   npm run package:android
+   ```
 
-- **Frontend**: SvelteKit static site (`@sveltejs/adapter-static`) with Svelte 5 runes for state management (`$state`, `$derived`).
-- **Styling**: Tailwind CSS v4 utilizing CSS variables for dynamic Light/Dark default theming.
-- **Backend**: Rust using Tauri v2. Handles all heavy lifting: managing child processes, streaming stdout to parse `yt-dlp` download progress, error mapping, and file operations.
-- **Sidecars**: Heavy usage of `@tauri-apps/plugin-shell` for invoking `externalBin` commands (`yt-dlp` and `ffmpeg`).
-- **State Persistence**: Uses `@tauri-apps/plugin-store` to save User History and App Settings.
+## 🔐 CI/CD Secrets
 
-## License
+To enable automated releases, ensure the following GitHub Secrets are configured:
 
-MIT License.
+- **Desktop**: `TAURI_SIGNING_PRIVATE_KEY`, `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`
+- **Android**: `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`
+- **Landing Page**: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
 
-**Disclaimer**: This application is provided for educational and personal archival purposes. Follow the Terms of Service of the platforms you download from. Do not download or distribute copyrighted material without permission.
+## ⚖️ License
+
+Distributed under the MIT License. See `LICENSE` for more information.

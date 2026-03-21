@@ -157,7 +157,7 @@ pub async fn start_download(
     #[cfg(target_os = "android")]
     {
         // Emit queued status immediately
-        safe_emit(&app, "download:progress", ProgressEvent {
+        safe_emit(&app, "download-progress", ProgressEvent {
             id: download_id.clone(),
             percent: 0.0,
             speed: "0 B/s".to_string(),
@@ -229,7 +229,7 @@ pub async fn start_download(
     let is_playlist = payload.is_playlist;
 
     // Emit queued status
-    safe_emit(&app, "download:progress", ProgressEvent {
+    safe_emit(&app, "download-progress", ProgressEvent {
         id: download_id.clone(),
         percent: 0.0,
         speed: "0 B/s".to_string(),
@@ -301,7 +301,7 @@ pub async fn start_download(
                             current_title.clone()
                         };
 
-                        safe_emit(&app_clone, "download:progress", ProgressEvent {
+                        safe_emit(&app_clone, "download-progress", ProgressEvent {
                             id: id_clone.clone(),
                             percent,
                             speed,
@@ -324,7 +324,7 @@ pub async fn start_download(
 
                     // Processing / merging
                     if line_str.contains("[Merger]") || line_str.contains("[ffmpeg]") {
-                        safe_emit(&app_clone, "download:progress", ProgressEvent {
+                        safe_emit(&app_clone, "download-progress", ProgressEvent {
                             id: id_clone.clone(),
                             percent: 100.0,
                             speed: String::new(),
@@ -379,7 +379,7 @@ pub async fn start_download(
         // Emit final status
         if had_error {
             let user_error = crate::commands::info::map_yt_dlp_error(&error_msg);
-            safe_emit(&app_clone, "download:progress", ProgressEvent {
+            safe_emit(&app_clone, "download-progress", ProgressEvent {
                 id: id_clone.clone(),
                 percent: 0.0,
                 speed: String::new(),
@@ -390,7 +390,7 @@ pub async fn start_download(
                 status: DownloadStatus::Error,
             });
         } else {
-            safe_emit(&app_clone, "download:progress", ProgressEvent {
+            safe_emit(&app_clone, "download-progress", ProgressEvent {
                 id: id_clone.clone(),
                 percent: 100.0,
                 speed: String::new(),

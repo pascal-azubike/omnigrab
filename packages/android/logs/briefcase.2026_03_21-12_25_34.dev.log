@@ -1,0 +1,324 @@
+Date/Time:       2026-03-21 12:25:34 
+Command line:    C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\__main__.py dev
+
+OS Release:      Windows 11
+OS Version:      10.0.26200
+Architecture:    AMD64
+Platform:        Windows-11-10.0.26200-SP0
+
+Python exe:      C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Scripts\python.exe
+Python version:  3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]
+Virtual env:     True
+Conda env:       False
+
+Briefcase:       0.4.1
+Target platform: windows
+Target format:   app
+
+Environment Variables:
+	ALLUSERSPROFILE=C:\ProgramData
+	ANTHROPIC_AUTH_TOKEN=********************
+	ANTHROPIC_BASE_URL=http://localhost:11434
+	ANTIGRAVITY_CLI_ALIAS=agy
+	APPDATA=C:\Users\pascal\AppData\Roaming
+	BUNDLED_DEBUGPY_PATH=c:\Users\pascal\.antigravity\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\libs\debugpy
+	CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_2528_KREZRAWWKCCITXNG
+	COLORTERM=truecolor
+	COMMONPROGRAMFILES=C:\Program Files\Common Files
+	COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files
+	COMMONPROGRAMW6432=C:\Program Files\Common Files
+	COMPUTERNAME=DESKTOP-RROI6M1
+	COMSPEC=C:\WINDOWS\system32\cmd.exe
+	DRIVERDATA=C:\Windows\System32\Drivers\DriverData
+	EFC_20252_1592913036=1
+	GIT_ASKPASS=********************
+	HOMEDRIVE=C:
+	HOMEPATH=\Users\pascal
+	LANG=en_US.UTF-8
+	LOCALAPPDATA=C:\Users\pascal\AppData\Local
+	LOGONSERVER=\\DESKTOP-RROI6M1
+	NUMBER_OF_PROCESSORS=12
+	OLLAMA_MAX_LOADED_MODELS=1
+	OLLAMA_NUM_CTX=2048
+	OLLAMA_NUM_THREADS=6
+	ONEDRIVE=C:\Users\pascal\OneDrive
+	OS=Windows_NT
+	PATH=C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Scripts;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\pascal\.cargo\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\pascal\AppData\Local\Microsoft\WindowsApps;C:\Users\pascal\AppData\Local\Programs\Antigravity\bin;C:\Users\pascal\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\pascal\.dotnet\tools;C:\Users\pascal\AppData\Local\Python\bin;C:\Users\pascal\.bun\bin;C:\Users\pascal\AppData\Roaming\npm;C:\Users\pascal\AppData\Local\Programs\Ollama;C:\Users\pascal\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe;c:\Users\pascal\.antigravity\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\scripts\noConfigScripts
+	PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+	PROCESSOR_ARCHITECTURE=AMD64
+	PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
+	PROCESSOR_LEVEL=6
+	PROCESSOR_REVISION=9e0a
+	PROGRAMDATA=C:\ProgramData
+	PROGRAMFILES=C:\Program Files
+	PROGRAMFILES(X86)=C:\Program Files (x86)
+	PROGRAMW6432=C:\Program Files
+	PSMODULEPATH=C:\Users\pascal\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules;C:\Program Files\Microsoft SQL Server\170\Tools\PowerShell\Modules\
+	PUBLIC=C:\Users\Public
+	PYDEVD_DISABLE_FILE_VALIDATION=1
+	PYTHONSTARTUP=c:\Users\pascal\AppData\Roaming\Antigravity\User\workspaceStorage\201e4fe4705acd38f798e9f38f7e4e69\ms-python.python\pythonrc.py
+	PYTHON_BASIC_REPL=1
+	SESSIONNAME=Console
+	SYSTEMDRIVE=C:
+	SYSTEMROOT=C:\WINDOWS
+	TEMP=C:\Users\pascal\AppData\Local\Temp
+	TERM_PROGRAM=vscode
+	TERM_PROGRAM_VERSION=1.107.0
+	TMP=C:\Users\pascal\AppData\Local\Temp
+	USERDOMAIN=DESKTOP-RROI6M1
+	USERDOMAIN_ROAMINGPROFILE=DESKTOP-RROI6M1
+	USERNAME=pascal
+	USERPROFILE=C:\Users\pascal
+	VIRTUAL_ENV=C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv
+	VIRTUAL_ENV_PROMPT=.venv
+	VSCODE_DEBUGPY_ADAPTER_ENDPOINTS=c:\Users\pascal\.antigravity\extensions\ms-python.debugpy-2025.18.0-win32-x64\.noConfigDebugAdapterEndpoints\endpoint-c74b29eb734fbd42.txt
+	VSCODE_GIT_ASKPASS_EXTRA_ARGS=********************
+	VSCODE_GIT_ASKPASS_MAIN=********************
+	VSCODE_GIT_ASKPASS_NODE=********************
+	VSCODE_GIT_IPC_HANDLE=\\.\pipe\vscode-git-5df1b4cc16-sock
+	VSCODE_INJECTION=1
+	VSCODE_PYTHON_AUTOACTIVATE_GUARD=1
+	WINDIR=C:\WINDOWS
+	ZES_ENABLE_SYSMAN=1
+	_OLD_VIRTUAL_PATH=C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\pascal\.cargo\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\pascal\AppData\Local\Microsoft\WindowsApps;C:\Users\pascal\AppData\Local\Programs\Antigravity\bin;C:\Users\pascal\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\pascal\.dotnet\tools;C:\Users\pascal\AppData\Local\Python\bin;C:\Users\pascal\.bun\bin;C:\Users\pascal\AppData\Roaming\npm;C:\Users\pascal\AppData\Local\Programs\Ollama;C:\Users\pascal\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe;c:\Users\pascal\.antigravity\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\scripts\noConfigScripts
+
+pyproject.toml:
+[project]
+name = "omnigrab"
+version = "1.0.0"
+description = "Download any video from any platform"
+requires-python = ">=3.9"
+dependencies = [
+    "toga-android>=0.4.5",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "yt-dlp>=2024.1.1",
+    "aiofiles>=23.0.0",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pyright",
+]
+
+[tool.briefcase]
+project_name = "OmniGrab"
+bundle = "com.omnigrab"
+version = "1.0.0"
+url = "https://github.com/pascal-azubike/omnigrab"
+license.text = "MIT"
+author = "OmniGrab Contributors"
+author_email = "hello@omnigrab.app"
+
+[tool.briefcase.app.omnigrab-android]
+formal_name = "OmniGrab"
+description = "Download any video from any platform"
+long_description = """OmniGrab lets you download videos, audio, and playlists from 1800+
+platforms including YouTube, TikTok, Instagram, Twitter, Vimeo, Twitch and more."""
+icon = "src/omnigrab_android/resources/omnigrab"
+sources = ["src/omnigrab_android"]
+test_sources = ["tests"]
+
+requires = [
+  "fastapi>=0.115.0",
+  "uvicorn>=0.30.0",
+  "yt-dlp>=2024.1.1",
+  "aiofiles>=23.0.0",
+  "python-multipart>=0.0.9",
+]
+
+[tool.briefcase.app.omnigrab-android.android]
+requires = [
+  "toga-android>=0.4.5",
+]
+
+[tool.briefcase.app.omnigrab-android.android.permissions]
+"android.permission.INTERNET" = true
+"android.permission.READ_EXTERNAL_STORAGE" = true
+"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.READ_MEDIA_VIDEO" = true
+"android.permission.READ_MEDIA_AUDIO" = true
+"android.permission.READ_MEDIA_IMAGES" = true
+"android.permission.FOREGROUND_SERVICE" = true
+"android.permission.POST_NOTIFICATIONS" = true
+
+supported_abis = ["arm64-v8a", "x86_64"]
+
+Briefcase Log:
+[12:25:33]                                                                                                                                                                dev.py:322
+           [omnigrab-android] Activating dev environment...                                                                                                               dev.py:322
+                                                                                                                                                                          dev.py:350
+           [omnigrab-android] Starting in dev mode...                                                                                                                     dev.py:350
+                                                                                                                                                                   subprocess.py:839
+           >>> Running Command:                                                                                                                                    subprocess.py:839
+           >>>     'C:\Users\pascal\Desktop\youyube downloader\packages\android\.briefcase\omnigrab-android\dev.cp314-win_amd64\Scripts\python.exe' -c 'import     subprocess.py:839
+           runpy, sys;sys.path.pop(0);sys.argv.extend([]);runpy.run_module("omnigrab_android", run_name="__main__", alter_sys=True)'                                                
+           >>> Working Directory:                                                                                                                                  subprocess.py:839
+           >>>     C:\Users\pascal                                                                                                                                 subprocess.py:839
+           >>> Environment Overrides:                                                                                                                              subprocess.py:839
+           >>>     PYTHONPATH=C:\Users\pascal\Desktop\youyube downloader\packages\android\src                                                                      subprocess.py:839
+           >>>     PYTHONMALLOC=default                                                                                                                            subprocess.py:839
+           >>>     PYTHONUNBUFFERED=1                                                                                                                              subprocess.py:839
+           >>>     PYTHONDEVMODE=1                                                                                                                                 subprocess.py:839
+           >>>     PYTHONUTF8=1                                                                                                                                    subprocess.py:839
+           >>>     PATH=C:\Users\pascal\Desktop\youyube                                                                                                            subprocess.py:839
+           downloader\packages\android\.briefcase\omnigrab-android\dev.cp314-win_amd64\Scripts;C:\Users\pascal\Desktop\youyube                                                      
+           downloader\packages\android\.venv\Scripts;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOW                  
+           S\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client                                                   
+           SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL                                            
+           Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client                                            
+           SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program                                                                                                             
+           Files\nodejs\;C:\Users\pascal\.cargo\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS                  
+           \System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client                                                    
+           SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL                                            
+           Server\170\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client                                            
+           SDK\ODBC\180\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program                                                                                                             
+           Files\nodejs\;C:\Users\pascal\AppData\Local\Microsoft\WindowsApps;C:\Users\pascal\AppData\Local\Programs\Antigravity\bin;C:\Users\pascal\AppData\Local\                  
+           Programs\Microsoft VS                                                                                                                                                    
+           Code\bin;C:\Users\pascal\.dotnet\tools;C:\Users\pascal\AppData\Local\Python\bin;C:\Users\pascal\.bun\bin;C:\Users\pascal\AppData\Roaming\npm;C:\Users\p                  
+           ascal\AppData\Local\Programs\Ollama;C:\Users\pascal\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8we                  
+           kyb3d8bbwe\ffmpeg-8.1-full_build\bin;C:\Users\pascal\AppData\Local\Microsoft\WinGet\Packages\DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe;c:\Use                  
+           rs\pascal\.antigravity\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\scripts\noConfigScripts                                                                  
+           >>>     VIRTUAL_ENV=C:\Users\pascal\Desktop\youyube downloader\packages\android\.briefcase\omnigrab-android\dev.cp314-win_amd64                         subprocess.py:839
+           ===========================================================================                                                                                    run.py:175
+[12:25:34] Traceback (most recent call last):                                                                                                                      subprocess.py:196
+             File "<string>", line 1, in <module>                                                                                                                  subprocess.py:196
+               import runpy, sys;sys.path.pop(0);sys.argv.extend([]);runpy.run_module("omnigrab_android", run_name="__main__", alter_sys=True)                     subprocess.py:196
+                                                                     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                     subprocess.py:196
+             File "<frozen runpy>", line 226, in run_module                                                                                                        subprocess.py:196
+             File "<frozen runpy>", line 98, in _run_module_code                                                                                                   subprocess.py:196
+             File "<frozen runpy>", line 88, in _run_code                                                                                                          subprocess.py:196
+             File "C:\Users\pascal\Desktop\youyube downloader\packages\android\src\omnigrab_android\__main__.py", line 12, in <module>                             subprocess.py:196
+               main().main_loop()                                                                                                                                  subprocess.py:196
+               ~~~~^^                                                                                                                                              subprocess.py:196
+             File "C:\Users\pascal\Desktop\youyube downloader\packages\android\src\omnigrab_android\__main__.py", line 8, in main                                  subprocess.py:196
+               return OmniGrabAndroid()                                                                                                                            subprocess.py:196
+             File "C:\Users\pascal\Desktop\youyube downloader\packages\android\.briefcase\omnigrab-android\dev.cp314-win_amd64\Lib\site-packages\toga\app.py",     subprocess.py:196
+           line 302, in __init__                                                                                                                                                    
+               self.factory = get_platform_factory()                                                                                                               subprocess.py:196
+                              ~~~~~~~~~~~~~~~~~~~~^^                                                                                                               subprocess.py:196
+             File "C:\Users\pascal\Desktop\youyube                                                                                                                 subprocess.py:196
+           downloader\packages\android\.briefcase\omnigrab-android\dev.cp314-win_amd64\Lib\site-packages\toga\platform.py", line 111, in get_platform_factory                       
+               factory = importlib.import_module(f"{backend.value}.factory")                                                                                       subprocess.py:196
+             File "C:\Users\pascal\AppData\Local\Python\pythoncore-3.14-64\Lib\importlib\__init__.py", line 88, in import_module                                   subprocess.py:196
+               return _bootstrap._gcd_import(name[level:], package, level)                                                                                         subprocess.py:196
+                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                                                         subprocess.py:196
+             File "<frozen importlib._bootstrap>", line 1398, in _gcd_import                                                                                       subprocess.py:196
+             File "<frozen importlib._bootstrap>", line 1371, in _find_and_load                                                                                    subprocess.py:196
+             File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked                                                                           subprocess.py:196
+             File "<frozen importlib._bootstrap>", line 938, in _load_unlocked                                                                                     subprocess.py:196
+             File "<frozen importlib._bootstrap_external>", line 759, in exec_module                                                                               subprocess.py:196
+             File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed                                                                          subprocess.py:196
+             File "C:\Users\pascal\Desktop\youyube                                                                                                                 subprocess.py:196
+           downloader\packages\android\.briefcase\omnigrab-android\dev.cp314-win_amd64\Lib\site-packages\toga_android\factory.py", line 3, in <module>                              
+               from . import dialogs                                                                                                                               subprocess.py:196
+             File "C:\Users\pascal\Desktop\youyube                                                                                                                 subprocess.py:196
+           downloader\packages\android\.briefcase\omnigrab-android\dev.cp314-win_amd64\Lib\site-packages\toga_android\dialogs.py", line 1, in <module>                              
+               from android import R                                                                                                                               subprocess.py:196
+           ModuleNotFoundError: No module named 'android'                                                                                                          subprocess.py:196
+                                                                                                                                                                      __main__.py:42
+           Problem running app omnigrab-android.                                                                                                                      __main__.py:43
+           Saving log... started                                                                                                                                      console.py:443
+
+Main thread traceback:
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\__main__.py:27 in main                                                             │
+│                                                                                                                                                                                  │
+│   24 │   │   │   Path.cwd() / "pyproject.toml",                                                                                                                                  │
+│   25 │   │   │   overrides=overrides,                                                                                                                                            │
+│   26 │   │   )                                                                                                                                                                   │
+│ ❱ 27 │   │   command(**options)                                                                                                                                                  │
+│   28 │   except HelpText as e:                                                                                                                                                   │
+│   29 │   │   console.info()                                                                                                                                                      │
+│   30 │   │   console.info(str(e))                                                                                                                                                │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────────────╮                                    │
+│ │       command = <briefcase.platforms.windows.app.WindowsAppDevCommand object at 0x0000022F962B3230>                                       │                                    │
+│ │       console = <briefcase.console.Console object at 0x0000022F962B1A90>                                                                  │                                    │
+│ │             e = BriefcaseCommandError('Problem running app omnigrab-android.')                                                            │                                    │
+│ │ extra_cmdline = []                                                                                                                        │                                    │
+│ │       options = {'appname': None, 'update_requirements': False, 'isolated': True, 'run_app': True, 'test_mode': False, 'passthrough': []} │                                    │
+│ │     overrides = {}                                                                                                                        │                                    │
+│ │        result = 200                                                                                                                       │                                    │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                    │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\commands\dev.py:351 in __call__                                                    │
+│                                                                                                                                                                                  │
+│   348 │   │   │   │   │   )                                                                                                                                                      │
+│   349 │   │   │   │   else:                                                                                                                                                      │
+│   350 │   │   │   │   │   self.console.info("Starting in dev mode...", prefix=app.app_name)                                                                                      │
+│ ❱ 351 │   │   │   │   return self.run_dev_app(                                                                                                                                   │
+│   352 │   │   │   │   │   app,                                                                                                                                                   │
+│   353 │   │   │   │   │   env=self.get_environment(app),                                                                                                                         │
+│   354 │   │   │   │   │   venv=venv,                                                                                                                                             │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────── locals ───────────────────────────────────────────────────╮                                                                  │
+│ │                 app = <com.omnigrab.omnigrab-android v1.0.0 AppConfig>                                      │                                                                  │
+│ │             appname = None                                                                                  │                                                                  │
+│ │            isolated = True                                                                                  │                                                                  │
+│ │             options = {}                                                                                    │                                                                  │
+│ │         passthrough = []                                                                                    │                                                                  │
+│ │             run_app = True                                                                                  │                                                                  │
+│ │                self = <briefcase.platforms.windows.app.WindowsAppDevCommand object at 0x0000022F962B3230>   │                                                                  │
+│ │           test_mode = False                                                                                 │                                                                  │
+│ │ update_requirements = False                                                                                 │                                                                  │
+│ │                venv = <briefcase.integrations.virtual_environment.VenvContext object at 0x0000022F964D0D70> │                                                                  │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                  │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\commands\dev.py:200 in run_dev_app                                                 │
+│                                                                                                                                                                                  │
+│   197 │   │   │   )                                                                                                                                                              │
+│   198 │   │   │                                                                                                                                                                  │
+│   199 │   │   │   # Start streaming logs for the app.                                                                                                                            │
+│ ❱ 200 │   │   │   self._stream_app_logs(                                                                                                                                         │
+│   201 │   │   │   │   app,                                                                                                                                                       │
+│   202 │   │   │   │   popen=app_popen,                                                                                                                                           │
+│   203 │   │   │   │   clean_output=False,                                                                                                                                        │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────── locals ─────────────────────────────────────────────────────╮                                                             │
+│ │         app = <com.omnigrab.omnigrab-android v1.0.0 AppConfig>                                                   │                                                             │
+│ │   app_popen = <Popen: returncode: 1 args: ['C:\\Users\\pascal\\Desktop\\youyube downloader...>                   │                                                             │
+│ │     cmdline = [                                                                                                  │                                                             │
+│ │               │   'C:\\Users\\pascal\\Desktop\\youyube downloader\\packages\\android\\.venv\\Scripts\\python'+4, │                                                             │
+│ │               │   '-c',                                                                                          │                                                             │
+│ │               │   'import runpy, sys;sys.path.pop(0);sys.argv.extend([]);runpy.run_module("omnigrab'+47          │                                                             │
+│ │               ]                                                                                                  │                                                             │
+│ │         env = {                                                                                                  │                                                             │
+│ │               │   'PYTHONPATH': 'C:\\Users\\pascal\\Desktop\\youyube downloader\\packages\\android\\src',        │                                                             │
+│ │               │   'PYTHONMALLOC': 'default',                                                                     │                                                             │
+│ │               │   'PYTHONUNBUFFERED': '1',                                                                       │                                                             │
+│ │               │   'PYTHONDEVMODE': '1',                                                                          │                                                             │
+│ │               │   'PYTHONUTF8': '1'                                                                              │                                                             │
+│ │               }                                                                                                  │                                                             │
+│ │     env_key = 'PYTHONUTF8'                                                                                       │                                                             │
+│ │   env_value = '1'                                                                                                │                                                             │
+│ │ main_module = 'omnigrab_android'                                                                                 │                                                             │
+│ │     options = {}                                                                                                 │                                                             │
+│ │ passthrough = []                                                                                                 │                                                             │
+│ │        self = <briefcase.platforms.windows.app.WindowsAppDevCommand object at 0x0000022F962B3230>                │                                                             │
+│ │        venv = <briefcase.integrations.virtual_environment.VenvContext object at 0x0000022F964D0D70>              │                                                             │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                             │
+│                                                                                                                                                                                  │
+│ C:\Users\pascal\Desktop\youyube downloader\packages\android\.venv\Lib\site-packages\briefcase\commands\run.py:206 in _stream_app_logs                                            │
+│                                                                                                                                                                                  │
+│   203 │   │   │   │   # If we're monitoring an actual app (not just a log stream),                                                                                               │
+│   204 │   │   │   │   # and the app didn't exit cleanly, surface the error to the user.                                                                                          │
+│   205 │   │   │   │   if popen.poll() != 0:                                                                                                                                      │
+│ ❱ 206 │   │   │   │   │   raise BriefcaseCommandError(f"Problem running app {app.app_name}.")                                                                                    │
+│   207 │   │                                                                                                                                                                      │
+│   208 │   │   except KeyboardInterrupt:                                                                                                                                          │
+│   209 │   │   │   pass  # Catch CTRL-C to exit normally                                                                                                                          │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────── locals ──────────────────────────────────────────────╮                                                                           │
+│ │          app = <com.omnigrab.omnigrab-android v1.0.0 AppConfig>                                    │                                                                           │
+│ │ clean_filter = None                                                                                │                                                                           │
+│ │ clean_output = False                                                                               │                                                                           │
+│ │   log_filter = <briefcase.commands.run.LogFilter object at 0x0000022F964D0C20>                     │                                                                           │
+│ │   log_stream = False                                                                               │                                                                           │
+│ │        popen = <Popen: returncode: 1 args: ['C:\\Users\\pascal\\Desktop\\youyube downloader...>    │                                                                           │
+│ │         self = <briefcase.platforms.windows.app.WindowsAppDevCommand object at 0x0000022F962B3230> │                                                                           │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                           │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+BriefcaseCommandError: Problem running app omnigrab-android.

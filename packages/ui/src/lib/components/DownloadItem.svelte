@@ -1,238 +1,87 @@
 <script lang="ts">
-  import type { DownloadItem as IDownloadItem } from '$lib/stores/downloads.svelte.js';
-  import { formatBytes, formatSpeed, formatEta } from '$lib/utils/formatBytes.js';
-  import { detectPlatform } from '$lib/utils/platform.js';
+  import { X, Play, Pause, CheckCircle2, AlertCircle, Loader2 } from 'lucide-svelte';
+  import type { DownloadItem } from '$lib/stores/downloads.svelte';
+  import { downloadStore } from '$lib/stores/downloads.svelte';
+  import { formatBytes } from '$lib/utils/formatBytes';
 
-  interface Props {
-    item: IDownloadItem;
-    onCancel: (id: string) => void;
+  let { item } = $props<{ item: DownloadItem }>();
+
+  async function handleCancel() {
+    await downloadStore.cancelDownload(item.id);
   }
 
-  let { item, onCancel }: Props = $props();
-
-  let platform = $derived(detectPlatform(item.url));
-  let isComplete = $derived(item.status === 'complete');
-  let isError = $derived(item.status === 'error');
-  let isProcessing = $derived(item.status === 'processing');
-
-  function handleCancel() {
-    onCancel(item.id);
+  function handleRemove() {
+    downloadStore.removeDownload(item.id);
   }
 </script>
 
-<div class="download-item card" class:complete={isComplete} class:error={isError}>
-  <!-- Header -->
-  <div class="header">
-    <div class="item-info">
-      <div class="thumb-container">
-        {#if item.thumbnail}
-          <img src={item.thumbnail} alt="" class="thumb" />
-        {:else}
-          <div class="thumb-fallback"></div>
-        {/if}
-        {#if platform}
-          <div class="platform-icon" style="background-color: {platform.color}">
-            <img src="/platform-icons/{platform.icon}.svg" alt="" width="12" height="12" />
+<div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
+  <div class="p-4 flex items-center gap-4">
+    <!-- Thumbnail -->
+    <div class="h-16 w-16 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0 relative group">
+      <img src={item.thumbnail} alt={item.title} class="w-full h-full object-cover" />
+      {#if item.status === 'downloading' || item.status === 'processing'}
+        <div class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[1px] flex items-center justify-center">
+          <Loader2 class="h-6 w-6 text-white animate-spin" />
+        </div>
+      {/if}
+    </div>
+
+    <!-- Info & Progress -->
+    <div class="flex-grow min-w-0 space-y-2">
+      <div class="flex items-start justify-between gap-2">
+        <div class="min-w-0">
+          <h3 class="text-sm font-bold text-white truncate uppercase tracking-tight leading-none mb-1">
+            {item.current_title || item.title}
+          </h3>
+          <div class="flex items-center gap-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+            <span>{item.format} &bull; {item.quality}</span>
+            {#if item.status === 'downloading'}
+              <span class="text-indigo-400">{item.speed} &bull; {item.eta}</span>
+            {/if}
           </div>
-        {/if}
-      </div>
-      <div class="title-container">
-        <div class="title" title={item.title}>{item.title}</div>
-        <div class="meta text-secondary text-xs">
-          {item.quality} • {item.format} • {platform?.name || 'Unknown'}
         </div>
-      </div>
-    </div>
-
-    <div class="actions">
-      {#if !isComplete && !isError}
-        <button class="btn btn-ghost btn-icon" onclick={handleCancel} title="Cancel Download">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
+        
+        <button 
+          onclick={item.status === 'complete' || item.status === 'error' ? handleRemove : handleCancel}
+          class="p-2 text-zinc-600 hover:text-white hover:bg-zinc-800 rounded-lg transition-all"
+        >
+          <X class="h-4 w-4" />
         </button>
-      {/if}
-    </div>
-  </div>
+      </div>
 
-  <!-- Progress area -->
-  <div class="progress-area">
-    <!-- Playlist sub-progress -->
-    {#if item.isPlaylist && item.playlistTotal > 0}
-      <div class="playlist-meta text-xs font-semibold mb-1 text-accent">
-        Video {item.playlistCurrent} of {item.playlistTotal}
-        {#if item.currentTitle && item.currentTitle !== item.title}
-          <span class="text-secondary font-normal ml-2 truncate">
-            Downloading: {item.currentTitle.length > 40 ? item.currentTitle.substring(0, 40) + '...' : item.currentTitle}
+      <!-- Progress Bar -->
+      <div class="space-y-1.5">
+        <div class="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+          <div 
+            class="h-full bg-indigo-500 transition-all duration-500 ease-out rounded-full"
+            style="width: {item.percent}%"
+          ></div>
+        </div>
+        
+        <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+          <span class={
+            item.status === 'complete' ? 'text-emerald-400' : 
+            item.status === 'error' ? 'text-red-400' : 
+            item.status === 'cancelled' ? 'text-zinc-500' :
+            'text-indigo-400'
+          }>
+            {item.status}
           </span>
-        {/if}
-      </div>
-    {/if}
-
-    <div class="status-row">
-      <div class="status-badge" class:error={isError} class:success={isComplete} class:active={!isComplete && !isError}>
-        {#if isError}
-          Failed
-        {:else if isComplete}
-          Complete
-        {:else if isProcessing}
-          Processing (Merging)...
-        {:else}
-          Downloading
-        {/if}
-      </div>
-
-      {#if !isComplete && !isError && !isProcessing}
-        <div class="stats font-mono text-xs">
-          <span class="percent text-lg font-bold">{item.percent.toFixed(1)}%</span>
-          <span class="divider">|</span>
-          <span class="speed" title="Speed">{formatSpeed(item.speed)}</span>
-          <span class="divider">|</span>
-          <span class="eta" title="ETA">{formatEta(item.eta)}</span>
-          <span class="divider">|</span>
-          <span class="sizes" title="Downloaded / Total">
-            {formatBytes(item.downloadedBytes)} / {formatBytes(item.totalBytes)}
+          <span class="text-zinc-500">
+            {item.status === 'downloading' ? `${formatBytes(item.downloaded_bytes)} / ${formatBytes(item.total_bytes)}` : `${item.percent}%`}
           </span>
         </div>
-      {/if}
-    </div>
-
-    <!-- Main Progress Bar -->
-    <div class="progress-bar mt-2">
-      <div
-        class="progress-bar-fill"
-        class:complete={isComplete}
-        class:processing={isProcessing}
-        class:error={isError}
-        style="width: {isComplete || isProcessing ? 100 : item.percent}%"
-      ></div>
-    </div>
-
-    {#if isError && item.errorMessage}
-      <div class="error-msg mt-2 text-xs text-error bg-[var(--error-bg)] p-2 rounded">
-        {item.errorMessage}
       </div>
-    {/if}
+    </div>
   </div>
+
+  {#if item.status === 'error' && item.error}
+    <div class="px-4 pb-4 animate-in fade-in slide-in-from-top-1">
+      <div class="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded-xl text-[10px] font-medium leading-relaxed">
+        <AlertCircle class="h-3 w-3 inline mr-1 -mt-0.5" />
+        {item.error}
+      </div>
+    </div>
+  {/if}
 </div>
-
-<style>
-  .download-item {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
-    transition: all 0.3s ease;
-  }
-
-  .download-item.complete {
-    border-color: var(--success);
-    background: var(--success-bg);
-  }
-
-  .download-item.error {
-    border-color: var(--error);
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .item-info {
-    display: flex;
-    gap: 12px;
-    min-width: 0;
-    flex: 1;
-  }
-
-  .thumb-container {
-    position: relative;
-    width: 80px;
-    height: 45px;
-    border-radius: 6px;
-    flex-shrink: 0;
-  }
-
-  .thumb {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-
-  .thumb-fallback {
-    width: 100%;
-    height: 100%;
-    border-radius: 6px;
-    background: var(--surface-raised);
-  }
-
-  .platform-icon {
-    position: absolute;
-    bottom: -4px;
-    right: -4px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--surface);
-  }
-
-  .title-container {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .title {
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .status-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 16px;
-  }
-
-  .status-badge {
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .status-badge.active { color: var(--accent); }
-  .status-badge.success { color: var(--success); }
-  .status-badge.error { color: var(--error); }
-
-  .stats {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    color: var(--text-secondary);
-  }
-
-  .stats .divider { color: var(--border); }
-  .stats .percent { color: var(--text-primary); }
-
-  .progress-bar-fill.error {
-    background: var(--error);
-  }
-
-  .playlist-meta {
-    display: flex;
-    align-items: center;
-  }
-</style>

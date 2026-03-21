@@ -1,193 +1,80 @@
 <script lang="ts">
-  import type { HistoryItem } from '$lib/stores/history.svelte.js';
-  import { detectPlatform } from '$lib/utils/platform.js';
-  import { formatBytes, formatRelativeTime } from '$lib/utils/formatBytes.js';
+  import { Folder, Trash2, ExternalLink, Calendar, FileVideo } from 'lucide-svelte';
+  import type { HistoryItem } from '$lib/stores/history.svelte';
+  import { historyStore } from '$lib/stores/history.svelte';
+  import { openFolder } from '$lib/utils/api';
+  import { formatBytes } from '$lib/utils/formatBytes';
 
-  interface Props {
-    item: HistoryItem;
-    onOpenFile: (path: string) => void;
-    onOpenFolder: (path: string) => void;
-    onRemove: (id: string) => void;
-    onRedownload: (url: string) => void;
+  let { item } = $props<{ item: HistoryItem }>();
+
+  async function handleOpenFolder() {
+    await openFolder(item.outputPath);
   }
 
-  let { item, onOpenFile, onOpenFolder, onRemove, onRedownload }: Props = $props();
-  let platform = $derived(detectPlatform(item.url));
+  function handleRemove() {
+    historyStore.removeItem(item.id);
+  }
 </script>
 
-<div class="history-item card animate-fade-in">
-  <div class="thumb-wrapper">
-    {#if item.thumbnail}
-      <img src={item.thumbnail} alt="" class="thumb" loading="lazy" />
-    {:else}
-      <div class="thumb-fallback"></div>
-    {/if}
-    {#if platform}
-      <div class="platform-icon" style="background-color: {platform.color}">
-        <img src="/platform-icons/{platform.icon}.svg" alt="" width="14" height="14" />
-      </div>
-    {/if}
+<div class="group bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all rounded-3xl p-5 flex flex-wrap md:flex-nowrap gap-6 items-center shadow-lg hover:shadow-2xl">
+  <!-- Thumbnail -->
+  <div class="h-24 w-40 rounded-2xl overflow-hidden bg-zinc-800 flex-shrink-0 relative group-hover:shadow-indigo-500/10 transition-shadow">
+    <img src={item.thumbnail} alt={item.title} class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+      <FileVideo class="h-8 w-8 text-white/50" />
+    </div>
   </div>
 
-  <div class="content">
-    <div class="header">
-      <h3 class="title" title={item.title}>{item.title}</h3>
-      <div class="actions">
-        <button class="btn btn-ghost btn-icon btn-sm" onclick={() => onRedownload(item.url)} title="Download again">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-        </button>
-        <button class="btn btn-ghost btn-icon btn-sm text-error" onclick={() => onRemove(item.id)} title="Remove from history">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"/>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-          </svg>
-        </button>
+  <!-- Info -->
+  <div class="flex-grow min-w-0 space-y-3">
+    <div>
+      <h3 class="text-lg font-bold text-white truncate group-hover:text-indigo-400 transition-colors uppercase tracking-tight leading-none mb-1">
+        {item.title}
+      </h3>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+        <span class="text-zinc-300">{item.platform}</span>
+        <span>&bull;</span>
+        <span>{item.format} &bull; {item.quality}</span>
+        <span>&bull;</span>
+        <span>{formatBytes(item.fileSize)}</span>
       </div>
     </div>
 
-    <div class="meta text-xs text-secondary">
-      <span class="badge badge-success">Complete</span>
-      <span class="divider"></span>
-      <span>{item.quality}</span>
-      <span class="divider"></span>
-      <span>{item.format}</span>
-      {#if item.fileSize}
-        <span class="divider"></span>
-        <span class="font-mono">{formatBytes(item.fileSize)}</span>
-      {/if}
-      <span class="divider"></span>
-      <span>Downloaded {formatRelativeTime(item.downloadedAt)}</span>
+    <div class="flex items-center gap-4 text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+      <div class="flex items-center gap-1.5 border border-zinc-800 px-2 py-1 rounded-md">
+        <Calendar class="h-3 w-3" />
+        {new Date(item.downloadedAt).toLocaleDateString()}
+      </div>
       {#if item.isPlaylist}
-        <span class="divider"></span>
-        <span class="text-accent font-medium">Playlist ({item.playlistTotal || '?'})</span>
+        <div class="px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded-md">
+          Playlist &bull; {item.playlistTotal} items
+        </div>
       {/if}
     </div>
+  </div>
 
-    <div class="file-path truncate text-xs text-secondary mt-1 font-mono" title={item.filePath}>
-      {item.filePath}
-    </div>
-
-    <div class="button-row mt-3">
-      <button class="btn btn-primary btn-sm flex-1" onclick={() => onOpenFile(item.filePath)}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
-        Open File
-      </button>
-      <button class="btn btn-secondary btn-sm flex-1" onclick={() => onOpenFolder(item.outputPath)}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-        </svg>
-        Open Folder
-      </button>
-    </div>
+  <!-- Actions -->
+  <div class="flex items-center gap-2 md:opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+    <button 
+      onclick={handleOpenFolder}
+      title="Open Folder"
+      class="p-4 bg-zinc-800/50 hover:bg-zinc-800 hover:text-white text-zinc-400 rounded-2xl transition-all"
+    >
+      <Folder class="h-5 w-5" />
+    </button>
+    <button 
+      onclick={() => window.open(item.url, '_blank')}
+      title="View Source"
+      class="p-4 bg-zinc-800/50 hover:bg-zinc-800 hover:text-white text-zinc-400 rounded-2xl transition-all"
+    >
+      <ExternalLink class="h-5 w-5" />
+    </button>
+    <button 
+      onclick={handleRemove}
+      title="Delete from History"
+      class="p-4 bg-red-500/10 hover:bg-red-500 text-red-500/50 hover:text-white rounded-2xl transition-all"
+    >
+      <Trash2 class="h-5 w-5" />
+    </button>
   </div>
 </div>
-
-<style>
-  .history-item {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-  }
-
-  @media (max-width: 600px) {
-    .history-item { flex-direction: column; gap: 12px; }
-  }
-
-  .thumb-wrapper {
-    position: relative;
-    width: 200px;
-    height: 112px;
-    border-radius: 8px;
-    flex-shrink: 0;
-    box-shadow: var(--shadow-sm);
-  }
-
-  @media (max-width: 600px) {
-    .thumb-wrapper { width: 100%; height: auto; aspect-ratio: 16/9; }
-  }
-
-  .thumb {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-
-  .thumb-fallback {
-    width: 100%;
-    height: 100%;
-    background: var(--surface-raised);
-    border-radius: 8px;
-  }
-
-  .platform-icon {
-    position: absolute;
-    bottom: -6px;
-    right: -6px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid var(--surface);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .content {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .title {
-    font-size: 16px;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .actions {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 6px;
-  }
-
-  .meta .divider {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--border);
-  }
-
-  .button-row {
-    display: flex;
-    gap: 12px;
-    margin-top: auto;
-  }
-</style>

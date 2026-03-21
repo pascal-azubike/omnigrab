@@ -1,71 +1,62 @@
-name: Android Build
+name: "Release Android"
+
 on:
   push:
-    branches: [ main ]
     tags:
       - 'v*'
-    paths:
-      - 'packages/ui/**'
-      - 'packages/android/**'
-      - '.github/workflows/android.yml'
 
 jobs:
-  build:
+  build-android:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Set up Python
+      - name: setup python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.12"
 
       - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: install project dependencies
-        run: |
-          rm -f package-lock.json
-          npm install --include=optional
+      - name: setup java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
 
-      - name: build UI
-        run: npm --prefix packages/ui run build:android
-
-      - name: Install Briefcase
+      - name: install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install briefcase
+          npm install
 
-      - name: Create Android App
+      - name: build ui for android
+        run: npm run build:ui:android
+
+      - name: create android app
         run: |
           cd packages/android
-          briefcase create android
-          briefcase build android
+          briefcase create android --no-input
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: omnigrab-android-apk
-          path: packages/android/build/omnigrab-android/android/gradle/app/build/outputs/apk/debug/*.apk
+      - name: build android app
+        run: |
+          cd packages/android
+          briefcase build android --no-input
 
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: package android app
+        run: |
+          cd packages/android
+          briefcase package android --no-input
+
+      - name: sign and release
         uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: packages/android/build/omnigrab-android/android/gradle/app/build/outputs/apk/debug/*.apk
-          draft: true
-          prerelease: false
+          files: |
+            packages/android/dist/*.apk
+            packages/android/dist/*.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

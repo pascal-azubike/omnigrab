@@ -3,303 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniGrab - Universal Video Downloader</title>
-    <meta name="description" content="Download any video or audio from YouTube, TikTok, Instagram, Twitter and 1800+ other platforms for free. No server, 100% local.">
+    <title>OmniGrab &bull; Universal Video Downloader</title>
+    <meta name="description" content="Download high-quality video and audio from 1800+ sites. Free, open source, and cross-platform.">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg: #0a0a0a;
-            --surface: #141414;
-            --surface-raised: #1c1c1c;
-            --border: #2a2a2a;
-            --text-primary: #f5f5f5;
-            --text-secondary: #888888;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --accent-glow: rgba(99, 102, 241, 0.25);
+            --bg: #030303;
+            --zinc-900: #18181b;
+            --zinc-800: #27272a;
+            --indigo-600: #4f46e5;
+            --indigo-500: #6366f1;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        * { margin:0; padding:0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
             background: var(--bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        a { color: inherit; text-decoration: none; }
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
 
-        /* Navigation */
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 24px 48px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1200px; mx-auto; padding: 0 2rem; }
+        header { padding: 2rem 0; display: flex; justify-content: space-between; align-items: center; }
+        
+        .hero { padding: 10rem 0 5rem; text-align: center; }
+        .hero h1 { font-size: clamp(3rem, 10vw, 8rem); line-height: 0.9; margin-bottom: 2rem; font-style: italic; letter-spacing: -0.05em; text-transform: uppercase; }
+        .hero p { max-width: 600px; margin: 0 auto 3rem; font-size: 1.25rem; color: #a1a1aa; font-weight: 500; }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
+        .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 1rem;
             font-weight: 700;
-        }
-
-        .github-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            transition: color 0.2s;
-        }
-        .github-link:hover { color: var(--text-primary); }
-
-        /* Hero */
-        .hero {
-            position: relative;
-            text-align: center;
-            padding: 80px 24px 120px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
-            z-index: -1;
-            filter: blur(60px);
-        }
-
-        .hero h1 {
-            font-size: clamp(48px, 6vw, 72px);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -0.03em;
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 48px;
-        }
-
-        .download-btn {
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            background: var(--accent);
-            color: #fff;
-            padding: 16px 32px;
-            border-radius: 16px;
-            font-size: 18px;
-            font-weight: 600;
-            transition: all 0.2s;
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .download-btn:hover {
-            transform: translateY(-2px);
-            background: var(--accent-hover);
+        .btn-primary { background: var(--indigo-600); color: white; box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2); }
+        .btn-primary:hover { background: var(--indigo-500); transform: translateY(-3px); box-shadow: 0 20px 40px rgba(79, 70, 229, 0.3); }
+
+        .btn-outline { background: var(--zinc-900); color: #fff; border: 1px border var(--zinc-800); }
+        .btn-outline:hover { background: var(--zinc-800); transform: translateY(-3px); }
+
+        /* Highlight OS button */
+        .os-highlight { border: 2px solid var(--indigo-500); box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+
+        .features { padding: 10rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; }
+        .feature-card { background: var(--zinc-900); padding: 3rem; border-radius: 2.5rem; border: 1px border var(--zinc-800); transition: border 0.3s; }
+        .feature-card:hover { border-color: var(--indigo-500); }
+        .feature-card i { color: var(--indigo-500); margin-bottom: 2rem; }
+        .feature-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card p { color: #71717a; font-weight: 500; }
+
+        .platform-marquee { 
+            overflow: hidden; 
+            padding: 4rem 0; 
+            background: linear-gradient(to right, var(--bg), transparent 10%, transparent 90%, var(--bg));
+            white-space: nowrap;
+        }
+        .marquee-content { display: inline-block; animation: scroll 40s linear infinite; }
+        .marquee-item { display: inline-flex; align-items: center; gap: 1rem; margin: 0 4rem; color: #3f3f46; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; }
+        
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
         }
 
-        .os-hint {
-            margin-top: 16px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+        footer { padding: 5rem 0; border-top: 1px border var(--zinc-900); text-align: center; color: #3f3f46; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
 
-        .os-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-top: 24px;
-            flex-wrap: wrap;
-        }
-
-        .os-link {
-            font-size: 14px;
-            color: var(--text-secondary);
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            transition: color 0.2s;
-        }
-        .os-link:hover { color: var(--text-primary); }
-
-        /* Features */
-        .features {
-            background: var(--surface);
-            padding: 120px 24px;
-            border-block: 1px solid var(--border);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: var(--surface-raised);
-            padding: 32px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--accent-glow);
-            color: var(--accent);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-
-        .feature-card h3 {
-            font-size: 20px;
-            margin-bottom: 12px;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 48px 24px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        @media (max-width: 600px) {
-            nav { padding: 24px; }
-            .hero { padding: 48px 24px; }
-        }
+        .glow { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 100vh; background: radial-gradient(circle at 50% -20%, rgba(79, 70, 229, 0.15), transparent 60%); pointer-events: none; z-index: -1; }
     </style>
 </head>
 <body>
+    <div class="glow"></div>
+    <div class="container">
+        <header>
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-family: 'Space Grotesk'; font-weight: 700; letter-spacing: -0.02em;">
+                <i data-lucide="cloud-download" style="color: var(--indigo-500)"></i>
+                OMNIGRAB
+            </div>
+            <a href="https://github.com/pascal-azubike/omnigrab" class="btn-outline btn" style="padding: 0.5rem 1rem">GitHub</a>
+        </header>
 
-    <nav>
-        <div class="logo">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            OmniGrab
-        </div>
-        <a href="https://github.com/omnigrab/omnigrab" class="github-link" target="_blank">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-            </svg>
-            GitHub
-        </a>
-    </nav>
-
-    <main>
         <section class="hero">
-            <h1>Download any video.<br/>From anywhere.</h1>
-            <p>The free, open-source universal downloader powered by yt-dlp. Supports YouTube, TikTok, X, Instagram, and 1,800+ other platforms.</p>
+            <div style="font-[700] italic text-[0.75rem] tracking-[0.3em] color:var(--indigo-500); margin-bottom:1rem">NEW DUAL-TARGET ARCHITECTURE</div>
+            <h1>Download <span style="color:#27272a">Anything</span><br/>From <span style="background: linear-gradient(to right, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Anywhere.</span></h1>
+            <p>The core of media extraction. 1800+ sites supported. Desktop and Android. No ads, no trackers, just high-quality downloads.</p>
             
-            <a href="https://github.com/omnigrab/omnigrab/releases/latest" class="download-btn" id="main-download-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                Download for <span id="os-name">Desktop</span>
-            </a>
-            
-            <div class="os-links">
-                <a href="#" class="os-link">Windows (.exe)</a>
-                <a href="#" class="os-link">macOS (.dmg)</a>
-                <a href="#" class="os-link">Linux (.AppImage)</a>
-                <a href="#" class="os-link">Android (.apk)</a>
+            <div class="btn-group" id="download-group">
+                <a href="#" class="btn btn-primary" id="btn-win"><i data-lucide="monitor"></i> Windows</a>
+                <a href="#" class="btn btn-primary" id="btn-android"><i data-lucide="smartphone"></i> Android APK</a>
+                <a href="#" class="btn btn-outline" id="btn-unix"><i data-lucide="terminal"></i> macOS / Linux</a>
             </div>
         </section>
+
+        <div class="platform-marquee">
+            <div class="marquee-content">
+                <div class="marquee-item"><i data-lucide="youtube"></i> YouTube</div>
+                <div class="marquee-item"><i data-lucide="music"></i> TikTok</div>
+                <div class="marquee-item"><i data-lucide="instagram"></i> Instagram</div>
+                <div class="marquee-item"><i data-lucide="twitter"></i> Twitter / X</div>
+                <div class="marquee-item"><i data-lucide="facebook"></i> Facebook</div>
+                <div class="marquee-item"><i data-lucide="twitch"></i> Twitch</div>
+                <div class="marquee-item"><i data-lucide="play-circle"></i> Vimeo</div>
+                <!-- Duplicate for seamless scroll -->
+                <div class="marquee-item"><i data-lucide="youtube"></i> YouTube</div>
+                <div class="marquee-item"><i data-lucide="music"></i> TikTok</div>
+                <div class="marquee-item"><i data-lucide="instagram"></i> Instagram</div>
+                <div class="marquee-item"><i data-lucide="twitter"></i> Twitter / X</div>
+                <div class="marquee-item"><i data-lucide="facebook"></i> Facebook</div>
+                <div class="marquee-item"><i data-lucide="twitch"></i> Twitch</div>
+                <div class="marquee-item"><i data-lucide="play-circle"></i> Vimeo</div>
+            </div>
+        </div>
 
         <section class="features">
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="2" y1="12" x2="22" y2="12"/>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                        </svg>
-                    </div>
-                    <h3>1800+ Supported Sites</h3>
-                    <p>Powered by the industry-standard yt-dlp engine. If the video is on the internet, OmniGrab can probably download it.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                            <line x1="8" y1="21" x2="16" y2="21"/>
-                            <line x1="12" y1="17" x2="12" y2="21"/>
-                        </svg>
-                    </div>
-                    <h3>100% Local Processing</h3>
-                    <p>No external servers, no cloud APIs, no subscriptions. Everything runs directly on your machine using bundled binaries.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                            <polyline points="2 17 12 22 22 17"/>
-                            <polyline points="2 12 12 17 22 12"/>
-                        </svg>
-                    </div>
-                    <h3>Full Playlist Support</h3>
-                    <p>Download entire playlists, channels, or albums in one go. Select exactly which videos you want from the intuitive grid interface.</p>
-                </div>
+            <div class="feature-card">
+                <i data-lucide="zap" size="32"></i>
+                <h3>High Octane</h3>
+                <p>Multi-threaded downloading with automatic format merging using FFmpeg. Up to 4K 60FPS.</p>
+            </div>
+            <div class="feature-card">
+                <i data-lucide="smartphone" size="32"></i>
+                <h3>Mobile First</h3>
+                <p>A native-feeling Android experience powered by BeeWare and FastAPI. Scoped storage ready.</p>
+            </div>
+            <div class="feature-card">
+                <i data-lucide="shield-check" size="32"></i>
+                <h3>Privacy Built-in</h3>
+                <p>No telemetry. No local servers tracking you. 100% open source and transparent.</p>
             </div>
         </section>
-    </main>
 
-    <footer>
-        <p>OmniGrab is open-source software under the MIT License.</p>
-        <p style="margin-top: 8px;">Made with Tauri • Powered by yt-dlp & FFmpeg</p>
-    </footer>
+        <footer>
+            MIT LICENSE &bull; (C) 2024 PASCAL AZUBIKE &bull; BUILT WITH TAURI + BEEWARE
+        </footer>
+    </div>
 
     <script>
-        // Simple OS detection for hero button
-        const platform = navigator.platform.toLowerCase();
-        let osName = 'Desktop';
-        
-        if (platform.includes('win')) osName = 'Windows';
-        else if (platform.includes('mac')) osName = 'macOS';
-        else if (platform.includes('linux')) osName = 'Linux';
-        else if (/android/i.test(navigator.userAgent)) osName = 'Android';
-        
-        document.getElementById('os-name').innerText = osName;
+        lucide.createIcons();
 
-        // In a real deployment, we would fetch from GitHub API here to get direct download links
-        // fetch('https://api.github.com/repos/omnigrab/omnigrab/releases/latest')
+        // OS Detection
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const btnWin = document.getElementById('btn-win');
+        const btnAndroid = document.getElementById('btn-android');
+        const btnUnix = document.getElementById('btn-unix');
+
+        if (/windows/i.test(userAgent)) {
+            btnWin.classList.add('os-highlight');
+        } else if (/android/i.test(userAgent)) {
+            btnAndroid.classList.add('os-highlight');
+        } else if (/mac|linux/i.test(userAgent)) {
+            btnUnix.classList.add('os-highlight');
+        }
+
+        // Fetch latest release from GitHub
+        async function fetchLatest() {
+            try {
+                const response = await fetch('https://api.github.com/repos/pascal-azubike/omnigrab/releases/latest');
+                const data = await response.json();
+                
+                data.assets.forEach(asset => {
+                    if (asset.name.endsWith('.exe')) btnWin.href = asset.browser_download_url;
+                    if (asset.name.endsWith('.apk')) btnAndroid.href = asset.browser_download_url;
+                    if (asset.name.endsWith('.msi')) btnWin.href = asset.browser_download_url;
+                    if (asset.name.endsWith('.dmg')) btnUnix.href = asset.browser_download_url;
+                    if (asset.name.endsWith('.AppImage')) btnUnix.href = asset.browser_download_url;
+                });
+            } catch (e) {
+                console.error("Failed to fetch latest releases:", e);
+            }
+        }
+        fetchLatest();
     </script>
 </body>
 </html>

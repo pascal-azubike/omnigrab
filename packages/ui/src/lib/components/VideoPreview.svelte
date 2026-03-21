@@ -1,302 +1,139 @@
 <script lang="ts">
-  import { formatDuration } from '$lib/utils/formatBytes.js';
-  import type { VideoInfo } from '$lib/types.js';
+  import { Download, Film, Type, Image, Music } from 'lucide-svelte';
+  import type { VideoInfo } from '$lib/types';
+  import { startDownload } from '$lib/utils/api';
+  import { downloadStore } from '$lib/stores/downloads.svelte';
+  import { v4 as uuidv4 } from 'uuid';
 
-  interface Props {
-    info: VideoInfo;
-    quality: string;
-    format: string;
-    outputPath: string;
-    embedThumbnail: boolean;
-    embedMetadata: boolean;
-    downloadSubtitles: boolean;
-    subtitleLang: string;
-    onQualityChange: (q: string) => void;
-    onFormatChange: (f: string) => void;
-    onOutputChange: (p: string) => void;
-    onOptionChange: (key: string, val: boolean | string) => void;
-    onDownload: () => void;
-    onBrowse: () => void;
-    isDesktop: boolean;
+  let { video } = $props<{ video: VideoInfo }>();
+
+  let quality = $state('best');
+  let format = $state('mp4');
+  let embedThumbnail = $state(true);
+  let embedMetadata = $state(true);
+  let downloadSubtitles = $state(false);
+  let subtitleLang = $state('en');
+
+  async function handleDownload() {
+    const id = uuidv4();
+    const payload = {
+      id,
+      url: video.webpage_url,
+      quality,
+      format,
+      embed_thumbnail: embedThumbnail,
+      embed_metadata: embedMetadata,
+      download_subtitles: downloadSubtitles,
+      subtitle_lang: subtitleLang,
+      is_playlist: false
+    };
+
+    await downloadStore.addDownload(payload);
+    await startDownload(payload);
   }
-
-  let {
-    info,
-    quality = $bindable(),
-    format = $bindable(),
-    outputPath = $bindable(),
-    embedThumbnail = $bindable(),
-    embedMetadata = $bindable(),
-    downloadSubtitles = $bindable(),
-    subtitleLang = $bindable(),
-    onDownload,
-    onBrowse,
-    isDesktop,
-  }: Props = $props();
-
-  let imgLoaded = $state(false);
-  let imgError = $state(false);
-
-  const QUALITY_OPTIONS = [
-    { value: 'best', label: 'Best Quality' },
-    { value: '2160', label: '4K (2160p)' },
-    { value: '1080', label: '1080p HD' },
-    { value: '720', label: '720p HD' },
-    { value: '480', label: '480p' },
-    { value: '360', label: '360p' },
-    { value: 'audio', label: 'Audio Only' },
-  ];
-
-  const FORMAT_OPTIONS = [
-    { value: 'mp4', label: 'MP4' },
-    { value: 'mkv', label: 'MKV' },
-    { value: 'webm', label: 'WebM' },
-    { value: 'mp3', label: 'MP3' },
-    { value: 'm4a', label: 'M4A' },
-    { value: 'flac', label: 'FLAC' },
-  ];
-
-  let audioFormats = $derived(['audio'].includes(quality)
-    ? FORMAT_OPTIONS.filter(f => ['mp3', 'm4a', 'flac'].includes(f.value))
-    : FORMAT_OPTIONS.filter(f => ['mp4', 'mkv', 'webm'].includes(f.value))
-  );
 </script>
 
-<div class="video-preview animate-fade-in">
-  <!-- Thumbnail -->
-  <div class="thumbnail-container">
-    {#if !imgLoaded && !imgError}
-      <div class="skeleton" style="width:100%;height:100%;position:absolute;inset:0;border-radius:12px"></div>
-    {/if}
-    {#if info.thumbnail && !imgError}
-      <img
-        src={info.thumbnail}
-        alt={info.title}
-        class="thumbnail"
-        class:loaded={imgLoaded}
-        onload={() => imgLoaded = true}
-        onerror={() => imgError = true}
-      />
-    {:else}
-      <div class="thumbnail-fallback">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
+<div class="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 p-8">
+    <!-- Thumbnail & Info -->
+    <div class="lg:col-span-2 space-y-4">
+      <div class="relative group rounded-2xl overflow-hidden aspect-video shadow-lg">
+        <img src={video.thumbnail} alt={video.title} class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+        <div class="absolute bottom-3 right-3 px-2 py-1 bg-black/80 backdrop-blur-md rounded text-xs text-white font-medium">
+          {Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')}
+        </div>
       </div>
-    {/if}
-    {#if info.duration}
-      <span class="duration font-mono">{formatDuration(info.duration)}</span>
-    {/if}
-  </div>
-
-  <!-- Info -->
-  <div class="info-section">
-    <h2 class="video-title" title={info.title}>{info.title}</h2>
-    <div class="meta">
-      <span class="platform-tag">{info.platform}</span>
-      {#if info.uploader}
-        <span class="uploader">by {info.uploader}</span>
-      {/if}
+      
+      <div class="space-y-2">
+        <h2 class="text-xl font-bold text-white leading-tight line-clamp-2">{video.title}</h2>
+        <div class="flex items-center gap-3 text-zinc-400 text-sm">
+          <span class="px-2 py-0.5 bg-zinc-800 rounded text-xs font-semibold uppercase">{video.platform}</span>
+          <span>&bull;</span>
+          <span>{video.uploader}</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Options grid -->
-    <div class="options-grid">
-      <!-- Quality -->
-      <div class="option-group">
-        <div class="option-label">Quality</div>
-        <select bind:value={quality} class="input">
-          {#each QUALITY_OPTIONS as opt}
-            <option value={opt.value}>{opt.label}</option>
-          {/each}
-        </select>
+    <!-- Options -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-zinc-500 uppercase flex items-center gap-2">
+            <Film class="h-3 w-3" /> Quality
+          </label>
+          <select bind:value={quality} class="w-full bg-zinc-800 border-none rounded-xl text-white px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none">
+            <option value="best">Best Available</option>
+            <option value="2160">4K (2160p)</option>
+            <option value="1080">1080p Full HD</option>
+            <option value="720">720p HD</option>
+            <option value="480">480p</option>
+            <option value="360">360p</option>
+            <option value="audio">Audio Only</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-zinc-500 uppercase flex items-center gap-2">
+            <Music class="h-3 w-3" /> Format
+          </label>
+          <select bind:value={format} class="w-full bg-zinc-800 border-none rounded-xl text-white px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none">
+            {#if quality === 'audio'}
+              <option value="mp3">MP3</option>
+              <option value="m4a">M4A (Apple)</option>
+              <option value="flac">FLAC (Lossless)</option>
+              <option value="wav">WAV</option>
+            {:else}
+              <option value="mp4">MP4 (Universal)</option>
+              <option value="mkv">MKV</option>
+              <option value="webm">WebM</option>
+            {/if}
+          </select>
+        </div>
       </div>
 
-      <!-- Format -->
-      <div class="option-group">
-        <div class="option-label">Format</div>
-        <select bind:value={format} class="input">
-          {#each audioFormats as opt}
-            <option value={opt.value}>{opt.label}</option>
-          {/each}
-        </select>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <label class="flex items-center gap-3 p-3 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-colors cursor-pointer group">
+          <input type="checkbox" bind:checked={embedThumbnail} class="w-4 h-4 rounded border-zinc-700 text-indigo-600 focus:ring-indigo-500/50" />
+          <div class="flex items-center gap-2 text-sm text-zinc-300">
+            <Image class="h-4 w-4 text-zinc-500 group-hover:text-indigo-400" /> Embed Thumbnail
+          </div>
+        </label>
+        
+        <label class="flex items-center gap-3 p-3 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-colors cursor-pointer group">
+          <input type="checkbox" bind:checked={embedMetadata} class="w-4 h-4 rounded border-zinc-700 text-indigo-600 focus:ring-indigo-500/50" />
+          <div class="flex items-center gap-2 text-sm text-zinc-300">
+            <Type class="h-4 w-4 text-zinc-500 group-hover:text-indigo-400" /> Write Metadata
+          </div>
+        </label>
       </div>
 
-      <!-- Output folder -->
-      <div class="option-group full-width">
-        <div class="option-label">Save to</div>
-        <div class="path-input">
-          <input
-            bind:value={outputPath}
-            type="text"
-            class="input"
-            placeholder="Select output folder..."
-            readonly
-          />
-          {#if isDesktop}
-            <button class="btn btn-secondary btn-sm" onclick={onBrowse}>Browse</button>
+      {#if quality !== 'audio'}
+        <div class="space-y-3 pt-2">
+          <label class="flex items-center gap-3 p-3 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-colors cursor-pointer group">
+            <input type="checkbox" bind:checked={downloadSubtitles} class="w-4 h-4 rounded border-zinc-700 text-indigo-600 focus:ring-indigo-500/50" />
+            <div class="flex items-center gap-2 text-sm text-zinc-300">
+              <Type class="h-4 w-4 text-zinc-500 group-hover:text-indigo-400" /> Download Subtitles
+            </div>
+          </label>
+          
+          {#if downloadSubtitles}
+            <div class="pl-7 animate-in fade-in slide-in-from-top-1">
+              <input type="text" bind:value={subtitleLang} placeholder="en, es, ja..." class="w-full bg-zinc-800 border-none rounded-xl text-white px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none" />
+            </div>
           {/if}
         </div>
-      </div>
-    </div>
-
-    <!-- Toggles -->
-    <div class="toggles">
-      <label class="toggle-row">
-        <span>Embed thumbnail</span>
-        <label class="toggle">
-          <input type="checkbox" bind:checked={embedThumbnail} />
-          <span class="toggle-slider"></span>
-        </label>
-      </label>
-      <label class="toggle-row">
-        <span>Embed metadata</span>
-        <label class="toggle">
-          <input type="checkbox" bind:checked={embedMetadata} />
-          <span class="toggle-slider"></span>
-        </label>
-      </label>
-      <label class="toggle-row">
-        <span>Download subtitles</span>
-        <label class="toggle">
-          <input type="checkbox" bind:checked={downloadSubtitles} />
-          <span class="toggle-slider"></span>
-        </label>
-      </label>
-      {#if downloadSubtitles}
-        <div class="toggle-row">
-          <span>Subtitle language</span>
-          <input bind:value={subtitleLang} type="text" class="input" style="width:80px" placeholder="en" />
-        </div>
       {/if}
     </div>
 
-    <!-- Download button -->
-    <button class="btn btn-primary btn-lg w-full" onclick={onDownload}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
-      Download
-    </button>
+    <!-- Download CTA -->
+    <div class="flex flex-col justify-end lg:col-span-1">
+      <button 
+        onclick={handleDownload}
+        class="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl transition-all shadow-xl active:scale-95 flex flex-col items-center gap-2"
+      >
+        <Download class="h-6 w-6" />
+        Start Download
+      </button>
+    </div>
   </div>
 </div>
-
-<style>
-  .video-preview {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: var(--shadow-md);
-  }
-
-  @media (max-width: 700px) {
-    .video-preview { grid-template-columns: 1fr; }
-  }
-
-  .thumbnail-container {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--surface-raised);
-    aspect-ratio: 16/9;
-  }
-
-  .thumbnail {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .thumbnail.loaded { opacity: 1; }
-
-  .thumbnail-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: var(--text-secondary);
-  }
-
-  .duration {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: rgba(0,0,0,0.8);
-    color: #fff;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-
-  .info-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    min-width: 0;
-  }
-
-  .video-title {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.3;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-
-  .meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .platform-tag {
-    font-size: 11px;
-    font-weight: 700;
-    background: var(--accent-glow);
-    color: var(--accent);
-    padding: 3px 10px;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .uploader {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  .options-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .option-group { display: flex; flex-direction: column; gap: 6px; }
-  .option-group.full-width { grid-column: 1 / -1; }
-  .option-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
-
-  .path-input { display: flex; gap: 8px; }
-  .path-input .input { flex: 1; cursor: default; }
-
-  .toggles { display: flex; flex-direction: column; gap: 10px; }
-
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    cursor: pointer;
-    gap: 12px;
-  }
-</style>

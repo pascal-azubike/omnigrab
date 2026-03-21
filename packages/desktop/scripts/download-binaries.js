@@ -14,12 +14,14 @@ import { fileURLToPath } from 'url';
 import { createWriteStream } from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const BINARIES_DIR = path.join(__dirname, '..', 'src-tauri', 'binaries');
+// In Tauri v2, sidecars in the crate root (src-tauri/) are reliably found.
+const BINARIES_DIR = path.join(__dirname, '..', 'src-tauri');
 
-// Ensure the directory exists (though it should as it's the root of src-tauri)
+// Ensure the directory exists
 if (!fs.existsSync(BINARIES_DIR)) {
   fs.mkdirSync(BINARIES_DIR, { recursive: true });
 }
+console.log(`📂 Output directory: ${BINARIES_DIR}`);
 
 import { execSync } from 'child_process';
 

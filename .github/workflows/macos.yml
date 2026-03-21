@@ -42,6 +42,9 @@ jobs:
         working-directory: packages/desktop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify sidecar placement
+        run: ls -R packages/desktop/src-tauri
         
       - uses: tauri-apps/tauri-action@v0
         env:

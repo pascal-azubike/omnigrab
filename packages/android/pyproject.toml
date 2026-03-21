@@ -21,6 +21,13 @@ requires = []
 
 [tool.briefcase.app.omnigrab-android.android]
 requires = [
+    "toga-core==0.4.7",
+    "toga-android==0.4.7",
+]
+
+[tool.briefcase.app.omnigrab-android.android]
+requires = [
+    "toga-core==0.4.7",
     "toga-android==0.4.7",
     "fastapi>=0.115.0",
     "uvicorn>=0.30.0",
@@ -32,6 +39,7 @@ requires = [
 ]
 
 build_gradle_dependencies = [
+    "androidx.appcompat:appcompat:1.6.1",
     "androidx.webkit:webkit:1.15.0",
 ]
 

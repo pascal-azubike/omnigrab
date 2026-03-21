@@ -58,13 +58,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: omnigrab-android-apk
-          path: packages/android/build/omnigrab/android/gradle/app/build/outputs/apk/debug/*.apk
+          path: packages/android/build/omnigrab-android/android/gradle/app/build/outputs/apk/debug/*.apk
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: packages/android/build/omnigrab/android/gradle/app/build/outputs/apk/debug/*.apk
+          files: packages/android/build/omnigrab-android/android/gradle/app/build/outputs/apk/debug/*.apk
           draft: true
           prerelease: false
         env:

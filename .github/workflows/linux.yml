@@ -42,7 +42,9 @@ jobs:
             javascriptcoregtk-4.1-dev
           
       - name: install project dependencies
-        run: npm install
+        run: |
+          rm -f package-lock.json
+          npm install
         
       - name: build UI
         run: npm run build

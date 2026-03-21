@@ -68,7 +68,9 @@ jobs:
 
       # ── SvelteKit UI ─────────────────────────────────────────────
       - name: Install dependencies
-        run: npm install
+        run: |
+          rm -f package-lock.json
+          npm install
 
       - name: Build SvelteKit UI (android mode)
         run: npm run build:android

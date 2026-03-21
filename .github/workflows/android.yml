@@ -34,7 +34,7 @@ jobs:
           cache: 'npm'
 
       - name: install project dependencies
-        run: npm install
+        run: npm install --include=optional
 
       - name: build UI
         run: npm --prefix packages/ui run build:android

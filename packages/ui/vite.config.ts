@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   // Determine output dir based on build mode
   const outDir = mode === 'android'
     ? path.resolve(__dirname, '../android/src/omnigrab_android/ui')
-    : path.resolve(__dirname, '../desktop/ui-dist');
+    : path.resolve(__dirname, '../desktop/src-tauri/ui-dist');
 
   const isDesktop = mode !== 'android';
 

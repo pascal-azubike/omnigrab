@@ -25,7 +25,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         
       - name: install project dependencies
-        run: npm install
+        run: npm install --include=optional
         
       - name: build UI
         run: npm --prefix packages/ui run build:desktop

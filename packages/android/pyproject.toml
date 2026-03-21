@@ -19,13 +19,6 @@ test_sources = ["tests"]
 
 requires = []
 
-[tool.briefcase.app.omnigrab-android.android]
-requires = [
-    "toga-core==0.4.7",
-    "toga-android==0.4.7",
-]
-
-[tool.briefcase.app.omnigrab-android.android]
 requires = [
     "toga-core==0.4.7",
     "toga-android==0.4.7",

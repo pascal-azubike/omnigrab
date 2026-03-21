@@ -2,6 +2,8 @@ name: Windows Build
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
     paths:
       - 'packages/ui/**'
       - 'packages/desktop/**'

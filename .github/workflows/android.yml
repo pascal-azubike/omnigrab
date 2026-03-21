@@ -2,16 +2,18 @@ name: Android Build
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
     paths:
       - 'packages/ui/**'
       - 'packages/android/**'
       - '.github/workflows/android.yml'
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -52,8 +54,18 @@ jobs:
           briefcase create android
           briefcase build android
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: omnigrab-android-apk
           path: packages/android/build/omnigrab/android/gradle/app/build/outputs/apk/debug/*.apk
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packages/android/build/omnigrab/android/gradle/app/build/outputs/apk/debug/*.apk
+          draft: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

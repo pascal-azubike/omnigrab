@@ -1,19 +1,65 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Light mode colors - Tailwind 4 uses --color-* prefix */
+  --color-background: oklch(98.5% 0 0);
+  --color-foreground: oklch(14.6% 0.005 285.8);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(14.6% 0.005 285.8);
+  --color-primary: oklch(56.8% 0.198 274.3);
+  --color-primary-foreground: oklch(100% 0 0);
+  --color-border: oklch(91.4% 0.002 285.8);
+  --color-muted: oklch(96.2% 0.002 285.8);
+  --color-muted-foreground: oklch(49.2% 0.015 285.8);
+  --color-accent: oklch(96.2% 0.002 285.8);
+  --color-accent-foreground: oklch(14.6% 0.005 285.8);
+}
+
+.dark {
+  /* Dark mode color overrides */
+  --color-background: oklch(14.6% 0.005 285.8);
+  --color-foreground: oklch(98.5% 0 0);
+  --color-card: oklch(17.5% 0.005 285.8);
+  --color-card-foreground: oklch(98.5% 0 0);
+  --color-primary: oklch(56.8% 0.198 274.3);
+  --color-primary-foreground: oklch(100% 0 0);
+  --color-border: oklch(25.6% 0.01 285.8);
+  --color-muted: oklch(25.6% 0.01 285.8);
+  --color-muted-foreground: oklch(65.8% 0.015 285.8);
+  --color-accent: oklch(25.6% 0.01 285.8);
+  --color-accent-foreground: oklch(98.5% 0 0);
+}
+
 @layer base {
-  :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 6%;
-    --card-foreground: 0 0% 98%;
-    --primary: 243 75% 59%;
-    --primary-foreground: 0 0% 100%;
-    --border: 240 3.7% 15.9%;
+  body {
+    @apply bg-background text-foreground font-sans leading-normal;
+    font-size: 14px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    overflow: hidden;
   }
 
-  body {
-    @apply bg-zinc-950 text-white antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  @media (min-width: 768px) {
+    body {
+      font-size: 16px;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-bold {
+    @apply tracking-tight;
+  }
+
+  input,
+  textarea {
+    user-select: auto;
+    -webkit-user-select: auto;
   }
 }
 
@@ -21,7 +67,7 @@
   .text-shadow-glow {
     text-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
   }
-  
+
   .glass {
     @apply bg-white/5 backdrop-blur-xl border border-white/10;
   }
@@ -33,6 +79,13 @@
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

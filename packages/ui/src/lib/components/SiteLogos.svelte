@@ -1,82 +1,54 @@
 <script lang="ts">
-  import { PLATFORMS } from '$lib/utils/platform.js';
+  import {
+    Youtube,
+    Instagram,
+    Twitter,
+    Facebook,
+    Twitch,
+    Github,
+    Music,
+    PlayCircle,
+    Radio,
+  } from "lucide-svelte";
 
-  const logos = Object.values(PLATFORMS).filter(p => !!p.icon);
+  const sites = [
+    { name: "YouTube", icon: Youtube, color: "text-red-500" },
+    { name: "TikTok", icon: Music, color: "text-foreground" },
+    { name: "Instagram", icon: Instagram, color: "text-pink-500" },
+    { name: "Twitter/X", icon: Twitter, color: "text-foreground" },
+    { name: "Facebook", icon: Facebook, color: "text-blue-500" },
+    { name: "Twitch", icon: Twitch, color: "text-purple-500" },
+    { name: "SoundCloud", icon: PlayCircle, color: "text-orange-500" },
+    { name: "Vimeo", icon: PlayCircle, color: "text-blue-400" },
+    { name: "Reddit", icon: Radio, color: "text-orange-600" },
+    { name: "Dailymotion", icon: PlayCircle, color: "text-blue-600" },
+  ];
 </script>
 
-<div class="site-logos-container">
-  <div class="site-logos-track">
-    {#each [...logos, ...logos] as logo, i}
-      <div class="logo-item" title={logo.name}>
-        <img
-          src="/platform-icons/{logo.icon}.svg"
-          alt={logo.name}
-          width="24"
-          height="24"
-          loading="lazy"
-          onerror={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h3 class="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+      Supported Platforms
+    </h3>
+    <span
+      class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest"
+      >1800+ more</span
+    >
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+    {#each sites as site}
+      <div
+        class="p-4 bg-card/50 border border-border rounded-2xl flex flex-col items-center gap-2 hover:border-muted-foreground/30 hover:bg-card transition-all cursor-default group"
+      >
+        <site.icon
+          class="h-6 w-6 {site.color} transition-transform group-hover:scale-110"
         />
-        <span class="logo-name">{logo.name}</span>
+        <span
+          class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest"
+          >{site.name}</span
+        >
       </div>
     {/each}
   </div>
 </div>
-
-<style>
-  .site-logos-container {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    padding: 24px 0;
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 15%,
-      black 85%,
-      transparent
-    );
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 15%,
-      black 85%,
-      transparent
-    );
-  }
-
-  .site-logos-track {
-    display: flex;
-    gap: 32px;
-    width: fit-content;
-    animation: scroll 40s linear infinite;
-  }
-
-  .site-logos-track:hover {
-    animation-play-state: paused;
-  }
-
-  .logo-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    filter: grayscale(1) opacity(0.6);
-    transition: all 0.3s;
-    cursor: default;
-    user-select: none;
-  }
-
-  .logo-item:hover {
-    filter: grayscale(0) opacity(1);
-    transform: scale(1.05);
-  }
-
-  .logo-name {
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-50% - 16px)); }
-  }
-</style>

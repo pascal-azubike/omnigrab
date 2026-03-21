@@ -12,6 +12,8 @@ export interface HistoryItem {
   downloadedAt: number;
   isPlaylist: boolean;
   playlistTotal: number;
+  status: 'queued' | 'downloading' | 'processing' | 'complete' | 'error' | 'cancelled';
+  error?: string;
 }
 
 function createHistoryStore() {
@@ -37,6 +39,14 @@ function createHistoryStore() {
     save();
   }
 
+  function updateItem(id: string, updates: Partial<HistoryItem>) {
+    const index = items.findIndex(i => i.id === id);
+    if (index !== -1) {
+      items[index] = { ...items[index], ...updates };
+      save();
+    }
+  }
+
   async function save() {
     // Implement persistence logic here
   }
@@ -46,7 +56,8 @@ function createHistoryStore() {
     init,
     addItem,
     removeItem,
-    clearHistory
+    clearHistory,
+    updateItem
   };
 }
 

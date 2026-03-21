@@ -1,5 +1,6 @@
 import { listenProgress, cancelDownload as apiCancelDownload } from '$lib/utils/api';
 import type { ProgressEvent, DownloadPayload } from '$lib/types';
+import { historyStore } from './history.svelte';
 
 export interface DownloadItem extends DownloadPayload {
   status: 'queued' | 'downloading' | 'processing' | 'complete' | 'error' | 'cancelled';
@@ -26,26 +27,55 @@ function createDownloadStore() {
       eta: '--:--',
       downloaded_bytes: 0,
       total_bytes: 0,
-      current_title: 'Initializing...',
+      current_title: payload.title || 'Initializing...',
       added_at: Date.now()
     };
     
     items.push(newItem);
     
+    // Add to history eagerly so it appears in the list immediately (as 'queued')
+    historyStore.addItem({
+      id: newItem.id,
+      url: newItem.url,
+      title: newItem.title || newItem.current_title || 'Media Download',
+      thumbnail: newItem.thumbnail || '',
+      platform: 'Media Video',
+      format: newItem.format,
+      quality: newItem.quality,
+      outputPath: newItem.output_path || '',
+      filePath: '',
+      fileSize: 0,
+      downloadedAt: Date.now(),
+      isPlaylist: newItem.is_playlist,
+      playlistTotal: newItem.playlist_total || 0,
+      status: 'queued'
+    });
+    
     const unlisten = await listenProgress(payload.id, (event) => {
       const index = items.findIndex(i => i.id === event.id);
       if (index === -1) return;
       
+      const previousStatus = items[index].status;
+      
       items[index] = {
         ...items[index],
         ...event,
-        // Ensure percent is a number if it comes as a string from backend
         percent: typeof event.percent === 'string' 
-          ? parseFloat(event.percent.replace('%', '')) 
-          : event.percent
+          ? parseFloat(String(event.percent).replace('%', '')) 
+          : Number(event.percent) || 0
       };
       
-      if (event.status === 'complete' || event.status === 'error' || event.status === 'cancelled') {
+      // Only sync to history if the status transitioned or finalized
+      if (previousStatus !== event.status || event.status === 'complete' || event.status === 'error') {
+        historyStore.updateItem(event.id, {
+          status: event.status,
+          fileSize: items[index].total_bytes || items[index].downloaded_bytes || 0,
+          title: items[index].current_title || items[index].title,
+          error: event.error
+        });
+      }
+      
+      if (['complete', 'error', 'cancelled'].includes(event.status)) {
         const cleanup = unlisteners.get(event.id);
         if (cleanup) cleanup();
         unlisteners.delete(event.id);
@@ -72,6 +102,8 @@ function createDownloadStore() {
 
   return {
     get items() { return items; },
+    get activeCount() { return items.filter(i => ['downloading', 'processing'].includes(i.status)).length; },
+    get queuedCount() { return items.filter(i => i.status === 'queued').length; },
     addDownload,
     cancelDownload,
     removeDownload

@@ -1,29 +1,80 @@
-import toga
+"""
+OmniGrab Android — BeeWare Briefcase Application Entry Point
+"""
+import asyncio
 import threading
-import uvicorn
-from omnigrab_android.server import app as fastapi_app
+import toga
+from toga.style import Pack
+from toga.style.pack import COLUMN
 
-class OmniGrab(toga.App):
+SERVER_PORT = 8765
+
+
+class OmniGrabAndroid(toga.App):
     def startup(self):
-        # Start FastAPI in a background thread
-        self.server_thread = threading.Thread(target=self.run_server, daemon=True)
-        self.server_thread.start()
-
-        # Main Layout
-        self.main_window = toga.MainWindow(title=self.formal_name)
-        
-        # WebView pointing to local FastAPI server
-        self.webview = toga.WebView(
-            style=toga.style.pack(flex=1),
-            url="http://127.0.0.1:8765",
-            user_agent="OmniGrabAndroid"
+        self.main_window = toga.MainWindow(
+            title="OmniGrab",
+            resizable=False,
         )
-        
-        self.main_window.content = self.webview
+
+        # Full-screen WebView — this IS the entire UI
+        self.webview = toga.WebView(
+            style=Pack(flex=1),
+        )
+
+        main_box = toga.Box(
+            children=[self.webview],
+            style=Pack(direction=COLUMN, flex=1),
+        )
+
+        self.main_window.content = main_box
         self.main_window.show()
 
-    def run_server(self):
-        uvicorn.run(fastapi_app, host="127.0.0.1", port=8765, log_level="info")
+        # Start FastAPI server in background thread, then load WebView once ready
+        self.add_background_task(self._start_server_then_load)
+
+    async def _start_server_then_load(self, widget):
+        """Start the FastAPI server then point WebView at it."""
+        import threading
+        from omnigrab_android.server import start_server
+
+        server_thread = threading.Thread(
+            target=start_server,
+            args=(SERVER_PORT,),
+            daemon=True,
+        )
+        server_thread.start()
+
+        # Poll /health until the server is ready (max 10 seconds)
+        import httpx
+        for attempt in range(100):
+            try:
+                async with httpx.AsyncClient() as client:
+                    r = await client.get(
+                        f"http://127.0.0.1:{SERVER_PORT}/health",
+                        timeout=0.5,
+                    )
+                    if r.status_code == 200:
+                        break
+            except Exception:
+                pass
+            await asyncio.sleep(0.1)
+
+        # Set custom user-agent in JavaScript so the SvelteKit UI can detect Android
+        try:
+            await self.webview.evaluate_javascript(
+                "Object.defineProperty(navigator, 'userAgent', "
+                "{get: function() { return navigator.userAgent + ' OmniGrabAndroid/2.0'; }});"
+            )
+        except Exception:
+            pass
+
+        # Load the SvelteKit UI served by FastAPI
+        await self.webview.load_url(f"http://127.0.0.1:{SERVER_PORT}/")
+
 
 def main():
-    return OmniGrab()
+    return OmniGrabAndroid(
+        "OmniGrab",
+        "com.omnigrab.omnigrab_android",
+    )

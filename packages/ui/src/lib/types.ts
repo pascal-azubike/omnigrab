@@ -49,6 +49,9 @@ export interface DownloadPayload {
   subtitle_lang: string;
   is_playlist: boolean;
   playlist_items?: string;
+  playlist_total?: number;
+  title?: string;
+  thumbnail?: string;
   output_path?: string;
   use_cookies?: boolean;
   cookies_path?: string;

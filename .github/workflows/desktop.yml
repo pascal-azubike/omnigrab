@@ -1,50 +1,110 @@
-name: "Release Desktop"
+name: Build Desktop
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: ['v*']
+  workflow_dispatch:
 
 jobs:
-  publish:
+  build-desktop:
     permissions:
       contents: write
+
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-22.04, windows-latest]
+        include:
+          - platform: ubuntu-22.04
+            target: Linux
+            artifact: omnigrab-linux
+
+          - platform: macos-latest
+            target: macOS
+            artifact: omnigrab-macos
+
+          - platform: windows-latest
+            target: Windows
+            artifact: omnigrab-windows
 
     runs-on: ${{ matrix.platform }}
+
     steps:
-      - uses: actions/checkout@v4
+      # ── Checkout ─────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: install Rust stable
+      # ── Rust toolchain ────────────────────────────────────────────
+      - name: Setup Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      - name: install dependencies (ubuntu only)
+      - name: Cache Rust build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: packages/desktop/src-tauri
+
+      # ── Node.js ───────────────────────────────────────────────────
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: packages/ui/package-lock.json
+
+      # ── Linux system dependencies (WebKit2GTK 4.1 for Tauri v2) ──
+      - name: Install Linux system dependencies
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libssl-dev \
+            libgtk-3-dev
 
-      - name: install frontend dependencies
-        run: npm install
+      # ── Front-end ─────────────────────────────────────────────────
+      - name: Install UI dependencies
+        run: npm ci
+        working-directory: packages/ui
 
-      - name: build tauri app
+      - name: Build SvelteKit UI (desktop mode)
+        run: npm run build
+        working-directory: packages/ui
+
+      # ── Sidecar binaries ─────────────────────────────────────────
+      - name: Download yt-dlp + ffmpeg binaries
+        run: node scripts/download-binaries.js
+        working-directory: packages/desktop
+
+      # ── Tauri build & release ────────────────────────────────────
+      - name: Build and release Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          tagName: v__VERSION__ # tauri-action replaces this with the app version
-          releaseName: "OmniGrab v__VERSION__"
-          releaseBody: "See the assets below for your platform."
-          releaseDraft: true
+          projectPath: packages/desktop
+          tagName: ${{ github.ref_name }}
+          releaseName: 'OmniGrab ${{ github.ref_name }}'
+          releaseBody: |
+            ## OmniGrab ${{ github.ref_name }}
+
+            Download the installer for your platform below.
+
+            ### Desktop Installers
+            | Platform | File |
+            |---|---|
+            | Windows | `.exe` or `.msi` |
+            | macOS | `.dmg` |
+            | Linux | `.AppImage` or `.deb` |
+
+            ### Android
+            See the [Android APK workflow](${{ github.server_url }}/${{ github.repository }}/actions/workflows/android.yml) artifact, or wait for the Android release to be attached.
+
+            ### Changelog
+            See [CHANGELOG.md](${{ github.server_url }}/${{ github.repository }}/blob/main/CHANGELOG.md) for what's new.
+          releaseDraft: false
           prerelease: false
-          projectPath: ./packages/desktop
+          includeUpdaterJson: true

@@ -1,62 +1,213 @@
-name: "Release Android"
+name: Build Android APK
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: ['v*']
+  workflow_dispatch:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
 
-      - name: setup python
+    steps:
+      # ── Checkout ─────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Python 3.12 ───────────────────────────────────────────────
+      - name: Setup Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
+          cache: pip
 
-      - name: setup node
+      # ── Node.js 20 ────────────────────────────────────────────────
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
 
-      - name: setup java
+      # ── Java 17 (required by Gradle / Briefcase) ──────────────────
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: temurin
           java-version: '17'
+          cache: gradle
 
-      - name: install dependencies
+      # ── Android SDK ───────────────────────────────────────────────
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools & NDK
+        run: |
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-34" \
+            "build-tools;34.0.0" \
+            "ndk;25.2.9519653"
+
+      # ── Python deps ───────────────────────────────────────────────
+      - name: Install Briefcase and app requirements
         run: |
           python -m pip install --upgrade pip
           pip install briefcase
-          npm install
-
-      - name: build ui for android
-        run: npm run build:ui:android
-
-      - name: create android app
-        run: |
           cd packages/android
-          briefcase create android --no-input
+          pip install -r requirements.txt
 
-      - name: build android app
+      # ── SvelteKit UI ─────────────────────────────────────────────
+      - name: Install UI dependencies
+        run: npm ci
+        working-directory: packages/ui
+
+      - name: Build SvelteKit UI (android mode)
+        run: npm run build:android
+        working-directory: packages/ui
+
+      - name: Verify UI was copied into Android bundle
         run: |
-          cd packages/android
-          briefcase build android --no-input
+          ls -la packages/android/src/omnigrab_android/ui/
+          echo "✓ UI build confirmed"
 
-      - name: package android app
-        run: |
-          cd packages/android
-          briefcase package android --no-input
+      # ── Briefcase: create Android scaffold ────────────────────────
+      - name: Create Briefcase Android scaffold
+        run: briefcase create android --no-input
+        working-directory: packages/android
 
-      - name: sign and release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+      # ── Briefcase: build debug APK ────────────────────────────────
+      - name: Build debug APK
+        run: briefcase build android --no-input
+        working-directory: packages/android
+
+      # ── Upload debug APK as artifact (always available for testing)
+      - name: Upload debug APK as artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: |
-            packages/android/dist/*.apk
-            packages/android/dist/*.aab
+          name: omnigrab-debug-apk-${{ github.ref_name }}
+          path: |
+            packages/android/build/omnigrab-android/android/gradle/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+          if-no-files-found: warn
+
+      # ── Signing setup ────────────────────────────────────────────
+      # If keystore secrets are available, sign the release APK.
+      # If not, skip signing and only publish the debug APK.
+      - name: Check if signing secrets are available
+        id: signing_check
+        run: |
+          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Signing secrets not set — skipping signed release build"
+          fi
+
+      - name: Decode signing keystore
+        if: steps.signing_check.outputs.available == 'true'
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode \
+            > packages/android/omnigrab-release.jks
+          echo "✓ Keystore decoded"
+
+      # ── Briefcase: build signed release AAB ──────────────────────
+      - name: Build signed release AAB
+        if: steps.signing_check.outputs.available == 'true'
+        run: |
+          briefcase package android --no-input \
+            -- \
+            -Pandroid.injected.signing.store.file=$(pwd)/omnigrab-release.jks \
+            "-Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            "-Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }}" \
+            "-Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}"
+        working-directory: packages/android
+
+      # ── BundleTool: convert AAB → universal APK ──────────────────
+      - name: Download bundletool
+        if: steps.signing_check.outputs.available == 'true'
+        run: |
+          BUNDLETOOL_VERSION="1.16.0"
+          wget -q \
+            "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" \
+            -O bundletool.jar
+          echo "✓ bundletool $BUNDLETOOL_VERSION downloaded"
+
+      - name: Convert AAB to universal APK
+        if: steps.signing_check.outputs.available == 'true'
+        env:
+          VERSION: ${{ github.ref_name }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          # Strip leading 'v' from tag for version number
+          VER="${VERSION#v}"
+          AAB_PATH="packages/android/dist/OmniGrab-${VER}.aab"
+
+          if [ ! -f "$AAB_PATH" ]; then
+            echo "❌ AAB not found at $AAB_PATH"
+            ls -la packages/android/dist/ || true
+            exit 1
+          fi
+
+          echo "Converting $AAB_PATH to universal APK..."
+          java -jar bundletool.jar build-apks \
+            --bundle="$AAB_PATH" \
+            --output="omnigrab.apks" \
+            --mode=universal \
+            --ks=packages/android/omnigrab-release.jks \
+            --ks-pass="pass:${ANDROID_KEYSTORE_PASSWORD}" \
+            --ks-key-alias="${ANDROID_KEY_ALIAS}" \
+            --key-pass="pass:${ANDROID_KEY_PASSWORD}"
+
+          # Extract the universal APK from the ZIP
+          APK_NAME="OmniGrab-${VERSION}-android.apk"
+          unzip -p omnigrab.apks universal.apk > "$APK_NAME"
+          ls -lh "$APK_NAME"
+          echo "APK_PATH=$APK_NAME" >> $GITHUB_ENV
+          echo "✓ Signed APK created: $APK_NAME"
+
+      # ── Upload signed APK to GitHub Release ───────────────────────
+      - name: Upload signed APK to GitHub Release
+        if: steps.signing_check.outputs.available == 'true' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.APK_PATH }}
+          tag_name: ${{ github.ref_name }}
+          name: "OmniGrab ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Fallback: upload debug APK to release if no signing ───────
+      - name: Upload debug APK to GitHub Release (unsigned fallback)
+        if: steps.signing_check.outputs.available == 'false' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            packages/android/build/omnigrab-android/android/gradle/app/build/outputs/apk/debug/app-debug.apk
+          tag_name: ${{ github.ref_name }}
+          name: "OmniGrab ${{ github.ref_name }}"
+          body: |
+            ⚠️ **This is an unsigned debug APK** — signing secrets are not configured.
+            To enable signed release APKs, add the required secrets:
+            - `ANDROID_KEYSTORE_BASE64`
+            - `ANDROID_KEYSTORE_PASSWORD`
+            - `ANDROID_KEY_ALIAS`
+            - `ANDROID_KEY_PASSWORD`
+
+            See README.md → Setting up GitHub Actions Secrets for instructions.
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Clean up sensitive files ───────────────────────────────────
+      - name: Remove keystore from runner
+        if: always()
+        run: rm -f packages/android/omnigrab-release.jks omnigrab.apks bundletool.jar

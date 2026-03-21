@@ -1,13 +1,13 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "OmniGrab",
-  "version": "1.3.6",
+  "version": "1.0.0",
   "identifier": "com.omnigrab.app",
   "build": {
-    "beforeDevCommand": "npm --prefix ../../ui run dev",
+    "beforeDevCommand": "npm --prefix ../ui run dev",
     "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "npm --prefix ../../ui run build",
-    "frontendDist": "../ui-dist"
+    "beforeBuildCommand": "npm --prefix ../ui run build",
+    "frontendDist": "../../ui/build"
   },
   "app": {
     "windows": [

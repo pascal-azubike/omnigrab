@@ -1,0 +1,7 @@
+# OmniGrab Android — Development / testing dependencies
+# Install with: pip install -r requirements-dev.txt
+# Assumes requirements.txt is already installed.
+
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+httpx>=0.27.0

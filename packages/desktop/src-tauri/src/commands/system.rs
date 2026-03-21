@@ -15,18 +15,18 @@ fn dirs_path() -> String {
     #[cfg(target_os = "windows")]
     {
         let user_profile = std::env::var("USERPROFILE").unwrap_or_else(|_| "C:\\Users\\User".to_string());
-        return format!("{}\\Downloads\\OmniGrab", user_profile);
+        return format!("{}\\Downloads\\omnigrab", user_profile);
     }
     // Android
     #[cfg(target_os = "android")]
     {
-        return "/storage/emulated/0/Download/OmniGrab".to_string();
+        return "/storage/emulated/0/Download/omnigrab".to_string();
     }
     // macOS / Linux
     #[allow(unreachable_code)]
     {
         let home = std::env::var("HOME").unwrap_or_else(|_| "/home/user".to_string());
-        format!("{}/Downloads/OmniGrab", home)
+        format!("{}/Downloads/omnigrab", home)
     }
 }
 

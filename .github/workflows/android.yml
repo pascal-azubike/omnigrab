@@ -129,11 +129,22 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          # Pass signing properties to Gradle via GRADLE_OPTS environment variable
-          export GRADLE_OPTS="-Pandroid.injected.signing.store.file=$(pwd)/omnigrab-release.jks \
-            -Pandroid.injected.signing.store.password=${ANDROID_KEYSTORE_PASSWORD} \
-            -Pandroid.injected.signing.key.alias=${ANDROID_KEY_ALIAS} \
-            -Pandroid.injected.signing.key.password=${ANDROID_KEY_PASSWORD}"
+          # The generated Gradle project is located in build/omnigrab-android/android/gradle
+          GRADLE_PROPS="build/omnigrab-android/android/gradle/gradle.properties"
+          
+          if [ ! -f "$GRADLE_PROPS" ]; then
+            echo "❌ gradle.properties not found at $GRADLE_PROPS. Checking structure..."
+            find build -name "gradle.properties"
+            exit 1
+          fi
+
+          echo "Injecting signing properties into $GRADLE_PROPS..."
+          cat <<EOF >> "$GRADLE_PROPS"
+          android.injected.signing.store.file=$(pwd)/omnigrab-release.jks
+          android.injected.signing.store.password=${ANDROID_KEYSTORE_PASSWORD}
+          android.injected.signing.key.alias=${ANDROID_KEY_ALIAS}
+          android.injected.signing.key.password=${ANDROID_KEY_PASSWORD}
+          EOF
           
           briefcase package android --no-input
         working-directory: packages/android

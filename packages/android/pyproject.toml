@@ -16,9 +16,6 @@ Instagram, Twitter, Vimeo, Twitch and more."""
 icon = "src/omnigrab_android/resources/omnigrab"
 sources = ["src/omnigrab_android"]
 test_sources = ["tests"]
-
-requires = []
-
 requires = [
     "toga-core==0.4.7",
     "toga-android==0.4.7",
@@ -31,6 +28,7 @@ requires = [
     "anyio>=4.0.0",
 ]
 
+[tool.briefcase.app.omnigrab-android.android]
 build_gradle_dependencies = [
     "androidx.appcompat:appcompat:1.6.1",
     "androidx.webkit:webkit:1.15.0",

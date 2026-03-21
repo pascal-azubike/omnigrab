@@ -9,7 +9,17 @@
       "WebSearch",
       "Bash(npm run:*)",
       "Bash(rm:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(where keytool)",
+      "Read(//c/Users/pascal/Desktop/youyube downloader/packages/ui/$LOCALAPPDATA/.briefcase/tools/java/jdk-17/bin/**)",
+      "Read(//c/Program Files/Java/jdk-17/bin/**)",
+      "Read(//c/Users/pascal/Desktop/youyube downloader/packages/ui/$LOCALAPPDATA/Eclipse Adoptium/jdk-17*/bin/**)",
+      "Read(//c/Program Files/**)",
+      "Bash(\"C:\\\\Program Files\\\\Java\\\\latest\\\\bin\\\\keytool.exe\":*)",
+      "Bash(\"/c/Program Files/Java/latest/bin/keytool.exe\":*)",
+      "Bash(\"/c/Program Files/Java/jdk-26/bin/keytool\":*)",
+      "Bash(ls:*)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)"
     ]
   }
 }

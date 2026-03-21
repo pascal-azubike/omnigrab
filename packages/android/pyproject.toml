@@ -3,7 +3,7 @@ project_name = "OmniGrab"
 bundle = "com.omnigrab"
 version = "1.0.0"
 url = "https://github.com/pascal-azubike/omnigrab"
-license = "MIT"
+license.file = "LICENSE"
 author = "Pascal Azubike"
 author_email = "pascal@example.com"
 

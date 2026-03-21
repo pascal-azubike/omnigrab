@@ -7,6 +7,11 @@ packages/ui/.svelte-kit/
 packages/desktop/src-tauri/target/
 packages/desktop/src-tauri/binaries/
 
+# Sidecar binaries - download during build, don't commit
+*.exe
+packages/desktop/src-tauri/yt-dlp-*
+packages/desktop/src-tauri/ffmpeg-*
+
 # Python/Briefcase
 packages/android/build/
 packages/android/dist/

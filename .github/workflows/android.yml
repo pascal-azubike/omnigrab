@@ -34,7 +34,9 @@ jobs:
           cache: 'npm'
 
       - name: install project dependencies
-        run: npm install --include=optional
+        run: |
+          rm -f package-lock.json
+          npm install --include=optional
 
       - name: build UI
         run: npm --prefix packages/ui run build:android

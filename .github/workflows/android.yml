@@ -167,15 +167,17 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          # Strip leading 'v' from tag for version number
-          VER="${VERSION#v}"
-          AAB_PATH="packages/android/dist/OmniGrab-${VER}.aab"
-
-          if [ ! -f "$AAB_PATH" ]; then
-            echo "❌ AAB not found at $AAB_PATH"
+          # Dynamically find the AAB file because the version name might differ from the branch name
+          AAB_FILE=$(ls packages/android/dist/OmniGrab-*.aab | head -n 1)
+          
+          if [ -z "$AAB_FILE" ]; then
+            echo "❌ No AAB found in packages/android/dist/"
             ls -la packages/android/dist/ || true
             exit 1
           fi
+          
+          echo "Found AAB: $AAB_FILE"
+          AAB_PATH="$AAB_FILE"
 
           echo "Converting $AAB_PATH to universal APK..."
           java -jar bundletool.jar build-apks \

@@ -222,48 +222,55 @@ async function downloadFfmpeg() {
     
     const tmpPath = path.join(BINARIES_DIR, `_tmp_ffmpeg_${target.triple}`);
     try {
-      // #28: wrap ffmpeg download in retry logic
       await withRetry(() => downloadFile(target.url, tmpPath));
       
       if (target.isZip) {
         console.log(`  📂 Extracting from ZIP...`);
         if (process.platform === 'win32') {
           execSync(`powershell -Command "Expand-Archive -Path '${tmpPath}' -DestinationPath '${BINARIES_DIR}' -Force"`);
-          const extractedPath = path.join(BINARIES_DIR, target.zipPath);
-          if (fs.existsSync(extractedPath)) {
-            fs.renameSync(extractedPath, destPath);
-          }
         } else {
           execSync(`unzip -o "${tmpPath}" -d "${BINARIES_DIR}"`);
-          const extractedPath = path.join(BINARIES_DIR, target.zipPath);
-          if (fs.existsSync(extractedPath)) {
-            fs.renameSync(extractedPath, destPath);
-          }
+        }
+        
+        const extractedPath = path.join(BINARIES_DIR, target.zipPath);
+        if (fs.existsSync(extractedPath)) {
+          fs.renameSync(extractedPath, destPath);
         }
       } else {
         console.log(`  📂 Extracting from tar.xz...`);
-        // #27: Extract the specific file by its internal path, not by strip-components
-        execSync(`tar -xJf "${tmpPath}" -C "${BINARIES_DIR}" "${target.tarPath}"`);
-        const extractedBinary = path.join(BINARIES_DIR, target.tarPath);
-        if (fs.existsSync(extractedBinary) && extractedBinary !== destPath) {
-          // Move from nested path to flat destPath
-          fs.mkdirSync(path.dirname(destPath), { recursive: true });
+        // Use --strip-components to reliably extract the binary regardless of the top-level folder name
+        // Most BtbN archives are 2 levels deep to the binary: folder/bin/ffmpeg
+        execSync(`tar -xJf "${tmpPath}" -C "${BINARIES_DIR}" --strip-components 2 "${target.tarPath}"`);
+        const extractedBinary = path.join(BINARIES_DIR, target.binary);
+        if (fs.existsSync(extractedBinary)) {
           fs.renameSync(extractedBinary, destPath);
         }
       }
       
+      // Cleanup: Remove the top-level folder if it was extracted (isZip might extract a folder)
+      if (target.isZip || !target.isZip) {
+        const topLevelFolder = target.isZip ? target.zipPath.split('/')[0] : target.tarPath.split('/')[0];
+        const folderPath = path.join(BINARIES_DIR, topLevelFolder);
+        if (fs.existsSync(folderPath) && fs.lstatSync(folderPath).isDirectory()) {
+          fs.rmSync(folderPath, { recursive: true, force: true });
+        }
+      }
+
+      // Final verification
+      if (!fs.existsSync(destPath)) {
+        throw new Error(`Binary failed to extract to expected path: ${destPath}`);
+      }
+      
       // Make executable on Unix
-      if (fs.existsSync(destPath) && !target.ext) {
+      if (!target.ext) {
         fs.chmodSync(destPath, 0o755);
       }
 
       console.log(`  ✓ Successfully processed ${destName}`);
-      
-      // Clean up tmp
       if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
     } catch (err) {
-      console.error(`  ✗ Failed to download/extract ffmpeg for ${target.triple}: ${err.message}`);
       if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+      throw err; // Re-throw to signal failure
     }
   }
 }
@@ -272,20 +279,10 @@ async function main() {
   console.log('🚀 OmniGrab Binary Downloader');
   console.log('================================');
   
-  try {
-    await downloadYtDlp();
-  } catch (err) {
-    console.error('✗ yt-dlp download failed:', err.message);
-    process.exit(1);
-  }
+  await downloadYtDlp();
+  await downloadFfmpeg();
 
-  try {
-    await downloadFfmpeg();
-  } catch (err) {
-    console.error('✗ ffmpeg download failed:', err.message);
-  }
-
-  console.log('\n✅ Done! Binaries are in src-tauri/binaries/');
+  console.log('\n✅ Done! Binaries are in src-tauri/');
   console.log('   Run: npm run tauri dev\n');
 }
 

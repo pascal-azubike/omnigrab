@@ -5,8 +5,6 @@
 
 briefcase>=0.3.18
 toga-android==0.4.7
-toga-core==0.4.7
-travertino>=0.3.0
 fastapi>=0.115.0
 uvicorn>=0.30.0
 yt-dlp>=2024.12.13

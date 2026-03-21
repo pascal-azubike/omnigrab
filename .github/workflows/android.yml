@@ -124,13 +124,18 @@ jobs:
       # ── Briefcase: build signed release AAB ──────────────────────
       - name: Build signed release AAB
         if: steps.signing_check.outputs.available == 'true'
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          briefcase package android --no-input \
-            -- \
-            -Pandroid.injected.signing.store.file=$(pwd)/omnigrab-release.jks \
-            "-Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-            "-Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }}" \
-            "-Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}"
+          # Pass signing properties to Gradle via GRADLE_OPTS environment variable
+          export GRADLE_OPTS="-Pandroid.injected.signing.store.file=$(pwd)/omnigrab-release.jks \
+            -Pandroid.injected.signing.store.password=${ANDROID_KEYSTORE_PASSWORD} \
+            -Pandroid.injected.signing.key.alias=${ANDROID_KEY_ALIAS} \
+            -Pandroid.injected.signing.key.password=${ANDROID_KEY_PASSWORD}"
+          
+          briefcase package android --no-input
         working-directory: packages/android
 
       # ── BundleTool: convert AAB → universal APK ──────────────────

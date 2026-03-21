@@ -233,6 +233,11 @@ async function downloadFfmpeg() {
           if (fs.existsSync(extractedPath)) {
             fs.renameSync(extractedPath, destPath);
           }
+          // Fix 6: Clean up the leftover ZIP extracted root directory
+          const zipExtractedRoot = path.join(BINARIES_DIR, target.zipPath.split('/')[0]);
+          if (fs.existsSync(zipExtractedRoot) && zipExtractedRoot !== destPath) {
+            fs.rmSync(zipExtractedRoot, { recursive: true, force: true });
+          }
         } else {
           execSync(`unzip -o "${tmpPath}" -d "${BINARIES_DIR}"`);
           const extractedPath = path.join(BINARIES_DIR, target.zipPath);
@@ -249,6 +254,12 @@ async function downloadFfmpeg() {
           // Move from nested path to flat destPath
           fs.mkdirSync(path.dirname(destPath), { recursive: true });
           fs.renameSync(extractedBinary, destPath);
+          
+          // Fix 5: Clean up the leftover tar-extracted folder tree
+          const extractedRootDir = path.join(BINARIES_DIR, target.tarPath.split('/')[0]);
+          if (fs.existsSync(extractedRootDir)) {
+            fs.rmSync(extractedRootDir, { recursive: true, force: true });
+          }
         }
       }
       

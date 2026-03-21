@@ -29,7 +29,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         
       - name: install project dependencies
-        run: npm ci
+        run: npm install
         
       - name: build UI
         run: npm run build

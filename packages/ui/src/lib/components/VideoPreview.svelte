@@ -35,8 +35,9 @@
     };
 
     try {
-      await downloadStore.addDownload(payload);
-      await startDownload(payload);
+      const downloadId = await startDownload(payload);
+      // Wait for server to return id before listening, fixes Android SSE race
+      await downloadStore.addDownload({ ...payload, id: downloadId });
     } catch (err) {
       console.error("Failed to start download:", err);
     }

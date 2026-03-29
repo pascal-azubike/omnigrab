@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(({ mode }) => {
 	const outDir =
-		mode === 'android' ? '../../android/src/omnigrab_android/ui' : '../../desktop/src-tauri/ui-dist';
+		mode === 'android' ? '../android/app/src/main/python/ui' : '../../desktop/src-tauri/ui-dist';
 
 	return {
 		plugins: [sveltekit(), tailwindcss()],
@@ -14,7 +14,8 @@ export default defineConfig(({ mode }) => {
 		},
 		server: {
 			port: 5173,
-			strictPort: true
+			strictPort: true,
+			host: true // Listen on all interfaces for Android dev
 		}
 	};
 });

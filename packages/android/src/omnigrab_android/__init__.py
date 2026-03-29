@@ -1,1 +1,0 @@
-"""OmniGrab Android — Package init"""

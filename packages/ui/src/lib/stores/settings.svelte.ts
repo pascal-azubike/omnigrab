@@ -1,4 +1,5 @@
-import { getDefaultDownloadPath } from '$lib/utils/api';
+import { getDefaultDownloadPath, saveSettings as serverSaveSettings } from '$lib/utils/api';
+import { getPlatform } from '$lib/utils/platform';
 
 export interface Settings {
   downloadPath: string;
@@ -50,12 +51,34 @@ function createSettingsStore() {
   async function initDefaultPath() {
     if (initialized) return;
     try {
-      const defaultPath = await getDefaultDownloadPath();
-      if (!settings.downloadPath) {
-        settings.downloadPath = defaultPath;
+      const platform = await getPlatform();
+      if (platform !== 'desktop') {
+        // On Android: load all settings from the server's settings.json
+        const res = await fetch('http://127.0.0.1:8765/settings');
+        if (res.ok) {
+          const serverSettings = await res.json();
+          if (serverSettings.download_path) {
+            settings.downloadPath = serverSettings.download_path;
+          }
+        }
+      } else {
+        // Desktop: load from localStorage then get default if empty
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            Object.assign(settings, parsed);
+          } catch (e) {
+            console.error('Failed to parse stored settings:', e);
+          }
+        }
+        if (!settings.downloadPath) {
+          const defaultPath = await getDefaultDownloadPath();
+          settings.downloadPath = defaultPath;
+        }
       }
     } catch (e) {
-      console.error('Failed to get default download path:', e);
+      console.error('Failed to initialize settings:', e);
     } finally {
       initialized = true;
     }
@@ -77,6 +100,21 @@ function createSettingsStore() {
       applyTheme(newSettings.theme);
     }
     await save();
+    // Also sync to Android server so the Python backend knows the new path
+    try {
+      await serverSaveSettings({
+        download_path: settings.downloadPath,
+        max_concurrent_downloads: settings.maxConcurrentDownloads,
+        embed_thumbnail: settings.embedThumbnail,
+        embed_metadata: settings.embedMetadata,
+        download_subtitles: settings.downloadSubtitles,
+        subtitle_lang: settings.subtitleLang,
+        use_cookies: settings.useCookies,
+        cookies_path: settings.cookiesPath,
+      });
+    } catch (e) {
+      console.error('Failed to sync settings to server:', e);
+    }
   }
 
   async function save() {

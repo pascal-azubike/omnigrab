@@ -19,7 +19,7 @@ export async function getVideoInfo(url: string): Promise<VideoInfo> {
   if (platform === 'desktop') {
     return tauriInvoke<VideoInfo>('get_video_info', { url });
   }
-  const res = await fetch(`${ANDROID_API}/info?url=${encodeURIComponent(url)}`);
+  const res = await fetch(`${ANDROID_API}/api/info?url=${encodeURIComponent(url)}`);
   if (!res.ok) throw new Error('Failed to get video info');
   return res.json();
 }
@@ -29,7 +29,7 @@ export async function getPlaylistInfo(url: string): Promise<PlaylistInfo> {
   if (platform === 'desktop') {
     return tauriInvoke<PlaylistInfo>('get_playlist_info', { url });
   }
-  const res = await fetch(`${ANDROID_API}/playlist?url=${encodeURIComponent(url)}`);
+  const res = await fetch(`${ANDROID_API}/api/playlist?url=${encodeURIComponent(url)}`);
   if (!res.ok) throw new Error('Failed to get playlist info');
   return res.json();
 }
@@ -40,7 +40,7 @@ export async function startDownload(payload: DownloadPayload): Promise<string> {
     await tauriInvoke<void>('start_download', { payload });
     return payload.id;
   }
-  const res = await fetch(`${ANDROID_API}/download`, {
+  const res = await fetch(`${ANDROID_API}/api/download`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -54,7 +54,7 @@ export async function cancelDownload(id: string): Promise<void> {
   if (platform === 'desktop') {
     return tauriInvoke<void>('cancel_download', { id });
   }
-  await fetch(`${ANDROID_API}/cancel/${id}`, { method: 'POST' });
+  await fetch(`${ANDROID_API}/api/cancel/${id}`, { method: 'POST' });
 }
 
 export async function openFolder(path: string): Promise<void> {
@@ -62,6 +62,38 @@ export async function openFolder(path: string): Promise<void> {
   if (platform === 'desktop') {
     return tauriInvoke<void>('open_folder', { path });
   }
+  await fetch(`${ANDROID_API}/api/open-folder`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path })
+  });
+}
+
+export function pickDirectory(): Promise<string | null> {
+    return new Promise(async (resolve, reject) => {
+        const platform = await getPlatform();
+        if (platform === 'android' && window.AndroidBridge) {
+            window.onFolderSelected = (path: string) => {
+                resolve(path)
+                window.onFolderSelected = undefined
+            }
+            window.AndroidBridge.openFolderPicker()
+        } else if (platform === 'desktop') {
+            try {
+                const { open } = await import('@tauri-apps/plugin-dialog');
+                const selected = await open({
+                  directory: true,
+                  multiple: false,
+                  title: "Select Download Folder",
+                });
+                resolve((selected && typeof selected === "string") ? selected : null);
+            } catch (e) {
+                reject(e);
+            }
+        } else {
+            resolve(null)
+        }
+    })
 }
 
 export async function getDefaultDownloadPath(): Promise<string> {
@@ -69,9 +101,22 @@ export async function getDefaultDownloadPath(): Promise<string> {
   if (platform === 'desktop') {
     return tauriInvoke<string>('get_default_download_path');
   }
-  const res = await fetch(`${ANDROID_API}/config`);
+  const res = await fetch(`${ANDROID_API}/api/settings`);
   const data = await res.json();
   return data.download_path;
+}
+
+export async function saveSettings(settings: Record<string, unknown>): Promise<void> {
+  const platform = await getPlatform();
+  if (platform === 'desktop') {
+    // Desktop stores settings in localStorage via the settings store — no-op here
+    return;
+  }
+  await fetch(`${ANDROID_API}/api/settings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(settings)
+  });
 }
 
 export async function checkYtDlpVersion(): Promise<VersionInfo> {
@@ -95,7 +140,7 @@ export async function listenProgress(id: string, callback: (event: ProgressEvent
     return unlisten;
   }
 
-  const es = new EventSource(`${ANDROID_API}/progress/${id}`);
+  const es = new EventSource(`${ANDROID_API}/api/progress/${id}`);
   es.onmessage = (e) => {
     const data = JSON.parse(e.data);
     callback(data);

@@ -6,7 +6,7 @@
   let items = $derived(downloadStore.items);
   let activeItems = $derived(
     items.filter(
-      (i) => i.status === "downloading" || i.status === "processing",
+      (i) => i.status === "queued" || i.status === "downloading" || i.status === "processing",
     ),
   );
   let completedItems = $derived(

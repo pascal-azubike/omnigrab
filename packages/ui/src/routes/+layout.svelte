@@ -1,4 +1,3 @@
-```html
 <script lang="ts">
   import "../app.css";
   import { onMount } from 'svelte';
@@ -56,7 +55,7 @@
       </div>
     </div>
 
-    <nav class="flex-grow flex flex-col items-center gap-4 pt-12">
+    <div class="grow overflow-y-auto scrollbar-hide py-6 h-full">
       {#each navItems as item}
         <a
           href={item.href}
@@ -79,7 +78,7 @@
           </div>
         </a>
       {/each}
-    </nav>
+    </div>
 
     <div class="p-4 pb-8 flex flex-col items-center gap-4">
       <ThemeToggle />
@@ -87,7 +86,7 @@
   </aside>
 
   <!-- Main Content Area -->
-  <main class="flex-grow flex flex-col min-w-0 relative h-full">
+  <main class="grow flex flex-col min-w-0 relative h-full">
     <!-- Top Header (Mobile Only) -->
     <header
       class="{(isMobile ? 'flex' : 'md:hidden flex')} items-center justify-between px-6 py-4 border-b border-border bg-background/50 backdrop-blur-xl shrink-0"

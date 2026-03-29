@@ -6,6 +6,12 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
+			pages: process.env.npm_lifecycle_event === 'build:android' 
+				? '../android/app/src/main/python/ui' 
+				: 'build',
+			assets: process.env.npm_lifecycle_event === 'build:android' 
+				? '../android/app/src/main/python/ui' 
+				: 'build',
 			fallback: 'index.html',
 			precompress: false,
 			strict: true

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="/favicon.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+		rel="stylesheet">
+	<link href="/_app/immutable/entry/start.DJ0Y5Uqf.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/CdPMTQMm.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/CiE1qEVL.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/B0GvB34f.js" rel="modulepreload">
+		<link href="/_app/immutable/entry/app.CxDil9HS.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/V5QH-NpV.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/N2VJsvfN.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/EE4MBxSS.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/xTkIAI0V.js" rel="modulepreload">
+		
+	<style>
+		/* Prevent flash of unstyled content and support theme switching */
+		html {
+			background: #fafafa;
+			color: #09090b;
+		}
+		html.dark {
+			background: #09090b;
+			color: #fafafa;
+		}
+		body {
+			background: inherit;
+			color: inherit;
+		}
+	</style>
+	<script>
+		// Apply saved theme before page renders to prevent flash
+		(function() {
+			const saved = localStorage.getItem('theme');
+			if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		})();
+	</script>
+</head>
+
+<body data-sveltekit-preload-data="hover" oncontextmenu="return false;"
+	class="select-none overflow-hidden m-0 p-0 antialiased">
+	<div id="svelte">
+			<script>
+				{
+					__sveltekit_16nqp4q = {
+						base: ""
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/_app/immutable/entry/start.DJ0Y5Uqf.js"),
+						import("/_app/immutable/entry/app.CxDil9HS.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+</body>
+
+</html>

@@ -8,6 +8,7 @@
     "build": "vite build --mode desktop",
     "build:desktop": "vite build --mode desktop",
     "build:android": "vite build --mode android",
+    "watch:android": "vite build --mode android --watch",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"

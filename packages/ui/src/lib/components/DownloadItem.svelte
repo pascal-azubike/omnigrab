@@ -43,7 +43,7 @@
           <Play class="h-6 w-6" />
         </div>
       {/if}
-      {#if item.status === "downloading" || item.status === "processing"}
+      {#if item.status === "queued" || item.status === "downloading" || item.status === "processing"}
         <div
           class="absolute inset-0 bg-indigo-600/20 backdrop-blur-[1px] flex items-center justify-center"
         >
@@ -106,7 +106,7 @@
                   ? "text-muted-foreground"
                   : "text-indigo-400"}
           >
-            {item.status}
+            {item.status === "queued" ? "WAITING" : item.status}
           </span>
           <span class="text-muted-foreground">
             {item.status === "downloading"

@@ -9,9 +9,8 @@
     RefreshCw,
     Loader2,
   } from "lucide-svelte";
-  import { open } from "@tauri-apps/plugin-dialog";
   import { settingsStore } from "$lib/stores/settings.svelte";
-  import { checkYtDlpVersion, openFolder } from "$lib/utils/api";
+  import { checkYtDlpVersion, openFolder, pickDirectory } from "$lib/utils/api";
 
   let current = $derived(settingsStore.current);
   let ytDlpChecking = $state(false);
@@ -28,16 +27,18 @@
 
   async function browseFolder() {
     try {
-      const selected = await open({
-        directory: true,
-        multiple: false,
-        title: "Select Download Folder",
-      });
-      if (selected && typeof selected === "string") {
+      const selected = await pickDirectory();
+      if (selected) {
         settingsStore.updateSettings({ downloadPath: selected });
+        if (window.AndroidBridge?.showToast) {
+          window.AndroidBridge.showToast('Download folder updated');
+        }
       }
+      // If null, user cancelled - no action needed
     } catch (e) {
-      console.error("Dialog error:", e);
+      console.error("Picker error:", e);
+      // Show feedback to user - on Android, folder picker may not work
+      alert(`Could not open folder picker: ${e instanceof Error ? e.message : 'Unknown error'}\n\nYou can manually type a path or use the default download location.`);
     }
   }
 </script>
@@ -56,31 +57,31 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="space-y-2">
-        <label class="text-sm font-medium text-foreground pl-1">
+        <label for="download-location" class="text-sm font-medium text-foreground pl-1">
           Download Location
         </label>
         <div class="flex gap-2">
-          <input
-            type="text"
-            bind:value={current.downloadPath}
-            class="grow bg-card border border-border rounded-xl text-foreground px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none placeholder:text-muted-foreground"
-            placeholder="Select a folder..."
-          />
           <button
             onclick={browseFolder}
-            class="p-3 bg-accent hover:bg-muted text-muted-foreground hover:text-foreground rounded-xl transition-all"
+            title={current.downloadPath || 'Select a folder'}
+            class="grow flex items-center justify-between bg-card text-left border border-border hover:border-indigo-500/50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none transition-colors group"
           >
-            <Folder class="h-5 w-5" />
+            <span class="truncate text-foreground {current.downloadPath ? '' : 'text-muted-foreground'}">
+              {current.downloadPath || 'Select a folder...'}
+            </span>
+            <Folder class="h-5 w-5 text-muted-foreground group-hover:text-indigo-400 shrink-0 ml-2" />
           </button>
         </div>
       </div>
 
       <div class="space-y-2">
-        <label class="text-sm font-medium text-foreground pl-1">
+        <label for="max-downloads" class="text-sm font-medium text-foreground pl-1">
           Concurrent Downloads
         </label>
         <select
-          bind:value={current.maxConcurrentDownloads}
+          id="max-downloads"
+          value={current.maxConcurrentDownloads}
+          onchange={(e) => settingsStore.updateSettings({ ...current, maxConcurrentDownloads: parseInt(e.currentTarget.value) })}
           class="w-full bg-card border border-border rounded-xl text-foreground px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none"
         >
           <option value={1}>1 (Safest)</option>
@@ -156,15 +157,16 @@
 
       {#if current.useCookies}
         <div class="pl-9 space-y-2">
-          <label class="text-sm font-medium text-foreground pl-1">
+          <label for="cookies-path" class="text-sm font-medium text-foreground pl-1">
             Cookies File Path
           </label>
           <div class="flex gap-2">
             <input
+              id="cookies-path"
               type="text"
               bind:value={current.cookiesPath}
               placeholder="/path/to/cookies.txt"
-              class="flex-grow bg-card border border-border rounded-xl text-foreground px-4 py-3 text-sm focus:ring-2 focus:ring-amber-500/50 outline-none placeholder:text-muted-foreground"
+              class="grow bg-card border border-border rounded-xl text-foreground px-4 py-3 text-sm focus:ring-2 focus:ring-amber-500/50 outline-none placeholder:text-muted-foreground"
             />
             <button class="p-3 bg-accent hover:bg-muted text-muted-foreground hover:text-foreground rounded-xl transition-all">
               <Folder class="h-5 w-5" />

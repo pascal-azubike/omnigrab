@@ -112,17 +112,34 @@ briefcase run android --device <device-udid>
 briefcase run android --list-devices
 ```
 
-#### Iterating quickly on Android
+#### Automated Android UI Iteration (Watch Mode)
+
+Instead of manually building every time, you can now use the automated watch script:
 
 ```bash
-# After changing Python code:
-cd packages/android
-briefcase update android && briefcase run android
+# Terminal 1: Watch and build UI to Android project
+cd packages/ui && npm run watch:android
 
-# After changing SvelteKit UI:
-cd packages/ui && npm run build:android
+# Terminal 2: Update and run the app
 cd packages/android && briefcase update android && briefcase run android
 ```
+
+#### Android Live Reload (Instant Feedback)
+
+For a desktop-like experience with HMR (Hot Module Replacement):
+
+1.  **Start Vite Dev Server**: `cd packages/ui && npm run dev -- --host`
+2.  **Find your PC's IP**: e.g., `192.168.1.10`
+3.  **Start the Android App**: `cd packages/android && briefcase run android`
+4.  **Connect the App to Dev Server**: 
+    In a terminal on your PC, run:
+    ```bash
+    curl -X POST http://localhost:8765/dev-url -H "Content-Type: application/json" -d '{"url": "http://192.168.1.10:5173"}'
+    ```
+5.  **Restart the App**: Close and reopen OmniGrab on your device. It will now load directly from your PC with Live Reload enabled!
+
+> 💡 To go back to the built-in offline UI, send an empty URL:
+> `curl -X POST http://localhost:8765/dev-url -H "Content-Type: application/json" -d '{"url": ""}'`
 
 #### Test the FastAPI server on desktop (without a device)
 

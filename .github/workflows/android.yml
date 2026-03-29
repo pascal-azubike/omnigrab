@@ -37,10 +37,13 @@ jobs:
             "platforms;android-35" \
             "build-tools;35.0.0"
 
-      - name: Install UI dependencies
+      - name: Install Monorepo dependencies
         run: |
-          rm -rf node_modules package-lock.json
-          npm install
+          npm ci
+          
+      - name: Force install Rollup Linux bindings
+        run: |
+          npm install @rollup/rollup-linux-x64-gnu --no-save
 
       - name: Build SvelteKit UI for Android
         run: |

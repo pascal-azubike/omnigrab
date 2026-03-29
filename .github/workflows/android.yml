@@ -39,16 +39,14 @@ jobs:
 
       - name: Install UI dependencies
         run: |
-          cd packages/ui
           rm -rf node_modules package-lock.json
           npm install
 
       - name: Build SvelteKit UI for Android
         run: |
-          cd packages/ui
-          npm run build:android
+          npm run build:ui:android
           echo "UI files:"
-          ls ../android/app/src/main/python/ui/
+          ls packages/android/app/src/main/python/ui/
 
       - name: Setup Python 3.12 (for Chaquopy build)
         uses: actions/setup-python@v5

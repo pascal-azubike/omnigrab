@@ -40,7 +40,7 @@ jobs:
       - name: Install UI dependencies
         run: |
           cd packages/ui
-          npm ci
+          npm install
 
       - name: Build SvelteKit UI for Android
         run: |

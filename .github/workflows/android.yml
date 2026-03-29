@@ -47,22 +47,22 @@ jobs:
           cd packages/ui
           npm run build:android
           echo "UI files:"
-          ls packages/android/app/src/main/python/ui/
+          ls ../android/app/src/main/python/ui/
 
       - name: Setup Python 3.12 (for Chaquopy build)
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Make Gradle executable
-        run: |
-          cd packages/android
-          chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.9'
 
       - name: Build debug APK
         run: |
           cd packages/android
-          ./gradlew assembleDebug --no-daemon
+          gradle assembleDebug --no-daemon
 
       - name: Decode signing keystore
         env:
@@ -78,9 +78,8 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           cd packages/android
-          ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=\
-            $(pwd)/omnigrab-release.jks \
+          gradle assembleRelease \
+            -Pandroid.injected.signing.store.file="$(pwd)/omnigrab-release.jks" \
             -Pandroid.injected.signing.store.password=\
             "${ANDROID_KEYSTORE_PASSWORD}" \
             -Pandroid.injected.signing.key.alias=\
@@ -92,11 +91,8 @@ jobs:
       - name: Rename APK
         run: |
           VERSION="${{ github.ref_name }}"
-          cp packages/android/app/build/outputs/apk/release/\
-          app-release.apk \
-          "OmniGrab-${VERSION}-android.apk"
-          echo "APK_PATH=OmniGrab-${VERSION}-android.apk" \
-            >> $GITHUB_ENV
+          cp packages/android/app/build/outputs/apk/release/app-release.apk "OmniGrab-${VERSION}-android.apk"
+          echo "APK_PATH=OmniGrab-${VERSION}-android.apk" >> $GITHUB_ENV
 
       - name: Upload APK to GitHub Release
         uses: softprops/action-gh-release@v2
@@ -112,7 +108,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: omnigrab-debug-apk
-          path: |
-            packages/android/app/build/outputs/apk/debug/
-            app-debug.apk
+          path: packages/android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7

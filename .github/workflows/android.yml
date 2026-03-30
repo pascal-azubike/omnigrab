@@ -8,6 +8,8 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -88,6 +90,13 @@ jobs:
           cp packages/android/app/build/outputs/apk/release/app-release.apk "OmniGrab-${VERSION}-android.apk"
           echo "APK_PATH=OmniGrab-${VERSION}-android.apk" >> $GITHUB_ENV
 
+      - name: Upload debug APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: omnigrab-debug-apk
+          path: packages/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
       - name: Upload APK to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -97,10 +106,3 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload debug APK as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: omnigrab-debug-apk
-          path: packages/android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 7

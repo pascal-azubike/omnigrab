@@ -60,8 +60,7 @@ jobs:
 
       - name: Build debug APK
         run: |
-          cd packages/android
-          gradle assembleDebug --no-daemon
+          gradle -p packages/android :app:assembleDebug --no-daemon
 
       - name: Decode signing keystore
         env:
@@ -76,15 +75,11 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          cd packages/android
-          gradle assembleRelease \
-            -Pandroid.injected.signing.store.file="$(pwd)/omnigrab-release.jks" \
-            -Pandroid.injected.signing.store.password=\
-            "${ANDROID_KEYSTORE_PASSWORD}" \
-            -Pandroid.injected.signing.key.alias=\
-            "${ANDROID_KEY_ALIAS}" \
-            -Pandroid.injected.signing.key.password=\
-            "${ANDROID_KEY_PASSWORD}" \
+          gradle -p packages/android :app:assembleRelease \
+            -Pandroid.injected.signing.store.file="$(pwd)/packages/android/omnigrab-release.jks" \
+            -Pandroid.injected.signing.store.password="${ANDROID_KEYSTORE_PASSWORD}" \
+            -Pandroid.injected.signing.key.alias="${ANDROID_KEY_ALIAS}" \
+            -Pandroid.injected.signing.key.password="${ANDROID_KEY_PASSWORD}" \
             --no-daemon
 
       - name: Rename APK

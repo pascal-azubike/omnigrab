@@ -7,7 +7,7 @@
 import { getPlatform } from './platform';
 import type { VideoInfo, PlaylistInfo, DownloadPayload, ProgressEvent, VersionInfo } from '../types';
 
-const ANDROID_API = 'http://127.0.0.1:8765';
+const ANDROID_API = 'http://localhost:8765';
 
 async function tauriInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
   const { invoke } = await import('@tauri-apps/api/core');

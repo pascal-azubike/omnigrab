@@ -45,10 +45,27 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    // Tell Gradle where jniLibs are
+    sourceSets {
+        getByName("main") {
+            jniLibs.srcDirs("src/main/jniLibs")
+        }
+    }
+
+    // CRITICAL: Tell Gradle NOT to strip libffmpeg.so
+    // Stripping removes the ELF entry point making it
+    // non-executable. We need it intact.
+    packaging {
+        jniLibs {
+            keepDebugSymbols += setOf("**/libffmpeg.so")
+        }
+    }
 }
 
 chaquopy {
     defaultConfig {
+        buildPython("C:/Users/pascal/AppData/Local/Programs/Python/Python312/python.exe")
         version = "3.12"
         pip {
             install("yt-dlp")

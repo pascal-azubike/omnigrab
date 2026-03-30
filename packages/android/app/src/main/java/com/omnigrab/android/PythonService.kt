@@ -6,10 +6,13 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.os.PowerManager
 import android.util.Log
 import com.chaquo.python.Python
 
 class PythonService : Service() {
+
+    private lateinit var wakeLock: PowerManager.WakeLock
 
     companion object {
         private const val TAG = "PythonService"
@@ -19,6 +22,12 @@ class PythonService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "OmniGrab::DownloadWakeLock"
+        )
+        wakeLock.acquire(60 * 60 * 1000L) // 1 hour max
         createNotificationChannel()
     }
 
@@ -28,24 +37,40 @@ class PythonService : Service() {
         startId: Int
     ): Int {
         // Show persistent notification (required for foreground service)
-        startForeground(NOTIFICATION_ID, buildNotification())
+        if (android.os.Build.VERSION.SDK_INT >= 34) { // UPSIDE_DOWN_CAKE
+            startForeground(
+                NOTIFICATION_ID, 
+                buildNotification(), 
+                android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
+        } else {
+            startForeground(NOTIFICATION_ID, buildNotification())
+        }
 
         // Start Python server in a background thread
         // NEVER call Python from the main thread — it will block UI
         Thread {
             try {
-                Log.i(TAG, "Starting Python environment...")
+                Log.i(TAG, "Starting Python server...")
 
-                // Initialize Chaquopy Python
-                // PyApplication in AndroidManifest handles Python.start()
-                // so we just get the instance here
+                // Read ffmpeg path passed from MainActivity
+                val ffmpegPath = intent?.getStringExtra("ffmpeg_path") ?: ""
+                Log.i(TAG, "ffmpeg_path received: $ffmpegPath")
+
                 val py = Python.getInstance()
+                val server = py.getModule("server")
 
-                Log.i(TAG, "Python started. Starting FastAPI server...")
+                // Pass ffmpeg path to Python BEFORE starting server
+                // This sets the global _ffmpeg_path variable in server.py
+                if (ffmpegPath.isNotEmpty()) {
+                    server.callAttr("set_ffmpeg_path", ffmpegPath)
+                    Log.i(TAG, "ffmpeg path set in Python: $ffmpegPath")
+                } else {
+                    Log.w(TAG, "No ffmpeg path — downloads limited to pre-merged formats")
+                }
 
-                // This call BLOCKS forever (uvicorn runs indefinitely)
-                // That is correct behavior for a Service
-                py.getModule("server").callAttr("start_server", 8765)
+                // Start the FastAPI server — this blocks forever
+                server.callAttr("start_server", 8765)
 
             } catch (e: Exception) {
                 Log.e(TAG, "Python server error: ${e.message}", e)
@@ -79,12 +104,16 @@ class PythonService : Service() {
         return Notification.Builder(this, CHANNEL_ID)
             .setContentTitle("OmniGrab")
             .setContentText("Download engine running")
-            .setSmallIcon(android.R.drawable.stat_sys_download)
+            .setSmallIcon(android.R.drawable.ic_menu_save)
             .setOngoing(true)
+            .setPriority(Notification.PRIORITY_LOW)
             .build()
     }
 
     override fun onDestroy() {
+        if (::wakeLock.isInitialized && wakeLock.isHeld) {
+            wakeLock.release()
+        }
         super.onDestroy()
         Log.i(TAG, "PythonService destroyed")
     }

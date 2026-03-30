@@ -52,6 +52,8 @@ function createDownloadStore() {
     });
     
     const unlisten = await listenProgress(payload.id, (event) => {
+      if (event.status === 'heartbeat' as any) return;
+      
       const index = items.findIndex(i => i.id === event.id);
       if (index === -1) return;
       

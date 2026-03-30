@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -39,8 +40,12 @@ class MainActivity : AppCompatActivity() {
         // Setup WebView
         setupWebView()
 
-        // Start Python FastAPI server as a foreground service
+        // Extract ffmpeg binary BEFORE starting Python service
+        val ffmpegPath = extractFfmpeg()
+        log("MAIN", "ffmpeg path: $ffmpegPath")
+
         val serviceIntent = Intent(this, PythonService::class.java)
+        serviceIntent.putExtra("ffmpeg_path", ffmpegPath)
         startForegroundService(serviceIntent)
 
         // Wait for server to be ready then load UI
@@ -86,6 +91,49 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         }
+    }
+
+    /**
+     * Extracts the ffmpeg binary from jniLibs to the app's
+     * private files directory and makes it executable.
+     * Android installs jniLibs to applicationInfo.nativeLibraryDir
+     * at APK install time — we just need to copy it and chmod +x.
+     * Returns the full path to the executable ffmpeg binary,
+     * or empty string if extraction failed.
+     */
+    private fun extractFfmpeg(): String {
+        return try {
+            val ffmpegDest = File(filesDir, "ffmpeg")
+
+            // Only extract if not already done
+            // (avoids re-extracting on every app start)
+            if (!ffmpegDest.exists() || ffmpegDest.length() == 0L) {
+                val nativeLib = File(
+                    applicationInfo.nativeLibraryDir,
+                    "libffmpeg.so"
+                )
+                if (!nativeLib.exists()) {
+                    log("FFMPEG", "libffmpeg.so not found in nativeLibraryDir: ${applicationInfo.nativeLibraryDir}")
+                    return ""
+                }
+                log("FFMPEG", "Copying ffmpeg from ${nativeLib.absolutePath}")
+                nativeLib.copyTo(ffmpegDest, overwrite = true)
+                log("FFMPEG", "Copy done. Size: ${ffmpegDest.length()} bytes")
+            }
+
+            // Always ensure executable bit is set
+            ffmpegDest.setExecutable(true, false)
+            log("FFMPEG", "ffmpeg ready at: ${ffmpegDest.absolutePath}")
+            ffmpegDest.absolutePath
+
+        } catch (e: Exception) {
+            log("FFMPEG", "extractFfmpeg FAILED: ${e.message}")
+            ""
+        }
+    }
+
+    private fun log(tag: String, msg: String) {
+        android.util.Log.i("OMNI", "[$tag] $msg")
     }
 
     private suspend fun waitForServerThenLoad() {

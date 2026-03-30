@@ -39,11 +39,8 @@ jobs:
 
       - name: Install Monorepo dependencies
         run: |
-          npm ci
-          
-      - name: Force install Rollup Linux bindings
-        run: |
-          npm install @rollup/rollup-linux-x64-gnu --no-save
+          rm -rf package-lock.json node_modules
+          npm install
 
       - name: Build SvelteKit UI for Android
         run: |

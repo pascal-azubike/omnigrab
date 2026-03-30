@@ -18,32 +18,6 @@ android {
         ndk {
             abiFilters += listOf("arm64-v8a", "x86_64")
         }
-
-        python {
-            // Use Python 3.12 — matches desktop and is supported
-            version = "3.12"
-
-            // Python source directory
-            // app/src/main/python/ is the default and correct location
-
-            pip {
-                // Core download engine
-                install("yt-dlp")
-
-                // Web server
-                install("fastapi")
-                install("uvicorn")
-
-                // Utilities
-                install("aiofiles")
-                install("httpx")
-                install("python-multipart")
-                install("anyio")
-
-                // NOTE: toga, toga-android are NOT installed
-                // Kotlin replaces Toga entirely
-            }
-        }
     }
 
     buildTypes {
@@ -70,6 +44,21 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        version = "3.12"
+        pip {
+            install("yt-dlp")
+            install("fastapi")
+            install("uvicorn")
+            install("aiofiles")
+            install("httpx")
+            install("python-multipart")
+            install("anyio")
+        }
     }
 }
 
